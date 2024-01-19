@@ -45,7 +45,7 @@
                     @endforeach
                 @endhasanyrole
                 @hasrole('teacher')
-                    @foreach (DB::table('notifications')->get() as $notify)
+                    @foreach (DB::table('notifications')->select('your_column_name')->distinct()->get() as $notify)
                         @php
                             // Decode the JSON data into an array
                             $notificationData = json_decode($notify->data, true);
