@@ -97,10 +97,14 @@ class HomeController extends Controller
             return redirect()->route('home');
         } else {
             $allcourses = course::where('permission->all', "true")->take(8)->get();
-            $dpmcourses = course::where('permission->dpm', "true")
+            if ($request->user()->hasAnyRole('admin', 'staff')) {
+                $dpmcourses = course::where('permission->dpm', "true")->take(8)->get();
+            } else {
+                $dpmcourses = course::where('permission->dpm', "true")
                  ->where(function ($query) use ($request) {
                      $query->Where('dpm', $request->user()->dpm);
                  })->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
+            }
 
             Log::channel('activity')->info('User '. $request->user()->name .' visited main page',
             [
