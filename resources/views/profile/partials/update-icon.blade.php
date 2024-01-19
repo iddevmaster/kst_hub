@@ -4,11 +4,11 @@
             <div class="col-lg-8 col-md-6 col-sm-12 mb-2">
                 <header>
                     <h2 class="text-lg font-medium text-gray-900">
-                        {{ __('Profile Icon') }}
+                        {{ __('messages.Profile Icon') }}
                     </h2>
 
                     <p class="mt-1 text-sm text-gray-600">
-                        {{ __("Update your account's profile icon.") }}
+                        {{ __("messages.Update your account's profile icon") }}
                     </p>
                 </header>
 
@@ -20,13 +20,13 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="iconFile" class="form-label">Default file input example</label>
+                        <label for="iconFile" class="form-label">{{ __('messages.Default file input example') }}</label>
                         <input class="form-control border rounded" type="file" id="iconFile" name="icon" accept="image/png, image/jpeg">
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <x-primary-button name='action' :value="1">{{ __('Save') }}</x-primary-button>
-                        <x-danger-button name='action' :value="0">{{ __('Delete') }}</x-danger-button>
+                        <x-primary-button name='action' :value="1">{{ __('messages.Save') }}</x-primary-button>
+                        <x-danger-button name='action' :value="0">{{ __('messages.Delete') }}</x-danger-button>
 
                         @if (session('status') === 'profile-updated')
                             <p

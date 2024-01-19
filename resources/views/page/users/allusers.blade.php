@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="text-center mt-5">
-        <p class="fs-1 fw-bold">All Users</p>
+        <p class="fs-1 fw-bold">{{ __('messages.All Users') }}</p>
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -19,32 +19,32 @@
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header ">
-                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Add User</h1>
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ __('messages.Add User') }}</h1>
                             </div>
                             <div class="modal-body">
                                 <form action="{{ route('user.register') }}" method="post">
                                     @csrf
                                     <div class="d-flex gap-2 mb-2">
-                                        <p>Name</p>
+                                        <p>{{ __('messages.Name') }}</p>
                                         <input type="text" class="form-control form-control-sm" value="{{ old('name') }}" name="name" required>
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
-                                        <p>Username</p>
+                                        <p>{{ __('messages.Username') }}</p>
                                         <input type="text" class="form-control form-control-sm" value="{{ old('username') }}" name="username" required>
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
-                                        <p>Password</p>
+                                        <p>{{ __('messages.Password') }}</p>
                                         <input type="password" class="form-control form-control-sm" name="password" required>
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('agn') }}" name="agn" required>
-                                            <option selected disabled>Agency</option>
+                                            <option selected disabled>{{ __('messages.Agency') }}</option>
                                             @foreach ($agns as $agn)
                                                 <option value="{{ $agn->id }}">{{ $agn->name }}</option>
                                             @endforeach
                                         </select>
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('brn') }}" name="brn" required>
-                                            <option selected disabled>Branch</option>
+                                            <option selected disabled>{{ __('messages.Branch') }}</option>
                                             @foreach ($brns as $brn)
                                                 <option value="{{ $brn->id }}">{{ $brn->name }}</option>
                                             @endforeach
@@ -52,20 +52,20 @@
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('dpm') }}" name="dpm" required>
-                                            <option selected disabled>Department</option>
+                                            <option selected disabled>{{ __('messages.Department') }}</option>
                                             @foreach ($dpms as $dpm)
                                                 <option value="{{ $dpm->id }}">{{ $dpm->name }}</option>
                                             @endforeach
                                         </select>
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('role') }}" name="role" required>
-                                            <option selected disabled>Role</option>
+                                            <option selected disabled>{{ __('messages.Role') }}</option>
                                             @foreach ($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="my-4">
-                                        <p>Course</p>
+                                        <p>{{ __('messages.Course') }}</p>
                                         <select class="form-select" id="small-select2-options-multiple-field" aria-label="Small select example" multiple name="courses[]">
                                             @foreach ($courses as $course)
                                                 <option value="{{ $course->id }}">{{ $course->code }}</option>
@@ -82,8 +82,8 @@
                                         </div>
                                     @endif
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-outline-primary">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{{ __('messages.Cancel') }}</button>
+                                        <button type="submit" class="btn btn-outline-primary">{{ __('messages.Save') }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -98,13 +98,13 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Dpm</th>
-                                <th scope="col">Course</th>
-                                <th scope="col">OwnCourse</th>
-                                <th scope="col">Lifetime</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">{{ __('messages.Name') }}</th>
+                                <th scope="col">{{ __('messages.Role') }}</th>
+                                <th scope="col">{{ __('messages.Dpm') }}</th>
+                                <th scope="col">{{ __('messages.Course') }}</th>
+                                <th scope="col">{{ __('messages.OwnCourse') }}</th>
+                                <th scope="col">{{ __('messages.Lifetime') }}</th>
+                                <th scope="col">{{ __('messages.Action') }}</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">

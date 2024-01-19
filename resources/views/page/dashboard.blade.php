@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="text-center mt-5 px-2">
-            <p class="fs-1 fw-bold">Dashboard</p>
+            <p class="fs-1 fw-bold">{{ __('messages.Dashboard') }}</p>
             @php
                 $seriesList = [];
                 $dpmList= [];
@@ -30,7 +30,7 @@
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                 <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
                             </svg>
-                            Course
+                            {{ __('messages.Course') }}
                         </a>
                     </li>
                     <li class="me-2">
@@ -38,7 +38,7 @@
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
                                 <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM5 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm10 6H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z"/>
                             </svg>
-                            Test
+                            {{ __('messages.Test') }}
                         </a>
                     </li>
                     <li class="me-2">
@@ -46,7 +46,7 @@
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 15">
                                 <path d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z"/>
                             </svg>
-                            Log
+                            {{ __('messages.Log') }}
                         </a>
                     </li>
                     <li class="me-2">
@@ -54,7 +54,7 @@
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
                             </svg>
-                            History
+                            {{ __('messages.History') }}
                         </a>
                     </li>
                     <li class="me-2">
@@ -62,7 +62,7 @@
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
                             </svg>
-                            Manage
+                            {{ __('messages.Manage') }}
                         </a>
                     </li>
                 </ul>
@@ -79,23 +79,23 @@
                             <div class="sm:rounded-lg p-2">
                                 <div class="mb-4">
                                     <div class="flex justify-between mb-3">
-                                        <p class="text-2xl font-bold"><i class="bi bi-journal-bookmark"></i> All Course</p>
+                                        <p class="text-2xl font-bold"><i class="bi bi-journal-bookmark"></i>{{ __('messages.All Course') }}</p>
                                     </div>
                                     <canvas id="myChart"></canvas>
                                 </div>
                                 <div class="bg-white p-4 rounded shadow-sm min-w-full">
                                     <div class="flex flex-wrap justify-between mb-3">
-                                        <p class="text-2xl font-bold"><i class="bi bi-backpack"></i> Course</p>
+                                        <p class="text-2xl font-bold"><i class="bi bi-backpack"></i>{{ __('messages.All Course') }}</p>
                                     </div>
                                     <div class="overflow-x-auto">
                                         <table class="table table-hover" id="allcourse-datatable">
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th scope="col">Code</th>
-                                                    <th scope="col" >Name</th>
-                                                    <th scope="col">Lecturer</th>
-                                                    <th scope="col">Dpm</th>
-                                                    <th scope="col">student</th>
+                                                    <th scope="col">{{ __('messages.Code') }}</th>
+                                                    <th scope="col" >{{ __('messages.Name') }}</th>
+                                                    <th scope="col">{{ __('messages.Lecturer') }}</th>
+                                                    <th scope="col">{{ __('messages.Dpm') }}</th>
+                                                    <th scope="col">{{ __('messages.student') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="text-start">
@@ -124,33 +124,33 @@
                             <div class="sm:rounded-lg p-2">
                                 <div class="mb-4">
                                     <div class="flex justify-between mb-3">
-                                        <p class="text-2xl font-bold"><i class="bi bi-file-earmark-check"></i> Test Summary</p>
+                                        <p class="text-2xl font-bold"><i class="bi bi-file-earmark-check"></i>{{ __('messages.Test Summary') }}</p>
                                     </div>
                                     <div  class="flex justify-center items-center flex-wrap">
                                         <div class=" md:h-80 w-1/2">
                                             <canvas id="testChart"></canvas>
                                         </div>
                                         <div>
-                                            <p class="text-xl">Average</p>
-                                            <p class="text-5xl sm:text-7xl md:text-9xl">{{ intval($totaltest != 0 ? $passtest * 100 /  $totaltest : 0) }}%</p>
-                                            <p class="text-xl">Pass from</p>
-                                            <p class="text-xl">Total : <b>{{$totaltest}}</b> times</p>
+                                            <p class="text-xl">{{ __('messages.Average') }}</p>
+                                            <p class="text-5xl sm:text-7xl md:text-9xl">{{ intval( ($totaltest != 0) ? ($passtest * 100 /  $totaltest) : 0 ) }}%</p>
+                                            <p class="text-xl">{{ __('messages.Pass from') }}</p>
+                                            <p class="text-xl">{{ __('messages.Total') }} <b>{{$totaltest}}</b> {{ __('messages.times') }}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="bg-white p-2 rounded shadow-sm min-w-full">
                                     <div class="flex justify-between mb-3">
-                                        <p class="text-2xl font-bold"><i class="bi bi-list-check"></i> All Test</p>
+                                        <p class="text-2xl font-bold"><i class="bi bi-list-check"></i> {{ __('messages.All Test') }}</p>
                                     </div>
                                     <div class="overflow-x-auto">
                                         <table class="table table-hover " id="test-datatable">
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th scope="col">#</th>
-                                                    <th scope="col">Quiz</th>
-                                                    <th scope="col">User</th>
-                                                    <th scope="col">Score</th>
-                                                    <th scope="col">Date</th>
+                                                    <th scope="col"> {{ __('messages.Quiz') }}</th>
+                                                    <th scope="col">{{ __('messages.User') }}</th>
+                                                    <th scope="col">{{ __('messages.Score') }}</th>
+                                                    <th scope="col">{{ __('messages.Date') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody class="text-start">
@@ -182,19 +182,19 @@
                                         #
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        User
+                                        {{ __('messages.User') }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Module
+                                        {{ __('messages.Module') }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Action
+                                        {{ __('messages.Action') }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Note
+                                        {{ __('messages.Note') }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Date
+                                        {{ __('messages.Date') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -230,7 +230,7 @@
                 <div class="hidden p-4 rounded-lg " id="history" role="tabpanel" aria-labelledby="history-tab">
                     {{-- Course Deleted --}}
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-20 bg-gray-50">
-                        <p class="font-bold text-2xl my-2">Course Deleted</p>
+                        <p class="font-bold text-2xl my-2">{{ __('messages.Course Deleted') }}</p>
                         <table class="w-full table-hover text-sm text-left rtl:text-right text-gray-500" id="courseDel-table">
                             <thead class="text-xs text-white uppercase bg-gray-700">
                                 <tr>
@@ -238,19 +238,19 @@
                                         #
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Title
+                                        {{ __('messages.Title') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Teacher
+                                        {{ __('messages.Teacher') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Dpm
+                                        {{ __('messages.Dpm') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Delete_at
+                                        {{ __('messages.Delete_at') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Action
+                                        {{ __('messages.Action') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -287,7 +287,7 @@
 
                     {{-- Quiz Deleted --}}
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-50">
-                        <p class="font-bold text-2xl my-2">Quiz Deleted</p>
+                        <p class="font-bold text-2xl my-2">{{ __('messages.Quiz Deleted') }}</p>
                         <table class="w-full table-hover text-sm text-left rtl:text-right text-gray-500" id="quizDel-table">
                             <thead class="text-xs text-white uppercase bg-gray-700">
                                 <tr>
@@ -295,19 +295,19 @@
                                         #
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        Title
+                                        {{ __('messages.Title') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Create_By
+                                        {{ __('messages.Create_By') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Pass Score
+                                        {{ __('messages.Pass Score') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Delete_at
+                                        {{ __('messages.Delete_at') }}
                                     </th>
                                     <th scope="col" class="px-4 py-3">
-                                        Action
+                                        {{ __('messages.Action') }}
                                     </th>
                                 </tr>
                             </thead>
@@ -346,7 +346,7 @@
                 {{-- Manage content --}}
                 <div class="hidden p-4 rounded-lg " id="manage" role="tabpanel" aria-labelledby="manage-tab">
                     <div class="text-center mt-2">
-                        <p class="fs-1 fw-bold">Agency Data</p>
+                        <p class="fs-1 fw-bold">{{ __('messages.Agency Data') }}</p>
                     </div>
                     <div class="py-10">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -355,17 +355,17 @@
                                     <div class="col-6 ">
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
-                                                <p class="text-2xl font-bold"><i class="bi bi-buildings"></i> Agency</p>
+                                                <p class="text-2xl font-bold"><i class="bi bi-buildings"></i> {{ __('messages.Agency') }}</p>
                                                 <button class="btn btn-success" onclick="addAgn()" ><i class="bi bi-plus-lg"></i></button>
                                             </div>
                                             <div class="overflow-auto">
                                                 <table class="table table-hover">
                                                     <thead class="table-dark">
                                                         <tr>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col">Name</th>
-                                                            <th scope="col">Address</th>
-                                                            <th scope="col">Contact</th>
+                                                            <th scope="col">{{ __('messages.Action') }}</th>
+                                                            <th scope="col">{{ __('messages.Name') }}</th>
+                                                            <th scope="col">{{ __('messages.Address') }}</th>
+                                                            <th scope="col">{{ __('messages.Contact') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody >
@@ -399,16 +399,16 @@
                                     <div class="col-6">
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
-                                                <p class="text-2xl font-bold"><i class="bi bi-building"></i> Branch</p>
+                                                <p class="text-2xl font-bold"><i class="bi bi-building"></i> {{ __('messages.Branch') }}</p>
                                                 <button class="btn btn-success" onclick="addBrn()"><i class="bi bi-plus-lg"></i></button>
                                             </div>
                                             <div class="overflow-auto">
                                                 <table class="table table-hover">
                                                     <thead class="table-dark">
                                                         <tr>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col">Name</th>
-                                                            <th scope="col">Agency</th>
+                                                            <th scope="col">{{ __('messages.Action') }}</th>
+                                                            <th scope="col">{{ __('messages.Name') }}</th>
+                                                            <th scope="col">{{ __('messages.Agency') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody >
@@ -441,19 +441,19 @@
 
                                 <div class="bg-white p-4 rounded-lg mb-5 shadow">
                                     <div class="flex justify-between mb-3">
-                                        <p class="text-2xl font-bold"><i class="bi bi-house-door"></i> Department</p>
+                                        <p class="text-2xl font-bold"><i class="bi bi-house-door"></i> {{ __('messages.Department') }}</p>
                                         <button class="btn btn-success" onclick="addDpm()"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                     <div class="overflow-auto">
                                         <table class="table table-hover">
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th scope="col">Action</th>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Prefix</th>
-                                                    <th scope="col">Personnel</th>
-                                                    <th scope="col">Agency</th>
-                                                    <th scope="col">Branch</th>
+                                                    <th scope="col">{{ __('messages.Action') }}</th>
+                                                    <th scope="col">{{ __('messages.Name') }}</th>
+                                                    <th scope="col">{{ __('messages.Prefix') }}</th>
+                                                    <th scope="col">{{ __('messages.Personnel') }}</th>
+                                                    <th scope="col">{{ __('messages.Agency') }}</th>
+                                                    <th scope="col">{{ __('messages.Branch') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody >
@@ -494,7 +494,7 @@
                     <hr class="w-4/5 h-0.5 mx-auto border-0 rounded bg-gray-700">
 
                     <div class="text-center mt-5">
-                        <p class="fs-1 fw-bold">Roles & Permissions</p>
+                        <p class="fs-1 fw-bold">{{ __('messages.Roles & Permissions') }}</p>
                     </div>
                     <div class="py-12">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -503,15 +503,15 @@
                                     <div class="col-6 ">
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
-                                                <p class="text-2xl font-bold"><i class="bi bi-person-square"></i> Roles</p>
+                                                <p class="text-2xl font-bold"><i class="bi bi-person-square"></i> {{ __('messages.Roles') }}</p>
                                                 <button class="btn btn-success" onclick="addRole()" ><i class="bi bi-plus-lg"></i></button>
                                             </div>
                                             <div class="overflow-auto">
                                                 <table class="table table-hover">
                                                     <thead class="table-dark">
                                                         <tr>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col">Name</th>
+                                                            <th scope="col">{{ __('messages.Action') }}</th>
+                                                            <th scope="col">{{ __('messages.Name') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody >
@@ -529,15 +529,15 @@
                                     <div class="col-6">
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
-                                                <p class="text-2xl font-bold"><i class="bi bi-person-fill-gear"></i> Permissions</p>
+                                                <p class="text-2xl font-bold"><i class="bi bi-person-fill-gear"></i> {{ __('messages.Permissions') }}</p>
                                                 <button class="btn btn-success" onclick="addPerm()"><i class="bi bi-plus-lg"></i></button>
                                             </div>
                                             <div class="overflow-auto">
                                                 <table class="table table-hover">
                                                     <thead class="table-dark">
                                                         <tr>
-                                                            <th scope="col">Action</th>
-                                                            <th scope="col">Name</th>
+                                                            <th scope="col">{{ __('messages.Action') }}</th>
+                                                            <th scope="col">{{ __('messages.Name') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -935,23 +935,23 @@
 
     addAgn = () => {
         Swal.fire({
-            title: 'Add Agency',
+            title: '{{ __('messages.Add Agency') }}',
             html: `
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">{{ __('messages.Name') }}</label>
                     <input type="text" class="form-control" id="name">
                 </div>
                 <div class="mb-3">
-                    <label for="addr" class="form-label">Address</label>
+                    <label for="addr" class="form-label">{{ __('messages.Address') }}</label>
                     <input type="text" class="form-control" id="addr">
                 </div>
                 <div class="mb-3">
-                    <label for="cont" class="form-label">Contact</label>
+                    <label for="cont" class="form-label">{{ __('messages.Contact') }}</label>
                     <input type="text" class="form-control" id="cont">
                 </div>
             `,
             showCancelButton: true,
-            confirmButtonText: "Save",
+            confirmButtonText: "{{ __('messages.Save') }}",
             preConfirm: () => {
                 const agnname = document.getElementById('name').value;
                 const addr = document.getElementById('addr').value;
@@ -1000,14 +1000,14 @@
 
     addBrn = () => {
         Swal.fire({
-            title: 'Add Branch',
+            title: '{{ __('messages.Add Branch') }}',
             html: `
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">{{ __('messages.Name') }}</label>
                     <input type="text" class="form-control" id="name">
                 </div>
 
-                <label for="agn" class="form-label">Agency</label>
+                <label for="agn" class="form-label">{{ __('messages.Agency') }}</label>
                 <select class="form-select" aria-label="Default select example" id="agn">
                     @foreach ($agns as $agn)
                         <option value="{{$agn->id}}">{{$agn->name}}</option>
@@ -1015,7 +1015,7 @@
                 </select>
             `,
             showCancelButton: true,
-            confirmButtonText: "Save",
+            confirmButtonText: "{{ __('messages.Save') }}",
             preConfirm: () => {
                 const brnname = document.getElementById('name').value;
                 const agn = document.getElementById('agn').value;
@@ -1063,15 +1063,15 @@
 
     addRole = () => {
         Swal.fire({
-            title: 'Add Role',
+            title: '{{ __('messages.Add Role') }}',
             html: `
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">{{ __('messages.Name') }}</label>
                     <input type="text" class="form-control" id="name">
                 </div>
             `,
             showCancelButton: true,
-            confirmButtonText: "Save",
+            confirmButtonText: "{{ __('messages.Save') }}",
             preConfirm: () => {
                 const rname = document.getElementById('name').value;
 
@@ -1118,15 +1118,15 @@
 
     addPerm = () => {
         Swal.fire({
-            title: 'Add Permission',
+            title: '{{ __('messages.Add Permission') }}',
             html: `
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">{{ __('messages.Name') }}</label>
                     <input type="text" class="form-control" id="name">
                 </div>
             `,
             showCancelButton: true,
-            confirmButtonText: "Save",
+            confirmButtonText: "{{ __('messages.Save') }}",
             preConfirm: () => {
                 const pname = document.getElementById('name').value;
 
@@ -1173,19 +1173,19 @@
 
     addDpm = () => {
         Swal.fire({
-            title: 'Add Department',
+            title: '{{ __('messages.Add Department') }}',
             html: `
                 <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">{{ __('messages.Name') }}</label>
                     <input type="text" class="form-control" id="name">
                 </div>
 
                 <div class="mb-3">
-                    <label for="prefix" class="form-label">Prefix</label>
+                    <label for="prefix" class="form-label">{{ __('messages.Prefix') }}</label>
                     <input type="text" class="form-control" id="prefix">
                 </div>
 
-                <label for="brn" class="form-label">Branch</label>
+                <label for="brn" class="form-label">{{ __('messages.Branch') }}</label>
                 <select class="form-select" aria-label="Default select example" id="brn">
                     @foreach ($brns as $brn)
                         <option value="{{$brn->id}}">{{$brn->name}}</option>
@@ -1193,7 +1193,7 @@
                 </select>
             `,
             showCancelButton: true,
-            confirmButtonText: 'Save',
+            confirmButtonText: '{{ __('messages.Save') }}',
             showLoaderOnConfirm: true,
             preConfirm: (name) => {
                 const dpmname = document.getElementById('name').value;

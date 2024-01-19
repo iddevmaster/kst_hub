@@ -1,13 +1,13 @@
 <x-app-layout>
     <div class="text-center mt-5">
-        <p class="fs-1 fw-bold">USER</p>
+        <p class="fs-1 fw-bold">{{ __('messages.USER') }}</p>
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="sm:rounded-lg p-4 row gap-2 justify-content-center">
                 <div class="bg-white rounded-4 mb-5 shadow-sm">
                     <div class="text-center my-3">
-                        <p class="fs-4 fw-bold">About</p>
+                        <p class="fs-4 fw-bold">{{ __('messages.About') }}</p>
                     </div>
                     <div class="d-flex justify-content-evenly">
                         <div class="d-flex justify-content-center align-items-center my-3 w-100">
@@ -15,19 +15,19 @@
                         </div>
                         <div class="my-3 w-100 px-4">
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Username:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Username') }}</span>
                                 <input type="text" class="form-control" id="username" name="username" value="{{ $user->username }}" aria-label="Username" aria-describedby="basic-addon1" disabled>
                             </div>
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Password:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Password') }}</span>
                                 <input type="password" class="form-control" id="password" name="password" value="" aria-label="Username" aria-describedby="basic-addon1" disabled>
                             </div>
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Name:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Name') }}</span>
                                 <input type="text" class="form-control" name="name" id="name" value="{{ $user->name }}" aria-label="Username" aria-describedby="basic-addon1" disabled>
                             </div>
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Agency:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Agency') }}</span>
                                 <select class="form-select form-select-sm" id="agn" name="agn" disabled>
                                     @foreach ($agns as $agn)
                                         <option value="{{ $agn->id }}"
@@ -39,7 +39,7 @@
                                 </select>
                             </div>
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Branch:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Branch') }}</span>
                                 <select class="form-select form-select-sm" id="brn" name="brn" disabled>
                                     @foreach ($brns as $brn)
                                         <option value="{{ $brn->id }}"
@@ -51,7 +51,7 @@
                                 </select>
                             </div>
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Dpm:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Dpm') }}</span>
                                 <select class="form-select form-select-sm" name="dpm" id="dpm"  disabled>
                                     @foreach ($dpms as $dpm)
                                         <option value="{{ $dpm->id }}"
@@ -63,7 +63,7 @@
                                 </select>
                             </div>
                             <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text" id="basic-addon1">Role:</span>
+                                <span class="input-group-text" id="basic-addon1">{{ __('messages.Role') }}</span>
                                 <select class="form-select form-select-sm" name="role" id="role" disabled>
                                     @foreach ($roles as $role)
                                         <option value="{{ $role->name }}"
@@ -77,26 +77,26 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center mb-3 gap-2">
-                        <button class="btn btn-success" id="editBtn">Edit</button>
-                        <button class="btn btn-danger" id="cancelBtn" style="display: none;">Cancel</button>
+                        <button class="btn btn-success" id="editBtn">{{ __('messages.Edit') }}</button>
+                        <button class="btn btn-danger" id="cancelBtn" style="display: none;">{{ __('messages.Cancel') }}</button>
                     </div>
                 </div>
 
                 <div class="bg-white rounded-4 mb-4 shadow-sm">
                     <div class="text-center my-3">
                         <div class="my-4 flex justify-between px-4">
-                            <p class="fs-4 fw-bold">Course</p>
+                            <p class="fs-4 fw-bold">{{ __('messages.Course') }}</p>
                             <button class="btn btn-success" id="addC2User"><i class="bi bi-plus-lg"></i></button>
                         </div>
                         <div>
                             <table class="table table-hover" id="course-datatable">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th scope="col">Action</th>
-                                        <th scope="col">code</th>
-                                        <th scope="col" >Course name</th>
-                                        <th scope="col">Progress</th>
-                                        <th scope="col">Enroll date</th>
+                                        <th scope="col">{{ __('messages.Action') }}</th>
+                                        <th scope="col">{{ __('messages.code') }}</th>
+                                        <th scope="col" >{{ __('messages.Course name') }}</th>
+                                        <th scope="col">{{ __('messages.Progress') }}</th>
+                                        <th scope="col">{{ __('messages.Enroll date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-start">
@@ -137,17 +137,17 @@
                 <div class="bg-white rounded-4 mb-4 shadow-sm">
                     <div class="text-center my-3">
                         <div class="my-4 flex justify-between px-4">
-                            <p class="fs-4 fw-bold">Own Course</p>
+                            <p class="fs-4 fw-bold">{{ __('messages.Own Course') }}</p>
                         </div>
                         <div>
                             <table class="table table-hover" id="owncourse-datatable">
                                 <thead class="table-dark">
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">code</th>
-                                        <th scope="col" colspan="3" >Course name</th>
-                                        <th scope="col">Progress</th>
-                                        <th scope="col">Enroll date</th>
+                                        <th scope="col">{{ __('messages.code') }}</th>
+                                        <th scope="col" colspan="3" >{{ __('messages.Course name') }}</th>
+                                        <th scope="col">{{ __('messages.Progress') }}</th>
+                                        <th scope="col">{{ __('messages.Enroll date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
@@ -188,16 +188,16 @@
                 <div class="bg-white rounded-4 mb-4 shadow-sm">
                     <div class="text-center my-3">
                         <div class="my-4 flex justify-between px-4">
-                            <p class="fs-4 fw-bold">Test History</p>
+                            <p class="fs-4 fw-bold">{{ __('messages.Test History') }}</p>
                         </div>
                         <div>
                             <table class="table table-hover " id="test-datatable">
                                 <thead class="table-dark">
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Quiz</th>
-                                        <th scope="col">Score</th>
-                                        <th scope="col">Date</th>
+                                        <th scope="col">{{ __('messages.Quiz') }}</th>
+                                        <th scope="col">{{ __('messages.Score') }}</th>
+                                        <th scope="col">{{ __('messages.Date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-start">
@@ -575,7 +575,7 @@
     const addCBtn = document.getElementById('addC2User');
     addCBtn.addEventListener('click', () => {
         Swal.fire({
-            title: 'Add Course',
+            title: '{{ __('messages.Add Course') }}',
             html: `
                 <select id="select-course" class="select2" multiple="multiple" style="width: 100%">
                     @foreach ($courses as $course)
@@ -592,7 +592,7 @@
                 });
             },
             showCancelButton: true,
-            confirmButtonText: "Save",
+            confirmButtonText: "{{ __('messages.Save') }}",
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 const courseSel = $('#select-course').select2('data').map(option => option.id);
