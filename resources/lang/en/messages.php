@@ -127,6 +127,7 @@ return [
     'Score' => 'Score',
     'Date' => 'Date',
     'Add Course' => 'Add Course',
+    'create_date' => 'Created Date',
 
 
     //Dashboard

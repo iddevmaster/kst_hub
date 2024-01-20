@@ -18,10 +18,16 @@ class course extends Model
         "dpm",
         "studens",
         "code",
-        "img"
+        "img",
+        "group"
     ] ;
 
     public function getStudensAttribute($value)
+    {
+        return json_decode($value, true);
+    }
+
+    public function getGroupAttribute($value)
     {
         return json_decode($value, true);
     }

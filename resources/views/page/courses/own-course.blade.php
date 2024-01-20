@@ -5,45 +5,154 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="sm:rounded-lg p-4 row">
-                <div class="mb-4 flex justify-end">
+                <div class="flex justify-end">
                     <button class="btn btn-success" onclick="showAddCourseAlert()">
                         <i class="bi bi-plus-circle-fill"></i> {{ __('messages.add_course') }}
                     </button>
                 </div>
-                <div class="overflow-y-auto mb-4" style="height: 520px">
-                    @if (count($courses) > 0)
-                        @foreach ($courses as $course)
-                            {{-- course card --}}
-                            <div class="shadow-sm card mb-3 course-card">
-                                <a href="{{route('course.detail', ['id' => $course->id])}}">
-                                    <div class="row g-0">
-                                        <div class="col-md-4 d-flex align-items-center coursebg" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
-                                            {{-- <img src="{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}" class="img-fluid rounded-start object-fit-cover" alt="..."> --}}
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body">
-                                                <h5 class="card-title fw-bold mb-0 fs-4">{{ $course->title }}</h5>
-                                                <p class="card-text fw-bold mb-2">{{ __('messages.id') }}: {{ $course->code }} &nbsp;&nbsp; {{ __('messages.by') }}: {{ optional($course->getDpm)->name }}</p>
-                                                <p class="card-text text-secondary text-truncate" style="text-indent: 1em">{{ $course->description}}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                                <div class="course-menu">
-                                    <button class="btn btn-info btn-sm edit-btn text-white" value="{{$course->id}}" ctitle="{{ $course->title }}" cdesc="{{ $course->description}}" allPerm="{{ json_decode($course->permission)->all??'' }}"  dpmPerm="{{ json_decode($course->permission)->dpm??'' }}"><i class="bi bi-gear"></i></button>
-                                    <button class="btn btn-danger btn-sm delete-btn" value="{{$course->id}}"><i class="bi bi-trash"></i></button>
+
+                <div class="mb-4 border-b border-gray-200">
+                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+                        <li class="me-2" role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">All</button>
+                        </li>
+                        @if ($groups)
+                            @foreach ($groups as $index => $group)
+                                <li class="me-2" role="presentation">
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="group-{{ $group->id }}-tab" data-tabs-target="#group{{ $group->id }}" type="button" role="tab" aria-controls="group{{ $group->id }}" aria-selected="false">{{ $group->name }}</button>
+                                </li>
+                            @endforeach
+                        @endif
+                        <li class="me-2" role="presentation">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="addGroup-tab" data-tabs-target="#addGroup" type="button" role="tab" aria-controls="addGroup" aria-selected="false">
+                                <svg class="w-6 h-6 text-green-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5.757v8.486M5.757 10h8.486M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="default-tab-content">
+                    <div class="hidden p-4 rounded-lg" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <livewire:own-all-course />
+                    </div>
+                    @if ($groups)
+                        @foreach ($groups as $index => $group)
+                            <div class="hidden p-2 rounded-lg" id="group{{ $group->id }}" role="tabpanel" aria-labelledby="group-{{ $group->id }}-tab">
+                                <div class="mb-4 inline-flex rounded-md shadow-sm" role="group">
+                                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                                      Edit group
+                                    </button>
+                                    <button type="button" value="{{ $group->id }}" class="delGroup text-red-500 px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+                                      Delete group
+                                    </button>
                                 </div>
+                                <livewire:own-group-course :gid="$group->id"/>
                             </div>
                         @endforeach
-                    @else
-                        <div class="flex justify-center fw-bold"><span class="bg-yellow-100 text-yellow-800 text-xl font-medium mr-2 px-2.5 py-0.5 rounded ">{{ __('messages.course_not') }}</span></div>
                     @endif
+                    <div class="hidden p-4 rounded-lg" id="addGroup" role="tabpanel" aria-labelledby="addGroup-tab">
+                        <form action="{{ route('courses.add.group') }}" method="post">
+                            @csrf
+                            <div class="mb-6">
+                                <label for="gname" class="block mb-2 text-sm font-medium text-gray-900">Group name</label>
+                                <input type="gname" id="gname" maxlength="100" name="gname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Enter group name" required>
+                            </div>
+                            <div class="my-4">
+                                {{-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."> --}}
+                                <div class="my-5 flex justify-between">
+                                    <h3 class="text-lg font-medium text-gray-900">Choose course:</h3>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                            </svg>
+                                        </div>
+                                        <input type="text" maxlength="50" onkeyup="myFunction()" id="myInput" class="block w-full ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500" placeholder="Search...">
+                                    </div>
+                                </div>
+                                <ul class="grid w-full gap-6 md:grid-cols-3" id="myUL">
+                                    @if ($courses)
+                                        @foreach ($courses as $index => $course)
+                                            <li>
+                                                <input type="checkbox" id="react-option{{ $index }}" value="{{ $course->id }}" name="selected_course[]" class="hidden peer">
+                                                <label for="react-option{{ $index }}" class="inline-flex items-center justify-between w-full text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
+                                                    <div class="card w-full" style="height: 200px">
+                                                        <div class="card-header" style="height: 100px; background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}'); background-size: cover; background-position:center;">
+                                                        </div>
+                                                        <div class="card-body gray-800" style="border-radius: 0px 0px 5px 5px">
+                                                            <h5 class="card-title fw-bold mb-2"><span>{{ $course->code }}</span>:: {{ $course->title }}</h5>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </li>
+                                        @endforeach
+                                    @endif
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="reset" class="btn btn-outline-secondary mx-2" value="{{ __('messages.Cancel') }}"/>
+                                <button type="submit" class="btn btn-outline-primary mx-2">{{ __('messages.Save') }}</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </x-app-layout>
 <script>
+    @if(session('success'))
+        Swal.fire({
+            icon: "success",
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            title: "{{ session('success') }}"
+        });
+    @elseif (session('error'))
+        Swal.fire({
+            icon: "error",
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            title: "{{ session('error') }}"
+        });
+        console.log("Error: {{ session('error') }}");
+    @endif
+
+    function myFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById('myInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            p = li[i].getElementsByTagName("h5")[0];
+            txtValue = p.textContent || p.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+            } else {
+            li[i].style.display = "none";
+            }
+        }
+    }
+
+    $( '#small-select2-options-multiple-field' ).select2( {
+        theme: "bootstrap-5",
+        width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+        placeholder: $( this ).data( 'placeholder' ),
+        closeOnSelect: false,
+        selectionCssClass: 'select2--small',
+        dropdownCssClass: 'select2--small',
+    } );
+
     function showAddCourseAlert() {
         Swal.fire({
             title: 'เพิ่มหลักสูตร',
@@ -169,6 +278,56 @@
                     'Your file has been deleted.',
                     'success'
                     )
+                }
+            })
+        });
+    });
+
+    const delGr = document.querySelectorAll(".delGroup");
+    delGr.forEach((btn) => {
+        const delId = btn.value;
+        btn.addEventListener('click', function () {
+            Swal.fire({
+                title: `Are you sure?`,
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                showLoaderOnConfirm: true,
+                preConfirm: () => {
+                    return fetch(`/course/group/delete/${delId}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    console.log(result.value);
+                    Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    })
                 }
             })
         });

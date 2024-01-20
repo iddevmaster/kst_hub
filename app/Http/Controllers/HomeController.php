@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\course_group;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\agency;
@@ -68,7 +69,7 @@ class HomeController extends Controller
         $courses = course::all();
         $dpms = department::all();
         $tests = Test::all();
-        $activitys = Activitylog::all();
+        $activitys = Activitylog::orderBy('id', 'desc')->get();
         $courseDel = course::onlyTrashed()->get();
         $quizDel = quiz::onlyTrashed()->get();
 
@@ -185,14 +186,15 @@ class HomeController extends Controller
     }
 
     public function ownCourse(Request $request) {
-        $courses = course::where("teacher", $request->user()->id)->get();
+        $courses = course::where("teacher", auth()->id())->get();
+        $groups = course_group::where('by', auth()->id())->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited ownCourse',
         [
             'user' => $request->user(),
         ]);
         if ($request->user()->hasAnyRole('admin', 'staff', 'teacher')) {
-            return view("page.courses.own-course", compact("courses"));
+            return view("page.courses.own-course", compact('courses', 'groups'));
         } else {
             Auth::logout();
             return redirect('/');

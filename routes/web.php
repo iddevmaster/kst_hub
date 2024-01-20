@@ -92,6 +92,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/lesson/sublesson/delete', [CourseController::class,'subLessDel']);
     Route::get('/courses/search/dpm', [CourseController::class, 'searchDpm'])->name('courses.search.dpm');
     Route::get('/courses/search/all', [CourseController::class, 'searchAll'])->name('courses.search.all');
+    Route::get('/course/group/delete/{gid}', [CourseController::class, 'delGroup']);
+    Route::post('/course/group/add/', [CourseController::class, 'addGroup'])->name('courses.add.group');
 
     // quiz
     Route::get('/quiz', [QuizController::class, 'index'])->name('quiz');

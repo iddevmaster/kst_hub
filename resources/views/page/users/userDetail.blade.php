@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center mb-3 gap-2">
-                        <button class="btn btn-success" id="editBtn">{{ __('messages.Edit') }}</button>
+                        <button class="btn btn-success" id="editBtn">Edit</button>
                         <button class="btn btn-danger" id="cancelBtn" style="display: none;">{{ __('messages.Cancel') }}</button>
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="bg-white rounded-4 mb-4 shadow-sm">
-                    <div class="text-center my-3">
+                    <div class=" my-3">
                         <div class="my-4 flex justify-between px-4">
                             <p class="fs-4 fw-bold">{{ __('messages.Own Course') }}</p>
                         </div>
@@ -145,37 +145,19 @@
                                     <tr>
                                         <th scope="col">#</th>
                                         <th scope="col">{{ __('messages.code') }}</th>
-                                        <th scope="col" colspan="3" >{{ __('messages.Course name') }}</th>
-                                        <th scope="col">{{ __('messages.Progress') }}</th>
-                                        <th scope="col">{{ __('messages.Enroll date') }}</th>
+                                        <th scope="col" >{{ __('messages.Course name') }}</th>
+                                        <th scope="col">{{ __('messages.create_date') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="table-group-divider">
                                     @foreach ($ownCourse as $index => $ocourse)
-                                        @php
-                                            $prog_finish = App\Models\progress::where('user_id', $id)->where('course_id', $ocourse->id)->count();
-                                            $less_all = App\Models\lesson::where('course', $ocourse->id)->count();
-                                            if ($less_all != 0) {
-                                                $prog_avg = $prog_finish * 100 / $less_all;
-                                            } else {
-                                                $prog_avg = 0;
-                                            }
-                                        @endphp
                                         <tr>
-                                            <th scope="row">{{ $index + 1 }}</th>
+                                            <td scope="row">{{ $index + 1 }}</td>
                                             <td>{{ $ocourse->code }}</td>
-                                            <td colspan="3" data-toggle="tooltip" data-placement="top" title="{{ $ocourse->title }}">{{ Str::limit($ocourse->title, 60) }}</td>
-                                            <td>
-                                                <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                                                    <div class="progress-bar bg-success" style="width: {{$prog_avg}}%">{{$prog_avg}}%</div>
-                                                </div>
-                                                {{-- {{$prog_avg}}%
-                                                <div class="w-full bg-gray-200 rounded-full h-2.5 ">
-                                                    <div class="bg-green-600 h-2.5 rounded-full " style="width: {{$prog_avg}}%"></div>
-                                                </div> --}}
+                                            <td data-toggle="tooltip" data-placement="top" title="{{ $ocourse->title }}">{{ Str::limit($ocourse->title, 60) }}
                                             </td>
                                             <td>
-                                                {{ $ocourse->studens[$user->id] ?? '' }}
+                                                {{ $ocourse->created_at ?? '' }}
                                             </td>
                                         </tr>
                                     @endforeach

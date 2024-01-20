@@ -118,7 +118,7 @@ return [
     'About' => 'ข้อมูลส่วนตัว',
     'Edit' => 'เเก้ไข',
     'code' => 'รหัส',
-    'Course name' => 'รหัสหลักสูตร',
+    'Course name' => 'ชื่อหลักสูตร',
     'Progress' => 'ความคืบหน้า',
     'Enroll date' => 'วันที่ลงทะเบียน',
     'Own Course' => 'หลักสูตรของฉัน',
@@ -127,6 +127,7 @@ return [
     'Score' => 'คะแนน',
     'Date' => 'วันที่',
     'Add Course' => 'เพิ่มหลักสูตร',
+    'create_date' => 'วันที่สร้าง',
 
 
     //Dashboard

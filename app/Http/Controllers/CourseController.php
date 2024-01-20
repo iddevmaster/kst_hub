@@ -6,6 +6,7 @@ use App\Models\quiz;
 use Illuminate\Http\Request;
 use App\Models\course;
 use App\Models\lesson;
+use App\Models\course_group;
 use App\Models\department;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -25,6 +26,40 @@ class CourseController extends Controller
     public function index()
     {
 
+    }
+
+    public function addGroup(Request $request) {
+        try {
+            $group = course_group::create([
+                'name' => $request->gname,
+                'courses' => json_encode($request->selected_course),
+                'by' => auth()->id()
+            ]);
+
+            Activitylog::create([
+                'user' => auth()->id(),
+                'module' => 'addGroup',
+                'content' => $request->gname,
+                'note' => $group->id,
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' search dpm',
+            [
+                'user_id' => auth()->id(),
+                'content' => 'addGroup '. json_encode($group),
+            ]);
+            return redirect()->back()->with('success','Group has been added.');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error','Something wrong!');
+        }
+    }
+
+    public function delGroup($gid) {
+        try {
+            course_group::find($gid)->delete();
+            return response()->json(['success' => $gid]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
+        }
     }
 
     public function searchDpm(Request $request)
