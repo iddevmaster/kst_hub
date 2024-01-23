@@ -14,6 +14,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Exception;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use App\Models\course_group;
 
 class UserController extends Controller
 {
@@ -230,7 +231,7 @@ class UserController extends Controller
             }
 
             foreach ($courses as $course) {
-                $oStd = is_array($course->studens) ? $course->studens : json_decode($course->studens, true);
+                $oStd = $course->studens;
                 if (count($oStd ?? []) > 0) {
                     $stdContainer = $oStd;
                 }
@@ -331,6 +332,53 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             // Handle exceptions and return an error message
             return response()->json(['message' => $th->getMessage()], 500); // 500 Internal Server Error
+        }
+    }
+
+
+    public function addGroup(Request $request) {
+        try {
+            $user = User::find( $request->uid );
+            $group = course_group::whereIn('id', $request->groups ?? [])->first();
+            $courses = course::whereIn('id', $group->courses ?? [] )->get();
+            $courseContainer = [];
+            $stdContainer = [];
+            $oCourses = $user->courses ?? [];
+            if (count($oCourses) > 0) {
+                $courseContainer = array_unique(array_merge($oCourses, $group->courses ?? []));
+            } else {
+                $courseContainer = $group->courses ?? [];
+            }
+
+            foreach ($courses as $course) {
+                $oStd = $course->studens;
+                if (count($oStd ?? []) > 0) {
+                    $stdContainer = $oStd;
+                }
+                if (!($stdContainer[$user->id] ?? false)) {
+                    $stdContainer[$user->id] = date('Y-m-d');
+                }
+                $course->studens = $stdContainer;
+                $course->save();
+            }
+            $user->courses = $courseContainer;
+            $user->save();
+
+            Activitylog::create([
+                'user' => auth()->id(),
+                'module' => 'User',
+                'content' => json_encode($request->courses),
+                'note' => 'add course',
+            ]);
+            Log::channel('activity')->info('User '. $request->user()->name .' add couser to user',
+            [
+                'user' => $request->user(),
+                'user_added' => $user,
+                'course_add' => $courses,
+            ]);
+            return response()->json(['success' => $courseContainer]);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()]);
         }
     }
 

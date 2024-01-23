@@ -318,7 +318,7 @@ class CourseController extends Controller
                 $courseContainer[] = (string) $course->id;
             }
             // ins course table -> studens
-            $oStd = is_array($course->studens ?? []) ? $course->studens ?? [] : json_decode($course->studens, true);
+            $oStd = $course->studens ?? [];
             if (count($oStd) > 0) {
                 $stdContainer = $oStd;
             }

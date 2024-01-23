@@ -86,7 +86,10 @@
                     <div class="text-center my-3">
                         <div class="my-4 flex justify-between px-4">
                             <p class="fs-4 fw-bold">{{ __('messages.Course') }}</p>
-                            <button class="btn btn-success" id="addC2User"><i class="bi bi-plus-lg"></i></button>
+                            <div>
+                                <button class="btn btn-success" id="addC2User" title="Add course"><i class="bi bi-plus-lg"></i> course</button>
+                                <button class="btn btn-info" id="addG2User" title="Add course group"><i class="bi bi-plus-lg"></i> group</button>
+                            </div>
                         </div>
                         <div>
                             <table class="table table-hover" id="course-datatable">
@@ -595,6 +598,16 @@
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(response.statusText)
+                    } else {
+                        Swal.fire(
+                            'Success!',
+                            'Your change has been saved.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload()
+                            }
+                        });
                     }
                     return response.json()
                 })
@@ -608,11 +621,74 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 console.log(result.value);
-                Swal.fire(
-                    'Success!',
-                    'Your change has been saved.',
-                    'success'
-                )
+            }
+        });
+    });
+
+    const addGBtn = document.getElementById('addG2User');
+    addGBtn.addEventListener('click', () => {
+        Swal.fire({
+            title: '{{ __('messages.add_group') }}',
+            html: `
+                <select id="select-group" class="select2" style="width: 100%">
+                    @foreach ($groups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    @endforeach
+                </select>
+            `,
+            didOpen: () => {
+                // Initialize Select2 on the #select-course element
+                $('#select-group').select2({
+                    dropdownParent: $(".swal2-container"),
+                    placeholder: "Select group",
+                    allowClear: true
+                });
+            },
+            showCancelButton: true,
+            confirmButtonText: "{{ __('messages.Save') }}",
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                const groupSel = $('#select-group').select2('data').map(option => option.id);
+
+                if (groupSel.length < 1) {
+                    Swal.showValidationMessage("Please select a group!");
+                    return;
+                }
+
+                return fetch('/user/add/group', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ groups: groupSel, uid: {{$user->id}}})
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText)
+                    } else {
+                        Swal.fire(
+                            'Success!',
+                            'Your change has been saved.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload()
+                            }
+                        });
+                    }
+                    return response.json()
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(
+                        `Request failed`
+                    )
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                console.log(result.value);
             }
         });
     });
@@ -643,6 +719,16 @@
                     .then(response => {
                         if (!response.ok) {
                             throw new Error(response.statusText)
+                        } else {
+                            Swal.fire(
+                                'Deleted!',
+                                'course has been removed.',
+                                'success'
+                            ).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload()
+                                }
+                            });
                         }
                         return response.json()
                     })
@@ -656,11 +742,6 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     console.log(result.value);
-                    Swal.fire(
-                        'Deleted!',
-                        'course has been removed.',
-                        'success'
-                    )
                 }
             })
         });

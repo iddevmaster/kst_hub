@@ -160,6 +160,7 @@ class HomeController extends Controller
         $roles = Role::all();
         $permissions = Permission::all();
         $courses = course::all();
+        $groups = course_group::all();
         $ucourse = course::whereIn("id", $user->courses ?? [])->get();
         $tests = Test::where('tester', $user->id)->orderBy('id', 'desc')->get();
         $ownCourse = course::where('teacher', $user->id)->orderBy('id', 'desc')->get();
@@ -170,7 +171,7 @@ class HomeController extends Controller
             'user' => $request->user(),
         ]);
         if ($request->user()->hasAnyRole('admin', 'staff')) {
-            return view("page.users.userDetail", compact("id","user", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse', 'tests', 'ownCourse'));
+            return view("page.users.userDetail", compact("id","user", "groups", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse', 'tests', 'ownCourse'));
         } else {
             Auth::logout();
             return redirect('/');

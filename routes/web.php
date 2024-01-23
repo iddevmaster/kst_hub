@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/user/update', [UserController::class,'update']);
     Route::post('/user/renew', [UserController::class,'renew']);
     Route::post('/user/add/course', [UserController::class,'addCourse']);
+    Route::post('/user/add/group', [UserController::class,'addGroup']);
     Route::post('/user/remove/course', [UserController::class,'removeCourse']);
     Route::get('/progress/add/', [UserController::class,'addProgress']);
 

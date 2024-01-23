@@ -128,6 +128,7 @@ return [
     'Date' => 'Date',
     'Add Course' => 'Add Course',
     'create_date' => 'Created Date',
+    'add_group' => 'Add course group',
 
 
     //Dashboard
