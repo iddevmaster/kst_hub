@@ -116,7 +116,7 @@ class HomeController extends Controller
     }
 
     public function home(Request $request) {
-        $courses = course::latest()->take(6)->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->get();
+        $courses = course::whereIn("id", $request->user()->courses)->latest()->take(6)->get();
         $user = $request->user();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited Home page',
