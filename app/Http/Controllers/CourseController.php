@@ -165,7 +165,7 @@ class CourseController extends Controller
 
 
             $dpmName = department::find($request->user()->dpm);
-            $courses = course::where('dpm', $request->user()->dpm)->count();
+            $courses = course::withTrashed()->where('dpm', $request->user()->dpm)->count();
             $courseNum = sprintf('%03d', $courses);
             $course_perm = [
                 'all'=> $request->allPerm ?? '',

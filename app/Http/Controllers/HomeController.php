@@ -210,11 +210,15 @@ class HomeController extends Controller
         //          })->paginate(12);
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
 
-        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+        if ($request->user()->hasAnyRole('admin', 'staff')) {
+            $courses = course::where('permission->dpm', "true")->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
+        } else {
+            $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
                  ->orWhere(function ($query) use ($request) {
                      $query->where('permission->dpm', "true")
                             ->Where('dpm', $request->user()->dpm);
                  })->paginate(12);
+        }
 
         $dpms = department::all();
 
