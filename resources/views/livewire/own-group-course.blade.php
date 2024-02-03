@@ -1,4 +1,27 @@
 <div class="overflow-y-auto mb-4" style="height: 520px">
+    <div class="mb-4 inline-flex rounded-md shadow-sm" role="group">
+        <button wire:click="switchToEditMode" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          Edit group
+        </button>
+        <button type="button" value="{{ $group->id }}" class="delGroup text-red-500 px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          Delete group
+        </button>
+    </div>
+
+    @livewireScripts
+
+    <script>
+        let alertShown = false; // Flag to track whether the alert has been shown
+
+        Livewire.on('error', () => {
+            if (!alertShown) {
+                // Handle success status here, e.g., show a success message
+                alert('Sorry, Something wrong!');
+                alertShown = true; // Set the flag to true to indicate that the alert has been shown
+            }
+        });
+    </script>
+
     @if (count($courses ?? []) > 0)
         @foreach ($courses as $course)
             {{-- course card --}}

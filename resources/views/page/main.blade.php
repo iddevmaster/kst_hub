@@ -7,6 +7,42 @@
             <div class="my-10">
                 <p class="text-xl ms-4 sm:text-3xl font-bold">{{ __('messages.kst_name') }}</p>
             </div>
+            @php
+                $alerts = App\Models\user_request::where('alert', 'LIKE', '%"' . auth()->user()->id . '"%')->where('target', auth()->user()->id)->where('type', 'course')->where('status', '1')->get();
+            @endphp
+
+            @if (count($alerts) > 0)
+                <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 flex items-center justify-center">
+                    <!-- Modal overlay with gray background -->
+                    <div class="fixed inset-0 bg-gray-800 opacity-50"></div>
+
+                    <div class="relative bg-white rounded-lg shadow w-1/2">
+                        <!-- Modal header -->
+                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                            <h3 class="text-xl font-semibold text-gray-900">
+                                ได้รับหลักสูตรใหม่
+                            </h3>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="p-4 md:p-5 space-y-4">
+                            @foreach ($alerts as $index => $alert)
+                                @php
+                                    $courses = App\Models\course::whereIn('id', json_decode($alert->content))->pluck('code', 'title');
+                                @endphp
+                                @foreach ($courses as $title => $code)
+                                    <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
+                                        <span class="font-medium">{{ $index + 1 }}) {{ $code }}</span> :: {{ $title }}
+                                    </div>
+                                @endforeach
+                            @endforeach
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
+                            <button type="button" class="acceptBtn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">ตกลง</button>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             {{-- all course carousel --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5">
@@ -69,6 +105,36 @@
     </div>
 </x-app-layout>
 <script>
+    $(document).ready(function() {
+        $('.acceptBtn').click(function() {
+
+            // Send an AJAX request to mark the notification as read
+            $.ajax({
+                url: '/notifications/mark-as-accept/', // You need to define this route in your web.php
+                type: 'GET',
+                success: function(response) {
+                    // You can add some code here to handle a successful response
+                    console.log(response['success']);
+                    closeModal();
+                },
+                error: function(error) {
+                    // You can add some error handling here
+                    closeModal()
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        // Show the modal on page load
+        $('#default-modal').removeClass('hidden');
+    });
+
+    // Function to close the modal
+    function closeModal() {
+        $('#default-modal').addClass('hidden');
+    }
     $(document).ready(function(){
         $(".owl-carousel").owlCarousel({
             loop: true,

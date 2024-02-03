@@ -18,6 +18,7 @@ use App\Notifications\MessageNotification;
 use App\Models\Test;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use App\Models\user_request;
 use Auth;
 use PDF;
 use TCPDF as TCPDF;
@@ -179,11 +180,17 @@ class HomeController extends Controller
     }
 
     public function requestAll(Request $request) {
+        if ($request->user()->hasAnyRole('admin', 'staff')) {
+            $requests = user_request::orderBy('id', 'desc')->get();
+        } else {
+            $requests = user_request::where('user', $request->user()->id)->orderBy('id', 'desc')->get();
+        }
+
         Log::channel('activity')->info('User '. $request->user()->name .' visited requestAll',
         [
             'user' => $request->user(),
         ]);
-        return view("page.requestAll");
+        return view("page.requestAll", compact('requests'));
     }
 
     public function ownCourse(Request $request) {
@@ -269,20 +276,23 @@ class HomeController extends Controller
 
     public function markAsRead($id)
     {
-        $notification = auth()->user()->unreadNotifications->find($id);
+        try {
+            $notification = user_request::find($id);
 
-        if ($notification) {
-            $notification->markAsRead();
-            return response()->json(['status' => 'success'], 200);
+            $alert = $notification->alert;
+            $filteredData = array_filter($alert, function ($value) {
+                return $value != auth()->user()->id;
+            });
+
+            $result = array_values($filteredData);
+
+            $notification->alert = json_encode($result);
+            $notification->save();
+
+            return response()->json(['status' => 'success', 'response' => $notification->alert], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['status' => 'error', 'error' => $th->getMessage()], 404);
         }
-
-        Activitylog::create([
-            'user' => auth()->id(),
-            'module' => 'notification',
-            'content' => $notification->id,
-            'note' => 'read',
-        ]);
-        return response()->json(['status' => 'error'], 404);
     }
 
     public function noticSuccess($id)

@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\ReqController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -108,6 +109,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/question/delete/{id}', [QuizController::class, 'delQuestion'])->name('quiz.quest.del');
     Route::get('/quiz/delete/{id}', [QuizController::class, 'destroy'])->name('quiz.del');
     Route::get('/quiz/record/{qid}', [QuizController::class, 'testRecord'])->name('quiz.record');
+
+    // request
+    Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');
+    Route::post('/request/store', [ReqController::class, 'storeReq'])->name('store-req');
+    Route::get('/notifications/mark-as-finish/{id}', [ReqController::class, 'markAsFinish']);
+    Route::get('/notifications/mark-as-fail/{id}', [ReqController::class, 'markAsFail']);
+    Route::get('/notifications/mark-as-accept', [ReqController::class, 'markAsAccept']);
 
 
     // Take Exam

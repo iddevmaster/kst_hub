@@ -5,166 +5,143 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="flex justify-end"><button class="btn btn-success" id="addBtn"><i class="bi bi-plus-lg"></i>{{ __('messages.Add') }}</button></div>
+            <div class="flex justify-end">
+                <a href="{{ route('add-req') }}"><button class="btn btn-success" id="addBtn"><i class="bi bi-plus-lg"></i>{{ __('messages.Add') }}</button></a>
+            </div>
 
-            <div class="sm:rounded-lg p-4 row">
-                @hasanyrole('admin|staff')
-                    @foreach (auth()->user()->notifications as $notify)
-                        @php
-                            $user = App\Models\User::find($notify->data['user']);
-                        @endphp
-                        <div x-data="{ open: false }" class='mb-3 hover:-translate-y-1 duration-300'>
-                            <button @click="open = !open" class = 'shadow-sm rounded-2xl bg-white w-full p-2 text-left text-gray-700'>
-                                <div class="flex justify-around">
-                                    <p>Request from: {{ $user->name }}</p>
-                                    <p>Department: {{ $user->dpmName->name }}</p>
-                                    <p><i class="bi bi-clock"></i> {{ $notify->data['date'] }}
-                                        @if ($notify->data['status'] == 'wait')
-                                            <span class="ms-1 inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ $notify->data['status'] }}</span>
-                                        @elseif ($notify->data['status'] == 'success')
-                                            <span class="inline-flex items-center rounded-md bg-green-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-500/10">{{ $notify->data['status'] }}</span>
-                                        @endif
-                                    </p>
-                                </div>
-                            </button>
-                            <div x-show="open" class="accordion-content" class='w-full px-4 py-2 text-left text-gray-700'>
-                                <div class="flex justify-center w-full">
-                                    <div class="bg-white w-4/5 p-2">
-                                        <div class="grid grid-cols-3 text-sm mb-2 bg-gray-100 rounded-lg p-2">
-                                            <p>{{ $notify->data['content'] }}</p>
-                                        </div>
-                                        @if ($notify->data['status'] != 'success')
-                                            <div class="flex justify-center">
-                                                <button class="successBtn btn btn-sm btn-success" data-notification-id="{{ $notify->id }}">Success</button>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
+            <div class="sm:rounded-lg p-4 row gap-3 justify-center">
+                @foreach ($requests as $index => $req)
+                    <div class="max-w-sm p-6 border-sm  border-gray-200 rounded-lg shadow {{ $req->status === '1' ? 'bg-green-200' : ($req->status === '2' ? 'bg-red-200' : 'bg-white') }}">
+                        @if ($req->type === 'course')
+                            <a href="#">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">คำขอเพิ่มหลักสูตร</h5>
+                            </a>
+                        @else
+                            <a href="#">
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900">คำขออื่นๆ</h5>
+                            </a>
+                        @endif
+                        <div class="grid grid-cols-2">
+                            <p class="font-normal text-gray-700">จาก: {{ $req->getUser->name }}</p>
+                            @if ($req->target === '-')
+                                <p class="font-normal text-gray-700">ให้: {{ $req->target }}</p>
+                            @else
+                                <p class="font-normal text-gray-700">ให้: {{ $req->getTarget->name }}</p>
+                            @endif
+                            <p class="font-normal text-gray-700">เมื่อ: {{ Carbon\Carbon::parse($req->created_at)->setTimezone('Asia/Bangkok')->locale('th')->thaidate('j M Y') }}</p>
                         </div>
-                    @endforeach
-                @endhasanyrole
-                @hasrole('teacher')
-                    @foreach (DB::table('notifications')->select('data')->distinct()->get() as $notify)
-                        @php
-                            // Decode the JSON data into an array
-                            $notificationData = json_decode($notify->data, true);
-                        @endphp
-                        @if ($notificationData['user'] == auth()->user()->id)
-                            @php
-                                $user = auth()->user();
-                            @endphp
-                            <div x-data="{ open: false }" class='mb-3 hover:-translate-y-1 duration-300'>
-                                <button @click="open = !open" class = 'shadow-sm rounded-2xl bg-white w-full p-2 text-left text-gray-700'>
-                                    <div class="flex justify-around">
-                                        <p>Request from: {{ $user->name }}</p>
-                                        <p>Department: {{ $user->dpmName->name }}</p>
-                                        <p><i class="bi bi-clock"></i> {{ $notificationData['date'] }}
-                                            @if ($notificationData['status'] == 'wait')
-                                                <span class="ms-1 inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{{ $notificationData['status'] }}</span>
-                                            @elseif ($notificationData['status'] == 'success')
-                                                <span class="inline-flex items-center rounded-md bg-green-500 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-500/10">{{ $notificationData['status'] }}</span>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </button>
-                                <div x-show="open" class="accordion-content" class='w-full px-4 py-2 text-left text-gray-700'>
-                                    <div class="flex justify-center w-full">
-                                        <div class="bg-white w-4/5 p-2">
-                                            <div class="grid grid-cols-3 text-sm mb-2 bg-gray-100 rounded-lg p-2">
-                                                <p>{{ $notificationData['content'] }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="mb-3">
+                            @if ($req->type === 'course')
+                                <p class="font-normal text-gray-700">หลักสูตร:</p>
+                                @foreach ((App\Models\course::whereIn('id', json_decode($req->content))->pluck('code', 'title') ?? []) as $title => $code)
+                                    <p class="font-normal text-gray-700 ms-4">- {{ $code }} :: {{ $title }}</p>
+                                @endforeach
+                            @else
+                                <p class="font-normal text-gray-700">ข้อความ:</p>
+                                <p class="font-normal text-gray-700 ms-4">{{ $req->content }}</p>
+                            @endif
+                        </div>
+
+                        @if ($req->status === '0')
+                            @hasanyrole('staff|admin')
+                                <a href="#" data-alert-id="{{ $req->id }}" class="finishBtn inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800">
+                                    สำเร็จ
+                                </a>
+                                <a href="#" data-alert-id="{{ $req->id }}" class="failBtn inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800">
+                                    ไม่สำเร็จ
+                                </a>
+                            @else
+                                <p class="w-100 justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-500 rounded-lg">
+                                    กำลังดำเนินการ
+                                </p>
+                            @endhasanyrole
+                        @elseif ($req->status === '1')
+                            <button data-tooltip-target="tooltip-default" type="button" class="w-100 justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-500 rounded-lg">
+                                ดำเนินการสำเร็จ
+                            </button>
+                            <div id="tooltip-default" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                ผู้ดำเนินการ: {{ optional($req->getFinish)->name }} <br>
+                                วันที่ดำเนินการ: {{ Carbon\Carbon::parse($req->created_at)->setTimezone('Asia/Bangkok')->locale('th')->thaidate('j M Y') }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                        @else
+                            <button data-tooltip-target="tooltip-default" type="button" class="w-100 justify-center inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-500 rounded-lg">
+                                ดำเนินการไม่สำเร็จ
+                            </button>
+                            <div id="tooltip-default" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                ผู้ดำเนินการ: {{ optional($req->getFinish)->name }} <br>
+                                วันที่ดำเนินการ: {{ Carbon\Carbon::parse($req->created_at)->setTimezone('Asia/Bangkok')->locale('th')->thaidate('j M Y') }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
                         @endif
-                    @endforeach
-                @endhasrole
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
-</x-app-layout>
-<script type="text/javascript">
 
-    $(document).ready(function() {
-        $('.successBtn').click(function() {
-            // Get the notification ID from the data attribute
-            var notificationId = $(this).data('notification-id');
+    <script>
+        @if(session('success'))
+        Swal.fire({
+            icon: "success",
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2000,
+            title: "{{ session('success') }}"
+        });
+        @elseif (session('error'))
+            Swal.fire({
+                icon: "error",
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 2000,
+                title: 'Sorry, something wrong!'
+            });
+            console.log("Error: {{ session('error') }}");
+        @endif
 
-            // Send an AJAX request to mark the notification as read
-            $.ajax({
-                url: '/notifications/success/' + notificationId, // You need to define this route in your web.php
-                type: 'GET',
-                success: function(response) {
-                    // You can add some code here to handle a successful response
-                    console.log('Notification marked as success');
-                    window.location.reload()
-                },
-                error: function(error) {
-                    // You can add some error handling here
-                    console.log('Error marking notification as success');
-                }
+        $(document).ready(function() {
+            $('.finishBtn').click(function() {
+                // Get the notification ID from the data attribute
+                var notificationId = $(this).data('alert-id');
+
+                // Send an AJAX request to mark the notification as read
+                $.ajax({
+                    url: '/notifications/mark-as-finish/' + notificationId, // You need to define this route in your web.php
+                    type: 'GET',
+                    success: function(response) {
+                        // You can add some code here to handle a successful response
+                        console.log(response['response']);
+                    },
+                    error: function(error) {
+                        // You can add some error handling here
+                        console.log(error);
+                    }
+                });
             });
         });
-    });
 
-    const addBtn = document.getElementById('addBtn');
-    addBtn.addEventListener('click', () => {
-        Swal.fire({
-            input: 'textarea',
-            inputLabel: 'Send Message to Staff',
-            inputPlaceholder: 'Type your message here...',
-            inputAttributes: {
-                'aria-label': 'Type your message here'
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Send',
-            showLoaderOnConfirm: true,
-            preConfirm: (message) => {
-                // You could add code here to handle the message, like sending it to a server
-                // For example, using fetch to send the message to a server endpoint:
-                if ( !message ) {
-                    Swal.showValidationMessage("Please enter message!");
-                    return;
-                }
+        $(document).ready(function() {
+            $('.failBtn').click(function() {
+                // Get the notification ID from the data attribute
+                var notificationId = $(this).data('alert-id');
 
-                return fetch('/notic/send', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                // Send an AJAX request to mark the notification as read
+                $.ajax({
+                    url: '/notifications/mark-as-fail/' + notificationId, // You need to define this route in your web.php
+                    type: 'GET',
+                    success: function(response) {
+                        // You can add some code here to handle a successful response
+                        console.log(response['response']);
                     },
-                    body: JSON.stringify({ text: message })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText)
+                    error: function(error) {
+                        // You can add some error handling here
+                        console.log(error);
                     }
-                    return response.json();
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(
-                        `Request failed: ${error}`
-                    )
                 });
-            },
-            allowOutsideClick: () => !Swal.isLoading()
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // If the promise resolves, it means the message was sent successfully
-                // You can handle the success here
-                console.log('Message was sent', result.value);
-                Swal.fire(
-                    'Success!',
-                    'Your message was sent.',
-                    'success'
-                )
-            }
+            });
         });
-    })
-</script>
-
-<style>
-
-</style>
+    </script>
+</x-app-layout>

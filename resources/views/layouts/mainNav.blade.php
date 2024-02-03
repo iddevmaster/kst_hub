@@ -69,12 +69,16 @@
                 </div>
             </div>
 
-            @unlessrole('employee|teacher')
+            @php
+                $alerts = App\Models\user_request::where('alert', 'LIKE', '%"' . auth()->user()->id . '"%')->get();
+            @endphp
+
+            @unlessrole('employee')
                 <button id="dropdownNotificationButton" data-dropdown-toggle="dropdownNotification" class="inline-flex items-center text-sm font-medium text-center text-gray-500 hover:text-gray-900 focus:outline-none  " type="button">
                     <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="#fff" viewBox="0 0 14 20">
                         <path d="M12.133 10.632v-1.8A5.406 5.406 0 0 0 7.979 3.57.946.946 0 0 0 8 3.464V1.1a1 1 0 0 0-2 0v2.364a.946.946 0 0 0 .021.106 5.406 5.406 0 0 0-4.154 5.262v1.8C1.867 13.018 0 13.614 0 14.807 0 15.4 0 16 .538 16h12.924C14 16 14 15.4 14 14.807c0-1.193-1.867-1.789-1.867-4.175ZM3.823 17a3.453 3.453 0 0 0 6.354 0H3.823Z"/>
                     </svg>
-                    @if (count(auth()->user()->unreadNotifications) > 0)
+                    @if (count($alerts) > 0)
                         <div class="relative flex">
                             <div class="relative inline-flex w-3 h-3 bg-red-500 border-2 border-white rounded-full -top-2 right-3 dark:border-gray-900"></div>
                         </div>
@@ -82,27 +86,76 @@
                 </button>
             @endunlessrole
 
-            @hasanyrole('admin|staff')
+            @hasanyrole('admin|staff|teacher')
                 <!-- Dropdown menu -->
                 <div id="dropdownNotification" class="z-20 hidden w-full max-w-sm bg-white divide-y divide-gray-100 rounded-lg shadow  dark:divide-gray-700" aria-labelledby="dropdownNotificationButton">
                     <div class="block px-4 py-2 font-medium text-center text-gray-700 rounded-t-lg bg-gray-50  ">
                         {{ __('messages.notify') }}
                     </div>
                 <div class="divide-y divide-gray-100 dark:divide-gray-700">
-                    @if (count(auth()->user()->unreadNotifications) > 0)
-                        @foreach (auth()->user()->unreadNotifications as $notification)
-                            @php
-                                $user = App\Models\User::find($notification->data['user']);
-                            @endphp
-                            <a href="{{route('request.all')}}" class="notification flex gap-4 block max-w-sm px-4 py-2 hover:bg-gray-100" data-notification-id="{{ $notification->id }}">
-                                <div class="flex justify-center items-center">
-                                    <div style="background-image: url('/img/icons/{{$user->icon? $user->icon : 'person.jpg'}}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 100%; border: 1px solid black"></div>
-                                </div>
-                                <div>
-                                    <h5 class="text-sm font-bold tracking-tight text-gray-900 ">{{ $user->name }} ({{ $user->dpmName->name }}) &nbsp; <span class="text-xs text-gray-400 ms-2"><i class="bi bi-clock"></i> {{$notification->data['date']}}</span></h5>
-                                    <p class="font-normal text-xs text-gray-700 " style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">{{ Str::limit($notification->data['content'], 60) }}</p>
-                                </div>
-                            </a>
+                    @if (count($alerts) > 0)
+                        @foreach ($alerts as $alert)
+                            @if ($alert->status == 0)
+                                <a href="{{route('request.all')}}" class="notification flex gap-4 block max-w-sm px-4 py-2 hover:bg-gray-100" data-alert-id="{{ $alert->id }}">
+                                    <div class="flex justify-center items-center">
+                                        <div style="background-image: url('/img/icons/{{$alert->getUser->icon? $alert->getUser->icon : 'person.jpg'}}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 100%; border: 1px solid black"></div>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-sm font-bold tracking-tight text-gray-900 ">
+                                            {{ $alert->getUser->name }} ({{ $alert->getUser->dpmName->name }}) &nbsp; <span class="text-xs text-gray-400 ms-2"><i class="bi bi-clock"></i> {{ Carbon\Carbon::parse($alert->created_at)->thaidate('j M Y') }}</span>
+                                        </h5>
+                                        <p class="font-normal text-xs text-gray-700 " style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">
+                                            @if ($alert->type === 'course')
+                                                คำขอเพิ่มหลักสูตร
+                                            @else
+                                                คำขออื่นๆ
+                                            @endif
+                                        </p>
+                                    </div>
+                                </a>
+                            @elseif ($alert->status == 1)
+                                <a href="{{route('request.all')}}" class="notification flex gap-4 block max-w-sm px-4 py-2 bg-green-100 hover:bg-green-200" data-alert-id="{{ $alert->id }}">
+                                    <div class="flex justify-center items-center">
+                                        <div style="background-image: url('/img/icons/{{$alert->getUser->icon? $alert->getUser->icon : 'person.jpg'}}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 100%; border: 1px solid black"></div>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-sm font-bold tracking-tight text-gray-900 ">
+                                            {{ $alert->getUser->name }} ({{ $alert->getUser->dpmName->name }}) &nbsp; <span class="text-xs text-gray-400 ms-2"><i class="bi bi-clock"></i> {{ Carbon\Carbon::parse($alert->created_at)->thaidate('j M Y') }}</span>
+                                        </h5>
+                                        <p class="font-normal text-xs text-gray-700 " style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">
+                                            @if ($alert->type === 'course')
+                                                คำขอเพิ่มหลักสูตร
+                                            @else
+                                                คำขออื่นๆ
+                                            @endif
+                                            <span class="justify-center inline-flex items-center p-1 text-xs font-medium text-center text-white bg-green-500 rounded-lg">
+                                                ดำเนินการสำเร็จ
+                                            </span>
+                                        </p>
+                                    </div>
+                                </a>
+                            @elseif ($alert->status == 2)
+                                <a href="{{route('request.all')}}" class="notification flex gap-4 block max-w-sm px-4 py-2 bg-pink-100 hover:bg-pink-200" data-alert-id="{{ $alert->id }}">
+                                    <div class="flex justify-center items-center">
+                                        <div style="background-image: url('/img/icons/{{$alert->getUser->icon? $alert->getUser->icon : 'person.jpg'}}'); width: 40px; height: 40px; background-size: cover; background-position: center; border-radius: 100%; border: 1px solid black"></div>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-sm font-bold tracking-tight text-gray-900 ">
+                                            {{ $alert->getUser->name }} ({{ $alert->getUser->dpmName->name }}) &nbsp; <span class="text-xs text-gray-400 ms-2"><i class="bi bi-clock"></i> {{ Carbon\Carbon::parse($alert->created_at)->thaidate('j M Y') }}</span>
+                                        </h5>
+                                        <p class="font-normal text-xs text-gray-700 " style="overflow-wrap: break-word; word-wrap: break-word; hyphens: auto;">
+                                            @if ($alert->type === 'course')
+                                                คำขอเพิ่มหลักสูตร
+                                            @else
+                                                คำขออื่นๆ
+                                            @endif
+                                            <span class="justify-center inline-flex items-center p-1 text-xs font-medium text-center text-white bg-red-500 rounded-lg">
+                                                ดำเนินการไม่สำเร็จ
+                                            </span>
+                                        </p>
+                                    </div>
+                                </a>
+                            @endif
                         @endforeach
                     @else
                         <div class="flex justify-center py-4">
@@ -115,7 +168,7 @@
                     <svg class="w-4 h-4 mr-2 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
                         <path d="M10 0C4.612 0 0 5.336 0 7c0 1.742 3.546 7 10 7 6.454 0 10-5.258 10-7 0-1.664-4.612-7-10-7Zm0 10a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
                     </svg>
-                    {{ __('messages.view_all') }}
+                        {{ __('messages.view_all') }}
                     </div>
                 </a>
                 </div>
@@ -240,7 +293,7 @@
     $(document).ready(function() {
         $('.notification').click(function() {
             // Get the notification ID from the data attribute
-            var notificationId = $(this).data('notification-id');
+            var notificationId = $(this).data('alert-id');
 
             // Send an AJAX request to mark the notification as read
             $.ajax({
@@ -248,11 +301,11 @@
                 type: 'GET',
                 success: function(response) {
                     // You can add some code here to handle a successful response
-                    console.log('Notification marked as read');
+                    console.log(response['response']);
                 },
                 error: function(error) {
                     // You can add some error handling here
-                    console.log('Error marking notification as read');
+                    console.log(error);
                 }
             });
         });

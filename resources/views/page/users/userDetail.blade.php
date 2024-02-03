@@ -564,7 +564,7 @@
             html: `
                 <select id="select-course" class="select2" multiple="multiple" style="width: 100%">
                     @foreach ($courses as $course)
-                        <option value="{{ $course->id }}">{{ $course->code }}</option>
+                        <option value="{{ $course->id }}">{{ $course->code }} :: {{ $course->title }}</option>
                     @endforeach
                 </select>
             `,
