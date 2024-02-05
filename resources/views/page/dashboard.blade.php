@@ -26,7 +26,7 @@
             <div class="border-b border-gray-200 mb-4">
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
                     <li class="me-2">
-                        <a href="#" id="course-tab" data-tabs-target="#course" type="button" role="tab" aria-controls="course" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                        <a href="#course" id="course-tab" data-tabs-target="#course" type="button" role="tab" aria-controls="course" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                                 <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
                             </svg>
@@ -34,7 +34,7 @@
                         </a>
                     </li>
                     <li class="me-2">
-                        <a href="#" id="test-tab" data-tabs-target="#test" type="button" role="tab" aria-controls="test" aria-selected="false" class="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active group" aria-current="page">
+                        <a href="#test" id="test-tab" data-tabs-target="#test" type="button" role="tab" aria-controls="test" aria-selected="false" class="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active group" aria-current="page">
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
                                 <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM5 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm10 6H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z"/>
                             </svg>
@@ -42,7 +42,7 @@
                         </a>
                     </li>
                     <li class="me-2">
-                        <a href="#" id="log-tab" data-tabs-target="#log" type="button" role="tab" aria-controls="log" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                        <a href="#log" id="log-tab" data-tabs-target="#log" type="button" role="tab" aria-controls="log" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 15">
                                 <path d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z"/>
                             </svg>
@@ -50,7 +50,7 @@
                         </a>
                     </li>
                     <li class="me-2">
-                        <a href="#" id="history-tab" data-tabs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                        <a href="#history" id="history-tab" data-tabs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
                             </svg>
@@ -58,7 +58,7 @@
                         </a>
                     </li>
                     <li class="me-2">
-                        <a href="#" id="manage-tab" data-tabs-target="#manage" type="button" role="tab" aria-controls="manage" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                        <a href="#manage" id="manage-tab" data-tabs-target="#manage" type="button" role="tab" aria-controls="manage" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
                             <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
                             </svg>
@@ -494,64 +494,87 @@
                     <hr class="w-4/5 h-0.5 mx-auto border-0 rounded bg-gray-700">
 
                     <div class="text-center mt-5">
-                        <p class="fs-1 fw-bold">{{ __('messages.Roles & Permissions') }}</p>
+                        <p class="fs-1 fw-bold">{{ __('messages.Roles') }}</p>
                     </div>
-                    <div class="py-12">
+                    <div class="py-10">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="sm:rounded-lg p-4 row justify-center">
                                 <div class="p-4 rounded-lg row">
-                                    <div class="col-6 ">
-                                        <div class="bg-white p-4 shadow rounded-lg">
-                                            <div class="flex justify-between mb-3">
-                                                <p class="text-2xl font-bold"><i class="bi bi-person-square"></i> {{ __('messages.Roles') }}</p>
-                                                <button class="btn btn-success" onclick="addRole()" ><i class="bi bi-plus-lg"></i></button>
-                                            </div>
-                                            <div class="overflow-auto">
-                                                <table class="table table-hover">
-                                                    <thead class="table-dark">
+                                    <div class="bg-white p-4 shadow rounded-lg">
+                                        <div class="flex justify-between mb-3">
+                                            <p class="text-2xl font-bold"><i class="bi bi-person-square"></i> {{ __('messages.Roles') }}</p>
+                                            <button class="btn btn-success" onclick="addRole()" ><i class="bi bi-plus-lg"></i></button>
+                                        </div>
+                                        <div class="overflow-auto">
+                                            <table class="table table-hover">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">{{ __('messages.Name') }}</th>
+                                                        <th scope="col">{{ __('messages.Action') }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody >
+                                                    @foreach ($roles as $index => $role)
                                                         <tr>
-                                                            <th scope="col">{{ __('messages.Action') }}</th>
-                                                            <th scope="col">{{ __('messages.Name') }}</th>
+                                                            <td>{{ $index + 1 }}</td>
+                                                            <td class="text-nowrap">{{$role->name}}</td>
+                                                            <td>
+                                                                <button class="btn btn-sm btn-primary" id="editBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-gear"></i></button>
+                                                                <button class="btn btn-sm btn-danger" id="delBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-trash"></i></button>
+                                                            </td>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody >
-                                                        @foreach ($roles as $role)
-                                                            <tr>
-                                                                <td><button class="btn btn-sm btn-danger" id="delBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-trash"></i></button></td>
-                                                                <td class="text-nowrap">{{$role->name}}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="bg-white p-4 shadow rounded-lg">
-                                            <div class="flex justify-between mb-3">
-                                                <p class="text-2xl font-bold"><i class="bi bi-person-fill-gear"></i> {{ __('messages.Permissions') }}</p>
-                                                <button class="btn btn-success" onclick="addPerm()"><i class="bi bi-plus-lg"></i></button>
-                                            </div>
-                                            <div class="overflow-auto">
-                                                <table class="table table-hover">
-                                                    <thead class="table-dark">
-                                                        <tr>
-                                                            <th scope="col">{{ __('messages.Action') }}</th>
-                                                            <th scope="col">{{ __('messages.Name') }}</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach ($permissions as $permission)
-                                                            <tr>
-                                                                <td><button class="btn btn-sm btn-danger" id="delBtn" deltype="perm" value="{{ $permission->name }}"><i class="bi bi-trash"></i></button></td>
-                                                                <td class="text-nowrap">{{$permission->name}}</td>
-                                                            </tr>
-                                                        @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr class="w-4/5 h-0.5 mx-auto border-0 rounded bg-gray-700">
+
+                    <div class="text-center mt-5">
+                        <p class="fs-1 fw-bold">{{ __('messages.Permissions') }}</p>
+                    </div>
+                    <div class="py-10">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="sm:rounded-lg p-4 row justify-center">
+                                <div class="rounded-lg row gap-2">
+                                    @foreach ($roles as $index => $role)
+                                        <div class="p-4 bg-white shadow rounded-lg">
+                                            <h3 class="mb-4 text-start font-semibold text-xl text-gray-900">{{ $role->name }}</h3>
+                                            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex">
+                                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                                                    <div class="flex items-center ps-3">
+                                                        <input id="perm-check-1{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                        <label for="perm-check-1{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Vue JS</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                                                    <div class="flex items-center ps-3">
+                                                        <input id="perm-check-2{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                        <label for="perm-check-2{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">React</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
+                                                    <div class="flex items-center ps-3">
+                                                        <input id="perm-check-3{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                        <label for="perm-check-3{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Angular</label>
+                                                    </div>
+                                                </li>
+                                                <li class="w-full">
+                                                    <div class="flex items-center ps-3">
+                                                        <input id="perm-check-4{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                                                        <label for="perm-check-4{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Laravel</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

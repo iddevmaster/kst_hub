@@ -163,7 +163,7 @@ return [
     'Prefix' => 'คำนำหน้า',
     'Personnel' => 'บุคลากร',
     'Roles & Permissions' => 'บทบาทและสิทธิ์',
-    'Roles' => 'สิทธิ์',
+    'Roles' => 'บทบาท',
     'Permissions' => 'สิทธิ์',
     'Add Agency' => 'เพิ่มหน่วยงาน',
     'Add Branch' => 'เพิ่มสาขา',
