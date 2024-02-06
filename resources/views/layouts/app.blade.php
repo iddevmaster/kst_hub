@@ -106,7 +106,7 @@
             <footer class="flex mt-5 justify-around w-full bg-white p-2 flex-wrap">
                 <div class="flex gap-2 align-items-center justify-center flex-wrap mb-2">
                     <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
-                    <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด <br> 200/222 หมู่2 ถนนชัยพฤกษ์ อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
+                    <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด <br> 200/222 หมู่2 ถนนชัยพฤกษ์ ตำบลในเมือง อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>
                 <div class="text-center flex items-center">
                     <p>© 2023 KST ID System</p>
