@@ -92,6 +92,17 @@ return [
     'number' => 'จำนวน',
     'add' => 'เพิ่ม',
     'note' => 'หมายเหตุ',
+    'choose_course' => 'เลือกหลักสูตร',
+    'enroll' => 'ลงทะเบียน',
+    'enrolled' => 'ลงทะเบียนแล้ว',
+    'own' => 'เป็นเจ้าของ',
+    'desc' => 'คำอธิบาย',
+    'add_section' => 'เพิ่มบทเรียน',
+    'feature' => 'คุณสมบัติ',
+    'cid' => 'รหัสหลักสูตร',
+    'lesson' => 'บทเรียน',
+    'please' => "กรุณา",
+    'itrs' => 'ที่ด้านบนขวาเพื่อรับบทเรียนทั้งหมด',
 
     //Request
     'Request All' => 'คำขอทั้งหมด',
@@ -139,7 +150,7 @@ return [
     'Manage' => 'จัดการ',
     'All Course' => 'หลักสูตรทั้งหมด',
     'Code' => 'รหัส',
-    'Lecturer' => 'อาจารย์',
+    'Lecturer' => 'ผู้สอน',
     'student' => 'นักเรียน',
     'Test Summary' => 'สรุปการทดสอบ',
     'Average' => 'เฉลี่ย',
@@ -181,4 +192,14 @@ return [
      "Update your account's profile icon" => "อัปเดตรูปโปรไฟล์บัญชีของคุณ",
      "Update your account's profile information and email address." => "อัปเดตข้อมูลโปรไฟล์และที่อยู่อีเมลของบัญชีของคุณ",
      "Ensure your account is using a long, random password to stay secure." => "ตรวจสอบให้แน่ใจว่าบัญชีของคุณใช้รหัสผ่านแบบสุ่มที่ยาวเพื่อความปลอดภัย",
+
+     // Permission
+    'perm-course' => 'สร้างหลักสูตร',
+    'perm-quiz' => 'สร้างแบบทดสอบ',
+    'perm-req' => 'สร้างคำขอ',
+    'perm-userm' => 'จัดการบัณชีผู้ใช้',
+    'perm-dCourse' => 'สรุปหลักสูตร',
+    'perm-dQuiz' => 'สรุปแบบทดสอบ',
+    'perm-dLog' => 'ประวัติการใช้งานระบบ',
+    'perm-dHistory' => 'การลบและนำกลับ',
 ];

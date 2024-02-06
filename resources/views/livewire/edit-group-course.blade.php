@@ -2,13 +2,13 @@
     <form wire:submit.prevent="updateGroup">
         @csrf
         <div class="mb-6">
-            <label for="gname" class="block mb-2 text-sm font-medium text-gray-900">Group name</label>
+            <label for="gname" class="block mb-2 text-sm font-medium text-gray-900">{{ __('messages.Name') }}</label>
             <input type="gname" wire:model="gName" id="gname" maxlength="100" name="gname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Enter group name" required>
         </div>
         <div class="my-4">
             {{-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."> --}}
             <div class="my-5 flex justify-between">
-                <h3 class="text-lg font-medium text-gray-900">Choose course:</h3>
+                <h3 class="text-lg font-medium text-gray-900">{{ __('messages.choose_course') }}:</h3>
                 <div class="relative">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">

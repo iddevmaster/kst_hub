@@ -92,6 +92,17 @@ return [
     'number' => 'Number',
     'add' => 'Add',
     'note' => 'Note',
+    'choose_course' => 'Choose course',
+    'enroll' => 'Enroll',
+    'enrolled' => 'Enrolled',
+    'own' => 'Own',
+    'desc' => 'Description',
+    'add_section' => 'Add Section',
+    'feature' => 'Feature',
+    'cid' => 'Course ID',
+    'lesson' => 'Lessons',
+    'please' => "Please",
+    'itrs' => 'in top right to get all lesson',
 
     //Request
     'Request All' => 'Request All',
@@ -181,4 +192,15 @@ return [
     "Update your account's profile icon" => "Update your account's profile icon",
     "Update your account's profile information and email address." => "Update your account's profile information and email address.",
     "Ensure your account is using a long, random password to stay secure." => "Ensure your account is using a long, random password to stay secure.",
+
+    // Permission
+    'perm-course' => 'Create course',
+    'perm-quiz' => 'Create quiz',
+    'perm-req' => 'Create request',
+    'perm-userm' => 'Manage user',
+    'perm-dCourse' => 'Dashboard course',
+    'perm-dQuiz' => 'Dashboard Quiz',
+    'perm-dLog' => 'Dashboard log',
+    'perm-dHistory' => 'Dashboard history',
+
 ];

@@ -564,7 +564,7 @@
                                                     <li class="px-3 border border-gray-200 sm:border-b-0 sm:border-r">
                                                         <div class="flex items-center">
                                                             <input id="{{ $role->name }}-check-{{ $perm->name }}" type="checkbox" name="{{ $perm->name }}" value="{{ $role->name }}" class="permission-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{ $role->hasPermissionTo($perm->name) ? 'checked' : '' }}>
-                                                            <label for="{{ $role->name }}-check-{{ $perm->name }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">{{ $perm->name }}</label>
+                                                            <label for="{{ $role->name }}-check-{{ $perm->name }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">{{ __('messages.perm-' . $perm->name) }}</label>
                                                         </div>
                                                     </li>
                                                 @endforeach

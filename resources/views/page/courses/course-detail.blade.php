@@ -3,11 +3,11 @@
         <div class="font-semibold text-xl text-gray-800 leading-tight d-flex justify-content-between">
             <p>{{ $course->title }}</p>
             @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
-                <button class="badge btn btn-secondary" disabled>Own</button>
+                <button class="badge btn btn-secondary" disabled>{{ __('messages.own') }}</button>
             @elseif ($course->studens[Auth::user()->id] ?? false)
-                <button class="badge btn btn-success" disabled>Enrolled</button>
+                <button class="badge btn btn-success" disabled>{{ __('messages.enrolled') }}</button>
             @else
-            <a href="{{ route('enroll', ['cid' => $course->id]) }}"><button class="badge btn" style="background-color: var(--primary-color)" >Enroll</button></a>
+            <a href="{{ route('enroll', ['cid' => $course->id]) }}"><button class="badge btn" style="background-color: var(--primary-color)" >{{ __('messages.enroll') }}</button></a>
             @endif
         </div>
     </x-slot>
@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-lg-10 col-sm-12 col-md-8 mb-4">
                 <div class="card py-2 px-4 mb-4">
-                    <p class="fw-bold fs-5">Description</p>
+                    <p class="fw-bold fs-5">{{ __('messages.desc') }}</p>
                     <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
                 </div>
 
@@ -55,7 +55,7 @@
                                                         value="{{$sls->content}}"
                                                     >
                                                         {{ $sls->label }}
-                                                        <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                        <span class="text-secondary" style="font-size: 12px">{{ __('messages.update') }} {{ $sls->date }} ({{ $sls->type }})</span>
                                                     </a>
                                                 </div>
                                                 <div>
@@ -77,7 +77,7 @@
                                                         embedCode="{{$sls->content}}"
                                                     >
                                                         {{ $sls->label }}
-                                                        <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                        <span class="text-secondary" style="font-size: 12px">{{ __('messages.update') }} {{ $sls->date }} ({{ $sls->type }})</span>
                                                     </a>
                                                 </div>
                                                 <div>
@@ -104,7 +104,7 @@
                                                         quesNum = "{{$quesnum ?? '0'}}"
                                                     >
                                                         {{ $sls->label }}
-                                                        <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                        <span class="text-secondary" style="font-size: 12px">{{ __('messages.update') }} {{ $sls->date }} ({{ $sls->type }})</span>
                                                     </a>
                                                 </div>
                                                 <div>
@@ -125,7 +125,7 @@
                                                         target="_BLANK"
                                                         class="text-primary chapter"
                                                         data-cid="{{ $course->id }}"
-                                                        data-lessid="{{ $lesson->id }}">{{ $sls->label }} <span class="text-secondary" style="font-size: 12px">Updated {{ $sls->date }} ({{ $sls->type }})</span>
+                                                        data-lessid="{{ $lesson->id }}">{{ $sls->label }} <span class="text-secondary" style="font-size: 12px">{{ __('messages.update') }} {{ $sls->date }} ({{ $sls->type }})</span>
                                                     </a>
                                                 </div>
                                                 <div>
@@ -169,8 +169,8 @@
                                             </li>
                                         </ul>
                                         <div class="py-2">
-                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-sky-300 editLessBtn" data-bs-toggle="modal" data-bs-target="#editless{{$lesson->id}}"><i class="bi bi-gear"></i> Edit</button>
-                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-red-300 delete-btn" value="{{$lesson->id}}" delType="lesson"><i class="bi bi-trash3"></i> Delete</button>
+                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-sky-300 editLessBtn" data-bs-toggle="modal" data-bs-target="#editless{{$lesson->id}}"><i class="bi bi-gear"></i> {{ __('messages.edit') }}</button>
+                                            <button class="w-100 text-start px-4 py-2 text-sm text-gray-700 hover:bg-red-300 delete-btn" value="{{$lesson->id}}" delType="lesson"><i class="bi bi-trash3"></i> {{ __('messages.delete') }}</button>
                                         </div>
                                     </div>
                                 </div>
@@ -182,7 +182,7 @@
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content bg-dark">
                                     <div class="modal-header">
-                                        <h1 class="modal-title text-light fs-5" id="addTopicLabel">Edit lesson</h1>
+                                        <h1 class="modal-title text-light fs-5" id="addTopicLabel">{{ __('messages.edit') }} {{ __('messages.lesson') }}</h1>
                                     </div>
                                     <form method="POST" action="{{ route('lesson.update') }}">
                                         @csrf
@@ -194,12 +194,12 @@
                                                 </div>
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" name="desc" value="{{ $lesson->desc }}" id="desc">
-                                                    <label for="desc">Description</label>
+                                                    <label for="desc">{{ __('messages.desc') }}</label>
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
+                                            <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -207,7 +207,7 @@
                         </div>
                     @endforeach
                 @else
-                    <div class="flex justify-center text-red-500"><p>Please <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded   border border-yellow-300">Enroll</span>in top right to get all lesson</p></div>
+                    <div class="flex justify-center text-red-500"><p>{{ __('messages.please') }} <span class="bg-yellow-100 text-yellow-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded   border border-yellow-300">{{ __('messages.enroll') }}</span>{{ __('messages.itrs') }}</p></div>
                 @endif
 
 
@@ -218,14 +218,14 @@
                         <!-- Modal -->
                         <div class="d-flex btn btn-success rounded-pill addtopic-btn" data-bs-toggle="modal" data-bs-target="#addTopic">
                             <i class="bi bi-plus-circle fs-5"></i>
-                            <p class="text-nowrap align-self-center ms-2 ">Add Section</p>
+                            <p class="text-nowrap align-self-center ms-2 ">{{ __('messages.add_section') }}</p>
                         </div>
 
                         <div class="modal fade" id="addTopic" data-bs-backdrop="static" tabindex="-1" aria-labelledby="addTopicLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content bg-dark">
                                     <div class="modal-header">
-                                        <h1 class="modal-title text-light fs-5" id="addTopicLabel">Add section</h1>
+                                        <h1 class="modal-title text-light fs-5" id="addTopicLabel">{{ __('messages.add_section') }}</h1>
                                     </div>
                                     <form method="POST" action="{{ route('lesson.add') }}">
                                         @csrf
@@ -237,7 +237,7 @@
                                                 </div>
                                                 <div class="form-floating mb-3">
                                                     <input type="text" class="form-control" name="desc" id="desc" maxlength="10000">
-                                                    <label for="desc">Description</label>
+                                                    <label for="desc">{{ __('messages.desc') }}</label>
                                                 </div>
                                                 {{-- <div>
                                                     <textarea id="editor" name="desc"></textarea>
@@ -252,8 +252,8 @@
                                                 </div> --}}
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.close') }}</button>
+                                            <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
                                         </div>
                                     </form>
                                 </div>
@@ -266,11 +266,11 @@
             </div>
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <div class="card p-4">
-                    <p class="text-center fw-bold fs-5 mb-4">Course Feature</p>
-                    <p><b>Course ID: </b> {{ $course->code }}</p>
-                    <p><b>Lecturer: </b> {{ $course->getTeacher->name }}</p>
-                    <p><b>Dpm: </b> {{ $course->getDpm->name }}</p>
-                    <p><b>Lesson: </b> {{ $lessons->count() }}</p>
+                    <p class="text-center fw-bold fs-5 mb-4">{{ __('messages.feature') }}</p>
+                    <p><b>{{ __('messages.cid') }}: </b> {{ $course->code }}</p>
+                    <p><b>{{ __('messages.Lecturer') }}: </b> {{ $course->getTeacher->name }}</p>
+                    <p><b>{{ __('messages.dpm') }}: </b> {{ $course->getDpm->name }}</p>
+                    <p><b>{{ __('messages.lesson') }}: </b> {{ $lessons->count() }}</p>
                     @php
                         $updatetime = new DateTime($course->updated_at);
                         $update = $updatetime->format('Y-m-d');
@@ -278,8 +278,8 @@
                         $createtime = new DateTime($course->updated_at);
                         $create = $createtime->format('Y-m-d');
                     @endphp
-                    <p><b>Update: </b> {{ $update }}</p>
-                    <p><b>Create: </b> {{ $create }}</p>
+                    <p><b>{{ __('messages.update') }}: </b> {{ $update }}</p>
+                    <p><b>{{ __('messages.create') }}: </b> {{ $create }}</p>
                 </div>
             </div>
         </div>
