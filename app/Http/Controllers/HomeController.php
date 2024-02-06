@@ -67,6 +67,14 @@ class HomeController extends Controller
     }
 
     public function dashboard(Request $request) {
+        $permis_name = ['course', 'quiz', 'req', 'userm', 'dCourse', 'dQuiz', 'dLog', 'dHistory'];
+
+        foreach ($permis_name as $name) {
+            if (Permission::where('name', $name)->count() === 0) {
+                Permission::create(['name' => $name]);
+            }
+        }
+
         $courses = course::all();
         $dpms = department::all();
         $tests = Test::all();
@@ -117,7 +125,7 @@ class HomeController extends Controller
     }
 
     public function home(Request $request) {
-        $courses = course::whereIn("id", $request->user()->courses)->latest()->take(6)->get();
+        $courses = course::whereIn("id", $request->user()->courses)->latest()->get();
         $user = $request->user();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited Home page',
@@ -340,6 +348,21 @@ class HomeController extends Controller
                   ->setPaper('a4', 'landscape')->setOptions(['encoding' => 'utf-8']); // Set the paper size to A4 and orientation to landscape
 
         return $pdf->stream('KST_Data.pdf');
+    }
+
+    public function managePermission(Request $request) {
+        try {
+            $role = Role::findByName($request->role_name);
+            if ($request->check) {
+                $role->givePermissionTo($request->perm_name);
+            } else {
+                $role->revokePermissionTo($request->perm_name);
+            }
+
+            return response()->json(['message' => $request->all()]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
     }
 
 

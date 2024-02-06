@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/notic/send', [HomeController::class, 'sendMessage'])->name('admin.sendMessage');
     Route::get('/notifications/mark-as-read/{id}', [HomeController::class, 'markAsRead']);
     Route::get('/notifications/success/{id}', [HomeController::class, 'noticSuccess']);
+    Route::post('/add-permission-to-role', [HomeController::class, 'managePermission']);
 
     // page
     Route::get('/main', [HomeController::class, 'main'])->name('main');

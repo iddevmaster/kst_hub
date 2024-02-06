@@ -547,31 +547,15 @@
                                     @foreach ($roles as $index => $role)
                                         <div class="p-4 bg-white shadow rounded-lg">
                                             <h3 class="mb-4 text-start font-semibold text-xl text-gray-900">{{ $role->name }}</h3>
-                                            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex">
-                                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-                                                    <div class="flex items-center ps-3">
-                                                        <input id="perm-check-1{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                                        <label for="perm-check-1{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Vue JS</label>
-                                                    </div>
-                                                </li>
-                                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-                                                    <div class="flex items-center ps-3">
-                                                        <input id="perm-check-2{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                                        <label for="perm-check-2{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">React</label>
-                                                    </div>
-                                                </li>
-                                                <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r">
-                                                    <div class="flex items-center ps-3">
-                                                        <input id="perm-check-3{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                                        <label for="perm-check-3{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Angular</label>
-                                                    </div>
-                                                </li>
-                                                <li class="w-full">
-                                                    <div class="flex items-center ps-3">
-                                                        <input id="perm-check-4{{ $index }}" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                                                        <label for="perm-check-4{{ $index }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Laravel</label>
-                                                    </div>
-                                                </li>
+                                            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                                                @foreach ($permissions as $perm)
+                                                    <li class="px-3 border border-gray-200 sm:border-b-0 sm:border-r">
+                                                        <div class="flex items-center">
+                                                            <input id="{{ $role->name }}-check-{{ $perm->name }}" type="checkbox" name="{{ $perm->name }}" value="{{ $role->name }}" class="permission-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{ $role->hasPermissionTo($perm->name) ? 'checked' : '' }}>
+                                                            <label for="{{ $role->name }}-check-{{ $perm->name }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">{{ $perm->name }}</label>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
                                             </ul>
                                         </div>
                                     @endforeach
@@ -1536,6 +1520,42 @@
         }
 
     })
+
+    $(document).ready(function () {
+        $('.permission-checkbox').change(function () {
+            // Get checkbox details
+            var checkbox = $(this);
+            var rname = checkbox.val();
+            var pname = checkbox.attr('name');
+            var checked = checkbox.prop('checked');
+
+            // Prepare data for AJAX request
+            var data = {
+                role_name: rname,
+                perm_name: pname,
+                check: checked
+            };
+
+            // Send data to the controller using AJAX
+            $.ajax({
+                url: '/add-permission-to-role',
+                method: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    // Handle success response if needed
+                    console.log(response);
+                },
+                error: function (error) {
+                    // Handle error if needed
+                    console.error(error);
+                }
+            });
+        });
+    });
 </script>
 
 <style>
