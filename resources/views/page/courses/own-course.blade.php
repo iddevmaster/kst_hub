@@ -161,11 +161,11 @@
                 <p class="mb-3">สิทธิ์การเข้าถึง</p>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="allPer" value="option1">
-                    <label class="form-check-label" for="allPer">ทั้งหมด</label>
+                    <label class="form-check-label" for="allPer">หลักสูตรสาธารณะ</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="checkbox" id="dpmPer" value="option2">
-                    <label class="form-check-label" for="dpmPer">ฝ่ายเท่านั้น</label>
+                    <label class="form-check-label" for="dpmPer">หลักสูตรเฉพาะ</label>
                 </div>
                 <div class="flex items-center justify-center w-full mt-2">
                     <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
@@ -337,22 +337,22 @@
                 title: 'Edit Course',
                 html: `
                     <div class="mb-3">
-                        <label for="topic" class="form-label text-start">Topic</label>
+                        <label for="topic" class="form-label text-start">ชื่อหลักสูตร</label>
                         <input type="text" class="form-control" id="topic" value="${etitle}">
                     </div>
                     <div class="mb-3">
-                        <label for="desc" class="form-label">Description</label>
+                        <label for="desc" class="form-label">คำอธิบาย</label>
                         <textarea class="form-control" id="desc" rows="2">${edesc}</textarea>
                     </div>
 
-                    <p class="mb-3">Permission</p>
+                    <p class="mb-3">สิทธิ์การเข้าถึง</p>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="allPer" value="option1" ${eall ? 'checked' : ''}>
-                        <label class="form-check-label" for="allPer">All</label>
+                        <label class="form-check-label" for="allPer">หลักสูตรสาธารณะ</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="dpmPer" value="option2" ${edpm ? 'checked' : ''}>
-                        <label class="form-check-label" for="dpmPer">DpmOnly</label>
+                        <label class="form-check-label" for="dpmPer">หลักสูตรเฉพาะ</label>
                     </div>
                     <div class="flex items-center justify-center w-full mt-2">
                         <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
