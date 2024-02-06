@@ -92,10 +92,10 @@ class HomeController extends Controller
         [
             'user_id' => auth()->id(),
         ]);
-        if ($request->user()->hasRole('admin')) {
+
+        if ($request->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || $request->user()->hasRole('admin')) {
             return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel', 'agns', 'brns', 'roles', 'permissions'));
         } else {
-            Auth::logout();
             return redirect('/');
         }
     }
@@ -153,10 +153,10 @@ class HomeController extends Controller
         [
             'user_id' => $request->user(),
         ]);
-        if ($request->user()->hasAnyRole('admin', 'staff')) {
+
+        if ($request->user()->hasPermissionTo('userm') || $request->user()->hasRole('admin')) {
             return view("page.users.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
         } else {
-            Auth::logout();
             return redirect('/');
         }
     }
@@ -198,7 +198,11 @@ class HomeController extends Controller
         [
             'user' => $request->user(),
         ]);
-        return view("page.requestAll", compact('requests'));
+        if ($request->user()->hasPermissionTo('req')) {
+            return view("page.requestAll", compact('requests'));
+        } else {
+            return redirect('/');
+        }
     }
 
     public function ownCourse(Request $request) {
@@ -209,10 +213,9 @@ class HomeController extends Controller
         [
             'user' => $request->user(),
         ]);
-        if ($request->user()->hasAnyRole('admin', 'staff', 'teacher')) {
+        if ($request->user()->hasPermissionTo('course')) {
             return view("page.courses.own-course", compact('courses', 'groups'));
         } else {
-            Auth::logout();
             return redirect('/');
         }
     }

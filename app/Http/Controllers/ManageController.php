@@ -145,6 +145,17 @@ class ManageController extends Controller
         }
     }
 
+    public function updateRole(Request $request){
+        try {
+            $role = Role::findByName($request->oldName);
+            $role->update(['name' => $request->newName]);
+            return response()->json(['success' => $request->all()]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['error' => 'ee '.$th->getMessage()]);
+        }
+    }
+
     public function createPerm(Request $request)
     {
         $validator = Validator::make($request->all(), [

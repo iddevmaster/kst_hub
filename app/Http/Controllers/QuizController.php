@@ -20,7 +20,11 @@ class QuizController extends Controller
         [
             'user' => $request->user(),
         ]);
-        return view("page.quizzes.allquizzes", compact("quizs"));
+        if ($request->user()->hasPermissionTo('quiz')) {
+            return view("page.quizzes.allquizzes", compact("quizs"));
+        } else {
+            return redirect('/');
+        }
     }
 
     public function testRecord(Request $request, $qid) {

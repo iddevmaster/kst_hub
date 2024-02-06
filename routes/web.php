@@ -38,7 +38,6 @@ Route::get('/', function () {
 //     phpinfo();
 // });
 
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
@@ -67,6 +66,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/manage/addBranch', [ManageController::class,'createBranch'])->name('add.branch');
     Route::post('/manage/addDpm', [ManageController::class,'createDpm'])->name('add.dpm');
     Route::post('/manage/addRole', [ManageController::class,'createRole']);
+    Route::post('/manage/editRole', [ManageController::class,'updateRole']);
     Route::post('/manage/addPerm', [ManageController::class,'createPerm']);
     Route::post('/manage/delete', [ManageController::class,'deleteData']);
     Route::post('/manage/update', [ManageController::class,'update']);

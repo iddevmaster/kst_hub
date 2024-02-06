@@ -25,46 +25,56 @@
             {{-- Tabs Bar --}}
             <div class="border-b border-gray-200 mb-4">
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
-                    <li class="me-2">
-                        <a href="#course" id="course-tab" data-tabs-target="#course" type="button" role="tab" aria-controls="course" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
-                            <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-                                <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
-                            </svg>
-                            {{ __('messages.Course') }}
-                        </a>
-                    </li>
-                    <li class="me-2">
-                        <a href="#test" id="test-tab" data-tabs-target="#test" type="button" role="tab" aria-controls="test" aria-selected="false" class="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active group" aria-current="page">
-                            <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
-                                <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM5 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm10 6H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z"/>
-                            </svg>
-                            {{ __('messages.Test') }}
-                        </a>
-                    </li>
-                    <li class="me-2">
-                        <a href="#log" id="log-tab" data-tabs-target="#log" type="button" role="tab" aria-controls="log" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
-                            <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 15">
-                                <path d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z"/>
-                            </svg>
-                            {{ __('messages.Log') }}
-                        </a>
-                    </li>
-                    <li class="me-2">
-                        <a href="#history" id="history-tab" data-tabs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
-                            <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
-                            </svg>
-                            {{ __('messages.History') }}
-                        </a>
-                    </li>
-                    <li class="me-2">
-                        <a href="#manage" id="manage-tab" data-tabs-target="#manage" type="button" role="tab" aria-controls="manage" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
-                            <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
-                            </svg>
-                            {{ __('messages.Manage') }}
-                        </a>
-                    </li>
+                    @can('dCourse')
+                        <li class="me-2">
+                            <a href="#course" id="course-tab" data-tabs-target="#course" type="button" role="tab" aria-controls="course" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                    <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z"/>
+                                </svg>
+                                {{ __('messages.Course') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('dQuiz')
+                        <li class="me-2">
+                            <a href="#test" id="test-tab" data-tabs-target="#test" type="button" role="tab" aria-controls="test" aria-selected="false" class="inline-flex items-center justify-center p-4 text-blue-600 border-b-2 border-blue-600 rounded-t-lg active group" aria-current="page">
+                                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 16">
+                                    <path d="M18 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2ZM5 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm10 6H9a1 1 0 0 1 0-2h6a1 1 0 0 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Zm0-3H9a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z"/>
+                                </svg>
+                                {{ __('messages.Test') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('dLog')
+                        <li class="me-2">
+                            <a href="#log" id="log-tab" data-tabs-target="#log" type="button" role="tab" aria-controls="log" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 15">
+                                    <path d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z"/>
+                                </svg>
+                                {{ __('messages.Log') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('dHistory')
+                        <li class="me-2">
+                            <a href="#history" id="history-tab" data-tabs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z"/>
+                                </svg>
+                                {{ __('messages.History') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @role('admin')
+                        <li class="me-2">
+                            <a href="#manage" id="manage-tab" data-tabs-target="#manage" type="button" role="tab" aria-controls="manage" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
+                                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M18 7.5h-.423l-.452-1.09.3-.3a1.5 1.5 0 0 0 0-2.121L16.01 2.575a1.5 1.5 0 0 0-2.121 0l-.3.3-1.089-.452V2A1.5 1.5 0 0 0 11 .5H9A1.5 1.5 0 0 0 7.5 2v.423l-1.09.452-.3-.3a1.5 1.5 0 0 0-2.121 0L2.576 3.99a1.5 1.5 0 0 0 0 2.121l.3.3L2.423 7.5H2A1.5 1.5 0 0 0 .5 9v2A1.5 1.5 0 0 0 2 12.5h.423l.452 1.09-.3.3a1.5 1.5 0 0 0 0 2.121l1.415 1.413a1.5 1.5 0 0 0 2.121 0l.3-.3 1.09.452V18A1.5 1.5 0 0 0 9 19.5h2a1.5 1.5 0 0 0 1.5-1.5v-.423l1.09-.452.3.3a1.5 1.5 0 0 0 2.121 0l1.415-1.414a1.5 1.5 0 0 0 0-2.121l-.3-.3.452-1.09H18a1.5 1.5 0 0 0 1.5-1.5V9A1.5 1.5 0 0 0 18 7.5Zm-8 6a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
+                                </svg>
+                                {{ __('messages.Manage') }}
+                            </a>
+                        </li>
+                    @endrole
                 </ul>
             </div>
             {{-- End Tabs Bar --}}
@@ -520,8 +530,10 @@
                                                             <td>{{ $index + 1 }}</td>
                                                             <td class="text-nowrap">{{$role->name}}</td>
                                                             <td>
-                                                                <button class="btn btn-sm btn-primary" id="editBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-gear"></i></button>
-                                                                <button class="btn btn-sm btn-danger" id="delBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-trash"></i></button>
+                                                                @if ($role->name !== 'admin')
+                                                                    <button class="btn btn-sm btn-primary" id="editBtn" edittype="role" value="{{ $role->name }}"><i class="bi bi-gear"></i></button>
+                                                                    <button class="btn btn-sm btn-danger" id="delBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-trash"></i></button>
+                                                                @endif
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -994,7 +1006,7 @@
                 console.log(result.value);
                 Swal.fire(
                     'Saved!',
-                    'Your department was saved successfully.',
+                    'Your data was saved successfully.',
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed) {
@@ -1057,7 +1069,7 @@
                 console.log(result.value);
                 Swal.fire(
                     'Saved!',
-                    'Your department was saved successfully.',
+                    'Your data was saved successfully.',
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed) {
@@ -1112,62 +1124,7 @@
                 console.log(result.value);
                 Swal.fire(
                     'Saved!',
-                    'Your department was saved successfully.',
-                    'success'
-                ).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.reload()
-                    }
-                });
-            }
-        });
-    }
-
-    addPerm = () => {
-        Swal.fire({
-            title: '{{ __('messages.Add Permission') }}',
-            html: `
-                <div class="mb-3">
-                    <label for="name" class="form-label">{{ __('messages.Name') }}</label>
-                    <input type="text" class="form-control" id="name">
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: "{{ __('messages.Save') }}",
-            preConfirm: () => {
-                const pname = document.getElementById('name').value;
-
-                if (!pname) {
-                    Swal.showValidationMessage("Name is required");
-                    return;
-                }
-
-                return fetch('/manage/addPerm', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ name: pname })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(response.statusText)
-                    }
-                    return response.json()
-                })
-                .catch(error => {
-                    Swal.showValidationMessage(
-                        `Request failed`
-                    )
-                })
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                console.log(result.value);
-                Swal.fire(
-                    'Saved!',
-                    'Your department was saved successfully.',
+                    'Your data was saved successfully.',
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed) {
@@ -1238,7 +1195,7 @@
                 console.log(result.value);
                 Swal.fire(
                     'Saved!',
-                    'Your department was saved successfully.',
+                    'Your department was added successfully.',
                     'success'
                 ).then((result) => {
                     if (result.isConfirmed) {
@@ -1293,7 +1250,7 @@
                     console.log(result.value);
                     Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Your data has been deleted.',
                     'success'
                     ).then((result) => {
                         if (result.isConfirmed) {
@@ -1368,7 +1325,7 @@
                         console.log(result.value);
                         Swal.fire(
                             'Saved!',
-                            'Your department was saved successfully.',
+                            'Your changed was saved successfully.',
                             'success'
                         ).then((result) => {
                             if (result.isConfirmed) {
@@ -1433,7 +1390,7 @@
                         console.log(result.value);
                         Swal.fire(
                             'Saved!',
-                            'Your department was saved successfully.',
+                            'Your changed was saved successfully.',
                             'success'
                         ).then((result) => {
                             if (result.isConfirmed) {
@@ -1507,7 +1464,7 @@
                         console.log(result.value);
                         Swal.fire(
                             'Saved!',
-                            'Your department was saved successfully.',
+                            'Your changed was saved successfully.',
                             'success'
                         ).then((result) => {
                             if (result.isConfirmed) {
@@ -1517,6 +1474,61 @@
                     }
                 });
             })
+        } else if (etype == 'role') {
+            editbtn.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Edit Role',
+                    html: `
+                        <div class="mb-3">
+                            <label for="name" class="form-label">{{ __('messages.Name') }}</label>
+                            <input type="text" value="${eid}" class="form-control" id="name">
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: "{{ __('messages.Save') }}",
+                    preConfirm: () => {
+                        const rname = document.getElementById('name').value;
+
+                        if (!rname) {
+                            Swal.showValidationMessage("Name is required");
+                            return;
+                        }
+
+                        return fetch('/manage/editRole', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({ newName: rname , oldName: eid})
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed`
+                            )
+                        })
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log(result.value);
+                        Swal.fire(
+                            'Saved!',
+                            'Role was saved successfully.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload()
+                            }
+                        });
+                    }
+                });
+            });
         }
 
     })
