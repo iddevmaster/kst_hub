@@ -109,59 +109,59 @@
                         </thead>
                         <tbody class="table-group-divider">
                             @foreach ($users as $index => $user)
-                                <tr>
-                                    <td>{{$index+1}}</td>
-                                    <td>{{ $user->name }}</td>
-                                    <td>{{ $user->role }}</td>
-                                    <td>{{ optional($user->dpmName)->name }}</td>
-                                    <td>{{ count($user->courses ?? []) }}</td>
-                                    <td>
-                                        @php
-                                            echo App\Models\course::where('teacher', $user->id)->count();
-                                        @endphp
-                                    </td>
-                                    <td>
-                                        @if ($user->startlt)
-                                            @php
-                                                $dateString = $user->startlt;
-
-                                                // Create a DateTime object from your date string
-                                                $yourDate = DateTime::createFromFormat('Y-m-d', $dateString);
-
-                                                // Get the current DateTime
-                                                $now = new DateTime();
-
-                                                // Calculate the difference between the dates
-                                                $difference = $yourDate->diff($now);
-                                            @endphp
-                                            @if ($difference->invert == 0)
-                                                <p class="text-red-400">expired</p>
-                                            @else
-                                                <p class="text-sky-500">{{ $difference->y > 0 ? $difference->y.'y ' : ''  }}{{ $difference->m > 0 ? $difference->m.'m ' : ''  }}{{ $difference->d >= 0 ? $difference->d.'d ' : ''  }}</p>
-                                            @endif
-                                        @else
-                                            Forever
-                                        @endif
-                                    </td>
-                                    @if (($user->role == 'admin'))
+                                @if ($user->role !== 'superAdmin')
+                                    <tr>
+                                        <td>{{$index+1}}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->role }}</td>
+                                        <td>{{ optional($user->dpmName)->name }}</td>
+                                        <td>{{ count($user->courses ?? []) }}</td>
                                         <td>
-                                            @if ((Auth::user()->role == 'admin') || Auth::user()->hasRole('superAdmin'))
+                                            @php
+                                                echo App\Models\course::where('teacher', $user->id)->count();
+                                            @endphp
+                                        </td>
+                                        <td>
+                                            @if ($user->startlt)
+                                                @php
+                                                    $dateString = $user->startlt;
+
+                                                    // Create a DateTime object from your date string
+                                                    $yourDate = DateTime::createFromFormat('Y-m-d', $dateString);
+
+                                                    // Get the current DateTime
+                                                    $now = new DateTime();
+
+                                                    // Calculate the difference between the dates
+                                                    $difference = $yourDate->diff($now);
+                                                @endphp
+                                                @if ($difference->invert == 0)
+                                                    <p class="text-red-400">expired</p>
+                                                @else
+                                                    <p class="text-sky-500">{{ $difference->y > 0 ? $difference->y.'y ' : ''  }}{{ $difference->m > 0 ? $difference->m.'m ' : ''  }}{{ $difference->d >= 0 ? $difference->d.'d ' : ''  }}</p>
+                                                @endif
+                                            @else
+                                                Forever
+                                            @endif
+                                        </td>
+                                        @if (($user->role == 'admin'))
+                                            <td>
+                                                @if ((Auth::user()->role == 'admin') || Auth::user()->hasRole('superAdmin'))
+                                                    <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
+                                                    <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
+                                                @endif
+                                            </td>
+                                        @else
+                                            <td>
                                                 <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
                                                 <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
-                                            @endif
-                                        </td>
-                                    @else
-                                        <td>
-                                            <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
-                                            @if ($user->role !== 'superAdmin')
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
-                                            @endif
-                                            @if ($user->role == 'new')
-                                                <button class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Renew." id="renewBtn" value="{{ $user->id }}" oldVal="{{ $user->startlt }}"><i class="bi bi-calendar2-plus"></i></button>
-                                            @endif
-                                        </td>
-                                    @endif
-                                </tr>
+                                                @if ($user->role == 'new')
+                                                    <button class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Renew." id="renewBtn" value="{{ $user->id }}" oldVal="{{ $user->startlt }}"><i class="bi bi-calendar2-plus"></i></button>
+                                                @endif
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
