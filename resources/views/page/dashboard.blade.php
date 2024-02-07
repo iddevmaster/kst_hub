@@ -65,7 +65,7 @@
                             </a>
                         </li>
                     @endcan
-                    @role('admin')
+                    @hasanyrole(['admin', 'superAdmin'])
                         <li class="me-2">
                             <a href="#manage" id="manage-tab" data-tabs-target="#manage" type="button" role="tab" aria-controls="manage" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
                                 <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -74,7 +74,7 @@
                                 {{ __('messages.Manage') }}
                             </a>
                         </li>
-                    @endrole
+                    @endhasanyrole
                 </ul>
             </div>
             {{-- End Tabs Bar --}}
@@ -366,13 +366,16 @@
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
                                                 <p class="text-2xl font-bold"><i class="bi bi-buildings"></i> {{ __('messages.Agency') }}</p>
-                                                <button class="btn btn-success" onclick="addAgn()" ><i class="bi bi-plus-lg"></i></button>
+                                                @hasrole('superAdmin')
+                                                    <button class="btn btn-success" onclick="addAgn()" ><i class="bi bi-plus-lg"></i></button>
+                                                @endhasrole
                                             </div>
                                             <div class="overflow-auto">
                                                 <table class="table table-hover">
                                                     <thead class="table-dark">
                                                         <tr>
                                                             <th scope="col">{{ __('messages.Action') }}</th>
+                                                            <th scope="col">Logo</th>
                                                             <th scope="col">{{ __('messages.Name') }}</th>
                                                             <th scope="col">{{ __('messages.Address') }}</th>
                                                             <th scope="col">{{ __('messages.Contact') }}</th>
@@ -383,18 +386,23 @@
                                                             <tr>
                                                                 <td>
                                                                     <div class="flex gap-1">
-                                                                        <button class="btn btn-sm btn-danger" id="delBtn" deltype="agn" value="{{ $agn->id }}"><i class="bi bi-trash"></i></button>
-                                                                        <button
-                                                                            class="btn btn-sm btn-info text-white"
-                                                                            id="editBtn"
-                                                                            edittype="agn"
-                                                                            value="{{ $agn->id }}"
-                                                                            agnName="{{$agn->name}}"
-                                                                            agnAddr="{{$agn->address ?? ''}}"
-                                                                            agnCont="{{$agn->contact ?? ''}}">
-                                                                                <i class="bi bi-gear"></i>
-                                                                        </button>
+                                                                        @hasrole('superAdmin')
+                                                                            <button class="btn btn-sm btn-danger" id="delBtn" deltype="agn" value="{{ $agn->id }}"><i class="bi bi-trash"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-info text-white"
+                                                                                id="editBtn"
+                                                                                edittype="agn"
+                                                                                value="{{ $agn->id }}"
+                                                                                agnName="{{$agn->name}}"
+                                                                                agnAddr="{{$agn->address ?? ''}}"
+                                                                                agnCont="{{$agn->contact ?? ''}}">
+                                                                                    <i class="bi bi-gear"></i>
+                                                                            </button>
+                                                                        @endhasrole
                                                                     </div>
+                                                                </td>
+                                                                <td class="text-nowrap">
+                                                                    <img src="/uploads/logo/{{ $agn->logo ?? '' }}" alt="" width="25">
                                                                 </td>
                                                                 <td class="text-nowrap">{{$agn->name}}</td>
                                                                 <td class="text-nowrap">{{$agn->address?? ""}}</td>
@@ -530,10 +538,10 @@
                                                             <td>{{ $index + 1 }}</td>
                                                             <td class="text-nowrap">{{$role->name}}</td>
                                                             <td>
-                                                                @if ($role->name !== 'admin')
+                                                                @role('superAdmin')
                                                                     <button class="btn btn-sm btn-primary" id="editBtn" edittype="role" value="{{ $role->name }}"><i class="bi bi-gear"></i></button>
                                                                     <button class="btn btn-sm btn-danger" id="delBtn" deltype="role" value="{{ $role->name }}"><i class="bi bi-trash"></i></button>
-                                                                @endif
+                                                                @endrole
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -546,35 +554,36 @@
                         </div>
                     </div>
 
+                    @role('superAdmin')
+                        <hr class="w-4/5 h-0.5 mx-auto border-0 rounded bg-gray-700">
 
-                    <hr class="w-4/5 h-0.5 mx-auto border-0 rounded bg-gray-700">
-
-                    <div class="text-center mt-5">
-                        <p class="fs-1 fw-bold">{{ __('messages.Permissions') }}</p>
-                    </div>
-                    <div class="py-10">
-                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                            <div class="sm:rounded-lg p-4 row justify-center">
-                                <div class="rounded-lg row gap-2">
-                                    @foreach ($roles as $index => $role)
-                                        <div class="p-4 bg-white shadow rounded-lg">
-                                            <h3 class="mb-4 text-start font-semibold text-xl text-gray-900">{{ $role->name }}</h3>
-                                            <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                                                @foreach ($permissions as $perm)
-                                                    <li class="px-3 border border-gray-200 sm:border-b-0 sm:border-r">
-                                                        <div class="flex items-center">
-                                                            <input id="{{ $role->name }}-check-{{ $perm->name }}" type="checkbox" name="{{ $perm->name }}" value="{{ $role->name }}" class="permission-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{ $role->hasPermissionTo($perm->name) ? 'checked' : '' }}>
-                                                            <label for="{{ $role->name }}-check-{{ $perm->name }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">{{ __('messages.perm-' . $perm->name) }}</label>
-                                                        </div>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    @endforeach
+                        <div class="text-center mt-5">
+                            <p class="fs-1 fw-bold">{{ __('messages.Permissions') }}</p>
+                        </div>
+                        <div class="py-10">
+                            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                <div class="sm:rounded-lg p-4 row justify-center">
+                                    <div class="rounded-lg row gap-2">
+                                        @foreach ($roles as $index => $role)
+                                            <div class="p-4 bg-white shadow rounded-lg">
+                                                <h3 class="mb-4 text-start font-semibold text-xl text-gray-900">{{ $role->name }}</h3>
+                                                <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                                                    @foreach ($permissions as $perm)
+                                                        <li class="px-3 border border-gray-200 sm:border-b-0 sm:border-r">
+                                                            <div class="flex items-center">
+                                                                <input id="{{ $role->name }}-check-{{ $perm->name }}" type="checkbox" name="{{ $perm->name }}" value="{{ $role->name }}" class="permission-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{ $role->hasPermissionTo($perm->name) ? 'checked' : '' }}>
+                                                                <label for="{{ $role->name }}-check-{{ $perm->name }}" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">{{ __('messages.perm-' . $perm->name) }}</label>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endrole
                 </div>
             </div>
             {{-- End Tabs Contents --}}
@@ -968,6 +977,16 @@
                     <label for="cont" class="form-label">{{ __('messages.Contact') }}</label>
                     <input type="text" class="form-control" id="cont">
                 </div>
+                <div class="flex items-center justify-center w-full mt-2">
+                    <label for="agn-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
+                        <div class="flex flex-col items-center justify-center pt-2 pb-2">
+                            <p class="mb-2 font-bold">รูปภาพlogo</p>
+                            <p class="text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                            <p class="text-xs text-gray-500 ">jpeg,png  (MAX 5Mb size)</p>
+                        </div>
+                        <input id="agn-file" type="file" class="hidden" />
+                    </label>
+                </div>
             `,
             showCancelButton: true,
             confirmButtonText: "{{ __('messages.Save') }}",
@@ -975,19 +994,23 @@
                 const agnname = document.getElementById('name').value;
                 const addr = document.getElementById('addr').value;
                 const cont = document.getElementById('cont').value;
+                const agnfile = document.getElementById('agn-file').files[0];
 
                 if (!agnname) {
                     Swal.showValidationMessage("Name is required");
                     return;
                 }
 
+                const formData = new FormData();
+                formData.append('name', agnname);
+                formData.append('address', addr);
+                formData.append('contact', cont);
+                formData.append('logo', agnfile);
+                formData.append('_token', '{{ csrf_token() }}');
+
                 return fetch('/manage/addAgency', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ name: agnname, address:addr, contact:cont })
+                    body: formData
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -1287,6 +1310,16 @@
                             <label for="cont" class="form-label">Contact</label>
                             <input type="text" class="form-control" id="cont" value="${econt}">
                         </div>
+                        <div class="flex items-center justify-center w-full mt-2">
+                            <label for="agn-file" class="flex flex-col items-center justify-center w-full h-30 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50   hover:bg-gray-100   ">
+                                <div class="flex flex-col items-center justify-center pt-2 pb-2">
+                                    <p class="mb-2 font-bold">รูปภาพlogo</p>
+                                    <p class="text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                    <p class="text-xs text-gray-500 ">jpeg,png  (MAX 5Mb size)</p>
+                                </div>
+                                <input id="agn-file" type="file" class="hidden" />
+                            </label>
+                        </div>
                     `,
                     showCancelButton: true,
                     confirmButtonText: "Save",
@@ -1294,19 +1327,25 @@
                         const agnname = document.getElementById('name').value;
                         const addr = document.getElementById('addr').value;
                         const cont = document.getElementById('cont').value;
+                        const agnfile = document.getElementById('agn-file').files[0];
 
                         if (!agnname) {
                             Swal.showValidationMessage("Name is required");
                             return;
                         }
 
+                        const formData = new FormData();
+                        formData.append('name', agnname);
+                        formData.append('address', addr);
+                        formData.append('contact', cont);
+                        formData.append('logo', agnfile);
+                        formData.append('agnid', eid);
+                        formData.append('editType', etype);
+                        formData.append('_token', '{{ csrf_token() }}');
+
                         return fetch('/manage/update', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            },
-                            body: JSON.stringify({ name: agnname, address:addr, contact:cont, agnid: eid, editType: etype})
+                            body: formData
                         })
                         .then(response => {
                             if (!response.ok) {

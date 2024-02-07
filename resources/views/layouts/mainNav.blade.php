@@ -5,9 +5,9 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <div class="bg-light py-2 rounded">
+                    <div class="bg-light p-1 rounded">
                         <a href="{{ route('home') }}">
-                            <img src="/img/logo.png" alt="" width="100">
+                            <img src="/img/logoid_new.png" alt="" width="50">
                         </a>
                     </div>
                 </div>
@@ -20,7 +20,7 @@
                 </div> --}}
             </div>
             <div class="flex items-center ml-2">
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" style="color:white !important">
+                <div class="hidden  space-x-8 sm:-my-px sm:ml-10 sm:flex" style="color: var(--text-color) !important; font-weight: bold;">
                     <a href="{{route('main')}}" >
                         {{ __('messages.home') }}
                     </a>
@@ -60,7 +60,7 @@
                             {{ __('messages.users') }}
                         </a>
                     @endcan
-                    @if (auth()->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || auth()->user()->hasRole('admin'))
+                    @if (auth()->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
                         <a href="{{route('dashboard')}}" >
                             {{ __('messages.dashboard') }}
                         </a>
@@ -223,7 +223,7 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden" >
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('main')" :active="request()->routeIs('home')">
                 {{ __('messages.home') }}

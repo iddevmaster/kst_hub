@@ -19,7 +19,8 @@ class course extends Model
         "studens",
         "code",
         "img",
-        "group"
+        "group",
+        "agn"
     ] ;
 
     public function getStudensAttribute($value)

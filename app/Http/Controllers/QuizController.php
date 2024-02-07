@@ -14,7 +14,7 @@ use App\Models\Activitylog;
 class QuizController extends Controller
 {
     public function index(Request $request) {
-        $quizs = quiz::all();
+        $quizs = quiz::where('agn', auth()->user()->agency)->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited allquizzes',
         [
@@ -88,6 +88,7 @@ class QuizController extends Controller
                 'shuffle_quest'=> $request->shuffq ?? false,
                 'create_by'=> $request->user()->id,
                 'showAns' => $request->showAns ?? false,
+                'agn' => $request->user()->agency
             ]);
 
             Activitylog::create([
@@ -95,6 +96,7 @@ class QuizController extends Controller
                 'module' => 'Quiz',
                 'content' => $quiz->id,
                 'note' => 'store',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' store quiz',
             [
@@ -130,6 +132,7 @@ class QuizController extends Controller
                 'module' => 'Quiz',
                 'content' => $quiz->id,
                 'note' => 'update',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' update quiz',
             [
@@ -156,6 +159,7 @@ class QuizController extends Controller
                 'module' => 'Quiz',
                 'content' => $quiz->id,
                 'note' => 'delete',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' delete quiz',
             [
@@ -201,6 +205,7 @@ class QuizController extends Controller
 
             $question->answer = json_encode( $choices );
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
+            $question->agn = auth()->user()->agency;
             $question->save();
 
             Activitylog::create([
@@ -208,6 +213,7 @@ class QuizController extends Controller
                 'module' => 'Question',
                 'content' => $question->id,
                 'note' => 'store',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' store question',
             [
@@ -259,6 +265,7 @@ class QuizController extends Controller
                 'module' => 'Question',
                 'content' => $question->id,
                 'note' => 'update',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' update question',
             [
@@ -282,6 +289,7 @@ class QuizController extends Controller
                 'module' => 'Question',
                 'content' => $question->id,
                 'note' => 'delete',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' delete question',
             [

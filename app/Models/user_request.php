@@ -17,7 +17,8 @@ class user_request extends Model
         "content",
         "status",
         "alert",
-        "finish_by"
+        "finish_by",
+        'agn'
     ];
 
     public function getUser() {

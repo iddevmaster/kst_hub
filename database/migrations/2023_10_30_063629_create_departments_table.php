@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('agency')->nullable();
             $table->integer('branch')->nullable();
             $table->integer('course')->default(0);
+            $table->string('prefix')->nullable();
             $table->timestamps();
         });
     }

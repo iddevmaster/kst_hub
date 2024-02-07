@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
-            $table->string('course');
+            $table->text('course');
             $table->text('topic');
             $table->longText('desc')->nullable;
             $table->json('sub_lessons')->nullable();
+            $table->string('agn');
             $table->timestamps();
             $table->softDeletes();
         });

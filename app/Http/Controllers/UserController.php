@@ -74,6 +74,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => $user->id,
                 'note' => 'create',
+                'agn' => $user->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' create new User',
             [
@@ -157,6 +158,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => $user->id,
                 'note' => 'update',
+                'agn' => $user->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' update user',
             [
@@ -182,6 +184,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => $user->id,
                 'note' => 'delete',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' delete user',
             [
@@ -205,6 +208,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => $user->id,
                 'note' => 'renew',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' renew user',
             [
@@ -249,6 +253,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => json_encode($request->courses),
                 'note' => 'add course',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' add couser to user',
             [
@@ -296,6 +301,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => $course->id,
                 'note' => 'remove course',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' remove course from user',
             [
@@ -322,7 +328,7 @@ class UserController extends Controller
 
             if (!$progressExists) {
                 // Only create a new record if it does not exist
-                progress::create(['course_id' => $cid, 'lesson_id' => $lessid, 'user_id' => $userId]);
+                progress::create(['course_id' => $cid, 'lesson_id' => $lessid, 'user_id' => $userId, 'agn' => auth()->user()->agency]);
                 return response()->json(['message' => 'Progress added']);
             } else {
                 // Return a message indicating that the progress already exists
@@ -369,6 +375,7 @@ class UserController extends Controller
                 'module' => 'User',
                 'content' => json_encode($request->courses),
                 'note' => 'add course',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' add couser to user',
             [

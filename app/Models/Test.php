@@ -18,6 +18,7 @@ class Test extends Model
         "score",
         "totalScore",
         "end",
+        'agn'
     ];
 
     public function getAnswersAttribute($value)

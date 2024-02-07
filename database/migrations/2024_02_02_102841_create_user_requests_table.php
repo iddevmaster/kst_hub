@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('content');
             $table->string('status')->default('0');
             $table->string('alert')->nullable();
+            $table->string('finish_by')->nullable();
+            $table->string('agn');
             $table->softDeletes();
             $table->timestamps();
         });

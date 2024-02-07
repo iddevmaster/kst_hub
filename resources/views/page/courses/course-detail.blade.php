@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="font-semibold text-xl text-gray-800 leading-tight d-flex justify-content-between">
             <p>{{ $course->title }}</p>
-            @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+            @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                 <button class="badge btn btn-secondary" disabled>{{ __('messages.own') }}</button>
             @elseif ($course->studens[Auth::user()->id] ?? false)
                 <button class="badge btn btn-success" disabled>{{ __('messages.enrolled') }}</button>
@@ -19,7 +19,7 @@
                     <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
                 </div>
 
-                @if (($course->studens[Auth::user()->id] ?? false) || ($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                @if (($course->studens[Auth::user()->id] ?? false) || ($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                     @foreach ($lessons as $lesson)
                         <div class="card p-4 mb-4">
                             <p class="fw-bold fs-5">{{ $lesson->topic }}</p>
@@ -38,7 +38,7 @@
                                                     <p style="text-indent: 1.5em">{{ $sls->content }}</p>
                                                 </div>
                                                 <div>
-                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                                                         <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
                                                     @endif
                                                 </div>
@@ -59,7 +59,7 @@
                                                     </a>
                                                 </div>
                                                 <div>
-                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                                                         <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
                                                     @endif
                                                 </div>
@@ -81,7 +81,7 @@
                                                     </a>
                                                 </div>
                                                 <div>
-                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                                                         <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
                                                     @endif
                                                 </div>
@@ -108,7 +108,7 @@
                                                     </a>
                                                 </div>
                                                 <div>
-                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                                                         <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
                                                     @endif
                                                 </div>
@@ -129,7 +129,7 @@
                                                     </a>
                                                 </div>
                                                 <div>
-                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                                                    @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                                                         <button class="btn text-danger btn-sm deleteSubBtn" value="{{ $index }}" lessIdVal="{{ $lesson->id }}"><i class="bi bi-trash"></i></button>
                                                     @endif
                                                 </div>
@@ -139,7 +139,7 @@
                                 @endif
                             </div>
 
-                            @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                            @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                                 <div class="course-menu">
                                     <button id="dropdownMenuIconButton{{ $lesson->id }}" data-dropdown-toggle="dropdownDots{{ $lesson->id }}" class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none " type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
@@ -211,7 +211,7 @@
                 @endif
 
 
-                @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasRole('admin')))
+                @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                     <div class="d-flex justify-content-center text-success ">
                         <div class="bg-success rounded-pill align-self-center w-100 mx-4" style="height: 5px"></div>
 

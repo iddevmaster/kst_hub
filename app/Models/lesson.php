@@ -15,6 +15,7 @@ class lesson extends Model
         "topic",
         "desc",
         "sub_lessons",
+        "agn"
     ] ;
 
     public function getCourse() {

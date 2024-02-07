@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
 use App\Models\quiz;
+use Illuminate\Support\Facades\File;
 use Auth;
 
 class ManageController extends Controller
@@ -25,23 +26,23 @@ class ManageController extends Controller
      */
     public function index(Request $request)
     {
-        $agns = agency::all();
-        $brns = branch::all();
-        $dpms = department::all();
-        $roles = Role::all();
-        $courses = course::all();
-        $permissions = Permission::all();
+        // $agns = agency::all();
+        // $brns = branch::all();
+        // $dpms = department::all();
+        // $roles = Role::all();
+        // $courses = course::all();
+        // $permissions = Permission::all();
 
-        Log::channel('activity')->info('User '. $request->user()->name .' visited manage',
-        [
-            'user' => $request->user(),
-        ]);
-        if ($request->user()->hasAnyRole('admin', 'staff')) {
-            return view("page.manages.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
-        } else {
-            Auth::logout();
-            return redirect('/');
-        }
+        // Log::channel('activity')->info('User '. $request->user()->name .' visited manage',
+        // [
+        //     'user' => $request->user(),
+        // ]);
+        // if ($request->user()->hasAnyRole('admin', 'staff')) {
+        //     return view("page.manages.manage", compact("agns","brns","dpms", "roles", "permissions", "courses"));
+        // } else {
+        //     Auth::logout();
+        //     return redirect('/');
+        // }
     }
 
     /**
@@ -58,25 +59,33 @@ class ManageController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         try {
-            $validatedData = $validator->validated();
             $agn = new agency;
+
+            if ($request->hasFile('logo')) {
+                $file = $request->file('logo');
+                $filename = time(). '_' . $file->getClientOriginalName(); // Unique name
+
+                // Define the path within the public directory where you want to store the files
+                $destinationPath = public_path('uploads/logo');
+
+                // Check if the directory exists, if not, create it
+                if (!File::isDirectory($destinationPath)) {
+                    File::makeDirectory($destinationPath, 0755, true);
+                }
+
+                // Move the file to the public directory
+                $file->move($destinationPath, $filename);
+
+                $agn->logo = $filename;
+            }
+            $validatedData = $validator->validated();
+
             $agn->name = $validatedData['name'];
             $agn->address = $validatedData['address'];
             $agn->contact = $validatedData['contact'];
             $agn->save();
 
-            Activitylog::create([
-                'user' => auth()->id(),
-                'module' => 'Agency',
-                'content' => $agn->id,
-                'note' => 'store',
-            ]);
-            Log::channel('activity')->info('User '. $request->user()->name .' create Agency',
-            [
-                'user' => $request->user(),
-                'agn_created' => $agn,
-            ]);
-            return response()->json(['success' => $agn]);
+            return response()->json(['success' => $request->hasFile('logo')]);
         } catch (\Throwable $th) {
             return response()->json(['error' => 'ee '.$th->getMessage()]);
         }
@@ -105,6 +114,7 @@ class ManageController extends Controller
                 'module' => 'Branch',
                 'content' => $brn->id,
                 'note' => 'store',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' create Branch',
             [
@@ -133,6 +143,7 @@ class ManageController extends Controller
                 'module' => 'Role',
                 'content' => $role->name,
                 'note' => 'store',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' create role',
             [
@@ -158,30 +169,30 @@ class ManageController extends Controller
 
     public function createPerm(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-        ]);
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-        try {
-            $permission = Permission::create(['name' => $request->name]);
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|max:255',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()], 422);
+        // }
+        // try {
+        //     $permission = Permission::create(['name' => $request->name]);
 
-            Activitylog::create([
-                'user' => auth()->id(),
-                'module' => 'permission',
-                'content' => $permission->name,
-                'note' => 'store',
-            ]);
-            Log::channel('activity')->info('User '. $request->user()->name .' create permission',
-            [
-                'user' => $request->user(),
-                'perm_created' => $permission,
-            ]);
-            return response()->json(['success' => $permission]);
-        } catch (\Throwable $th) {
-            return response()->json(['error' => 'ee '.$th->getMessage()]);
-        }
+        //     Activitylog::create([
+        //         'user' => auth()->id(),
+        //         'module' => 'permission',
+        //         'content' => $permission->name,
+        //         'note' => 'store',
+        //     ]);
+        //     Log::channel('activity')->info('User '. $request->user()->name .' create permission',
+        //     [
+        //         'user' => $request->user(),
+        //         'perm_created' => $permission,
+        //     ]);
+        //     return response()->json(['success' => $permission]);
+        // } catch (\Throwable $th) {
+        //     return response()->json(['error' => 'ee '.$th->getMessage()]);
+        // }
     }
 
     public function createDpm(Request $request)
@@ -212,6 +223,7 @@ class ManageController extends Controller
                 'module' => 'Department',
                 'content' => $dpm->id,
                 'note' => 'store',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' create Department',
             [
@@ -243,6 +255,7 @@ class ManageController extends Controller
                 'module' => 'delete Data',
                 'content' => $request->type. ' : '. $request->delid,
                 'note' => 'delete',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' deleted data',
             [
@@ -296,6 +309,25 @@ class ManageController extends Controller
         try {
             if ($request->editType == 'agn') {
                 $agn = agency::find( $request->agnid );
+
+                if ($request->hasFile('logo')) {
+                    $file = $request->file('logo');
+                    $filename = time(). '_' . $file->getClientOriginalName(); // Unique name
+
+                    // Define the path within the public directory where you want to store the files
+                    $destinationPath = public_path('uploads/logo');
+
+                    // Check if the directory exists, if not, create it
+                    if (!File::isDirectory($destinationPath)) {
+                        File::makeDirectory($destinationPath, 0755, true);
+                    }
+
+                    // Move the file to the public directory
+                    $file->move($destinationPath, $filename);
+
+                    $agn->logo = $filename;
+                }
+
                 $agn->name = $request->name;
                 $agn->address = $request->address;
                 $agn->contact = $request->contact;
@@ -320,6 +352,7 @@ class ManageController extends Controller
                 'module' => 'Data',
                 'content' => $request->editType. ' : '. $request->name,
                 'note' => 'Update',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' updated data',
             [

@@ -13,6 +13,7 @@ class progress extends Model
         "user_id",
         "course_id",
         "lesson_id",
+        "agn"
     ];
 
     public function user() {

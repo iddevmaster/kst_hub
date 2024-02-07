@@ -17,7 +17,8 @@ class quiz extends Model
         "shuffle_quest",
         "create_by",
         'showAns',
-        'for_courses'
+        'for_courses',
+        "agn"
     ];
 
     public function getCreated() {

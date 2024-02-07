@@ -10,15 +10,15 @@ use Illuminate\Http\Request;
 class ReqController extends Controller
 {
     public function addReq () {
-        $users = User::all();
-        $courses = course::all();
+        $users = User::where('agency', auth()->user()->agency)->get();
+        $courses = course::where('agn', auth()->user()->agency)->get();
         return view('page.add_request', compact('users', 'courses'));
     }
 
     public function storeReq (Request $request) {
 
         try {
-            $alert2staff = User::role('staff')->pluck('id')->toArray();
+            $alert2staff = User::role('staff')->where('agency', auth()->user()->agency)->pluck('id')->toArray();
             // Use array_map to wrap each value in double quotes
             $encodedAlert = json_encode(array_map(function ($value) {
                 return (string)$value;
@@ -30,6 +30,7 @@ class ReqController extends Controller
                 'status' => 0,
                 'alert' => $encodedAlert,
                 'content' => '',
+                'agn' => auth()->user()->agency
 
             ]);
 

@@ -15,6 +15,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->createRoleIfNotExists('superAdmin');
         $this->createRoleIfNotExists('admin');
         $this->createRoleIfNotExists('staff');
         $this->createRoleIfNotExists('teacher');

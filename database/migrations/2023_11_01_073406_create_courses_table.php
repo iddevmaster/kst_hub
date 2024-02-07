@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('dpm');
             $table->json('studens')->nullable();
             $table->string('code');
+            $table->text('img')->nullable();
+            $table->text('group')->nullable();
+            $table->string('agn');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -12,7 +12,8 @@ class course_group extends Model
     protected $fillable = [
         "name",
         "courses",
-        "by"
+        "by",
+        'agn'
     ] ;
 
     public function getCoursesAttribute($value)

@@ -103,10 +103,24 @@
             <main style="background-color: var(--bg-color);" class="flex-auto">
                 {{ $slot }}
             </main>
+
+            @php
+                $agn = App\Models\agency::find(auth()->user()->agency);
+            @endphp
+
             <footer class="flex mt-5 justify-around w-full bg-white p-2 flex-wrap">
                 <div class="flex gap-2 align-items-center justify-center flex-wrap mb-2">
-                    <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
-                    <div class="flex items-center text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด <br> 200/222 หมู่2 ถนนชัยพฤกษ์ ตำบลในเมือง อำเภอเมืองขอนแก่น จังหวัดขอนแก่น <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
+                    <div><img src="/img/logoid_new.png" alt="" width="50"></div>
+                    <div><img src="{{ $agn->logo ? '/uploads/logo/'.$agn->logo : '/img/logoiddrives.png' }}" alt="" width="50"></div>
+                    <div class="flex items-center text-sm">
+                        <p style="height: fit-content">
+                            {{ $agn->name ? $agn->name : 'บริษัท ไอดีไดรฟ์ จำกัด' }}
+                            <br>
+                            {{ $agn->address ? $agn->address : '200/222 หมู่2 ถนนชัยพฤกษ์ ตำบลในเมือง อำเภอเมืองขอนแก่น จังหวัดขอนแก่น' }}
+                            <br>
+                            {{ $agn->contact ? $agn->contact : 'Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th' }}
+                        </p>
+                    </div>
                 </div>
                 <div class="text-center flex items-center">
                     <p>© 2023 KST ID System</p>

@@ -18,6 +18,9 @@ return new class extends Migration
             $table->integer('pass_score')->default(50);
             $table->boolean('shuffle_quest')->default(false);
             $table->string('create_by');
+            $table->boolean('showAns')->default(false);
+            $table->text('for_courses')->nullable();
+            $table->string('agn');
             $table->timestamps();
             $table->softDeletes();
 

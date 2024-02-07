@@ -33,7 +33,8 @@ class CourseController extends Controller
             $group = course_group::create([
                 'name' => $request->gname,
                 'courses' => json_encode($request->selected_course),
-                'by' => auth()->id()
+                'by' => auth()->id(),
+                'agn' => $request->user()->agency
             ]);
 
             Activitylog::create([
@@ -41,6 +42,7 @@ class CourseController extends Controller
                 'module' => 'addGroup',
                 'content' => $request->gname,
                 'note' => $group->id,
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' search dpm',
             [
@@ -67,7 +69,7 @@ class CourseController extends Controller
         $search = $request->get('search');
 
         // search in title
-        $courses1 = course::where('permission->dpm', "true")
+        $courses1 = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
                         ->where(function ($query) use ($request) {
                             $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
                                 ->orWhere('dpm', $request->user()->dpm);
@@ -78,7 +80,7 @@ class CourseController extends Controller
                         });
 
         // search in course code
-        $courses2 = course::where('permission->dpm', "true")
+        $courses2 = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
                         ->where(function ($query) use ($request) {
                             $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
                                 ->orWhere('dpm', $request->user()->dpm);
@@ -96,6 +98,7 @@ class CourseController extends Controller
             'module' => 'search',
             'content' => $search,
             'note' => 'dpm',
+            'agn' => auth()->user()->agency
         ]);
         Log::channel('activity')->info('User '. $request->user()->name .' search dpm',
             [
@@ -110,7 +113,7 @@ class CourseController extends Controller
         $search = $request->get('search');
 
         // search in title
-        $courses = course::where('permission->all', "true")
+        $courses = course::where('permission->all', "true")->where('agn', $request->user()->agency)
                         ->where(function ($query) use ($search) {
                             $query->where('title', 'like', '%'.$search.'%')
                                 ->orWhere('code', 'like', '%'.$search.'%');
@@ -121,6 +124,7 @@ class CourseController extends Controller
             'module' => 'search',
             'content' => $search,
             'note' => 'all course',
+            'agn' => auth()->user()->agency
         ]);
         Log::channel('activity')->info('User '. $request->user()->name .' search all course',
         [
@@ -179,6 +183,7 @@ class CourseController extends Controller
                 'dpm' => $request->user()->dpm,
                 'code' => ($dpmName->prefix).($courseNum),
                 'img' => $filename ?? null,
+                'agn' => $request->user()->agency
             ]);
 
             Activitylog::create([
@@ -186,6 +191,7 @@ class CourseController extends Controller
                 'module' => 'Course',
                 'content' => $course->id,
                 'note' => 'store',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' store course',
             [
@@ -258,6 +264,7 @@ class CourseController extends Controller
                 'module' => 'Course',
                 'content' => $courses->id,
                 'note' => 'update',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' update course',
             [
@@ -290,6 +297,7 @@ class CourseController extends Controller
                 'module' => $request->deltype,
                 'content' => $request->delid,
                 'note' => 'delete',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' delete course or lesson',
             [
@@ -336,6 +344,7 @@ class CourseController extends Controller
                 'module' => 'Course',
                 'content' => $course->id,
                 'note' => 'enroll',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' enroll course',
             [
@@ -357,7 +366,7 @@ class CourseController extends Controller
         $departmentIds = $request->input('departments');
 
         // Start building the query
-        $query = Course::where('permission->all', true);
+        $query = Course::where('permission->all', true)->where('agn', $request->user()->agency);
 
         // If a search keyword was provided, use it to filter the courses
         if ($search) {
@@ -378,12 +387,6 @@ class CourseController extends Controller
         $dpms = department::all();
         // Return the search view with the results and departments
 
-        Activitylog::create([
-            'user' => auth()->id(),
-            'module' => 'all course',
-            'content' => $search,
-            'note' => 'search',
-        ]);
         Log::channel('activity')->info('User '. $request->user()->name .' search all course',
         [
             'user_id' => auth()->id(),
@@ -405,9 +408,9 @@ class CourseController extends Controller
 
         // Start building the query with the initial condition for the current user
         if ($request->user()->hasAnyRole(['admin', 'staff'])) {
-            $query = Course::where('permission->dpm', true);
+            $query = Course::where('permission->dpm', true)->where('agn', $request->user()->agency);
         } else {
-            $query = Course::where('permission->dpm', true)
+            $query = Course::where('permission->dpm', true)->where('agn', $request->user()->agency)
                         ->where(function ($query) use ($request) {
                             $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
                                 ->orWhere('dpm', $request->user()->dpm);
@@ -437,13 +440,6 @@ class CourseController extends Controller
         // Load departments for the filters
         $dpms = Department::all();
 
-
-        Activitylog::create([
-            'user' => auth()->id(),
-            'module' => 'My course',
-            'content' => $search,
-            'note' => 'search',
-        ]);
         Log::channel('activity')->info('User '. $request->user()->name .' search my course',
         [
             'user_id' => auth()->id(),
@@ -464,6 +460,7 @@ class CourseController extends Controller
                 'topic'=> $request->topic,
                 'desc'=> $request->desc ?? '',
                 'course'=> $request->courseid,
+                'agn' => $request->user()->agency
             ]);
 
             Activitylog::create([
@@ -471,6 +468,7 @@ class CourseController extends Controller
                 'module' => 'lesson',
                 'content' => $lesson->id,
                 'note' => 'store',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' add lesson',
             [
@@ -504,6 +502,7 @@ class CourseController extends Controller
                 'module' => 'lesson',
                 'content' => $lesson->id,
                 'note' => 'update',
+                'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' update lesson',
             [
@@ -605,6 +604,7 @@ class CourseController extends Controller
                 'module' => 'sublesson',
                 'content' => $lesson->id,
                 'note' => 'add sublesson',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' add sub lesson',
             [
@@ -667,6 +667,7 @@ class CourseController extends Controller
                 'module' => 'sublesson',
                 'content' => $lesson->id,
                 'note' => 'remove',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' delete sub lesson',
             [

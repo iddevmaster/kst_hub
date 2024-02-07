@@ -45,6 +45,7 @@ class ProfileController extends Controller
                 'module' => 'Profile',
                 'content' => $user->id,
                 'note' => 'Update',
+                'agn' => auth()->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' update user profile',
             [
@@ -72,6 +73,7 @@ class ProfileController extends Controller
                     'module' => 'Icon',
                     'content' => $request->user()->id,
                     'note' => 'Update',
+                    'agn' => auth()->user()->agency
                 ]);
                 Log::channel('activity')->info('User '. $request->user()->name .' updated user icon',
                 [

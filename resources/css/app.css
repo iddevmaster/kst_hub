@@ -4,6 +4,8 @@
 
 
 :root {
-    --primary-color: #FF6B00;
-    --bg-color: #EAFFFE;
+    --primary-color: #ffcf22;
+    --bg-color: #e7e7e7;
+    --bg-color2: #f7f7f7;
+    --text-color: #555555;
 }

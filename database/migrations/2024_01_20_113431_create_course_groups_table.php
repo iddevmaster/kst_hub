@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->longText('courses')->nullable();
             $table->string('by');
+            $table->string('agn');
             $table->timestamps();
         });
     }

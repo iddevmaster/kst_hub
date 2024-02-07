@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('score')->default(1);
             $table->boolean('shuffle_ch')->default(false);
             $table->json('answer')->nullable();
+            $table->string('type')->nullable();
+            $table->string('agn');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -45,7 +45,7 @@
             @endif
 
             {{-- all course carousel --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5">
+            <div class="overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5" style="background-color: var(--bg-color2);">
                 <div class="mb-3 flex justify-between">
                     <p class="text-md sm:text-xl fw-bold">{{ __('messages.all_course') }}</p>
                     <a href="{{route('course.all')}}" class="btn btn-sm text-xs sm:text-md btn-primary">{{ __('messages.seemore') }} <i class="bi bi-chevron-double-right"></i></a>
@@ -74,7 +74,7 @@
             </div>
 
             {{-- Dpm course carousel --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4">
+            <div class="overflow-hidden shadow-sm sm:rounded-lg p-4" style="background-color: var(--bg-color2);">
                 <div class="mb-3 flex justify-between">
                     <p class="text-md sm:text-xl fw-bold">{{ __('messages.classroom') }}</p>
                     <a href="{{route('classroom')}}" class="btn btn-sm text-xs sm:text-md btn-primary">{{ __('messages.seemore') }} <i class="bi bi-chevron-double-right"></i></a>

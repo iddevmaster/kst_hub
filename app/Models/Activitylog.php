@@ -13,7 +13,8 @@ class Activitylog extends Model
         'user',
         'module',
         'content',
-        'note'
+        'note',
+        'agn'
     ];
 
     public function getUser() {

@@ -145,7 +145,7 @@
                                     </td>
                                     @if (($user->role == 'admin'))
                                         <td>
-                                            @if ((Auth::user()->role == 'admin'))
+                                            @if ((Auth::user()->role == 'admin') || Auth::user()->hasRole('superAdmin'))
                                                 <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
                                                 <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
                                             @endif

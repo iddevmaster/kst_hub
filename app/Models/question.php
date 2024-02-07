@@ -16,6 +16,7 @@ class question extends Model
         "score",
         "shuffle_ch",
         "answer",
+        'agn'
     ];
 
     public function getAnswerAttribute($value)

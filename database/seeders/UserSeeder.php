@@ -14,31 +14,31 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Check if the user with the specified username already exists
-        $existingUser = User::where('username', 'admin')->first();
+        $existingUser = User::where('username', 'superadmin')->first();
 
         if (!$existingUser) {
             // User doesn't exist, so create it
             $adminUser = User::create([
-                'name' => 'AdminKST',
-                'username' => 'admin',
+                'name' => 'Super Admin',
+                'username' => 'superadmin',
                 'password' => bcrypt('iddrivesadmin'), // Use bcrypt() to hash the password
                 'agency' => '0',
                 'brn' => '0',
                 'dpm' => '0',
-                'role' => 'admin',
+                'role' => 'superAdmin',
                 'icon' => '',
-                'courses' => '',
+                'courses' => [],
                 // ... any other user fields
             ]);
 
-            if (!($adminUser->hasRole('admin'))) {
-                $adminUser->assignRole('admin');
+            if (!($adminUser->hasRole('superAdmin'))) {
+                $adminUser->assignRole('superAdmin');
             }
 
-            $this->command->info("User AdminKST created successfully.");
+            $this->command->info("User superAdmin created successfully.");
         } else {
             // User already exists, display a message
-            $this->command->info("User AdminKST already exists.");
+            $this->command->info("User superAdmin already exists.");
         }
     }
 }

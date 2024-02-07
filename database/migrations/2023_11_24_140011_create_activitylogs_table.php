@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('user');
             $table->string('module');
             $table->longText('content');
-            $table->text('note')->nullable;
+            $table->text('note')->nullable();
+            $table->string('agn');
             $table->timestamps();
         });
     }

@@ -74,6 +74,7 @@ class TestController extends Controller
             'score' => $scores,
             'totalScore' => $totalScore,
             'end'=> $testResults['end'],
+            'agn' => auth()->user()->agency
         ]);
 
         session([
@@ -91,6 +92,7 @@ class TestController extends Controller
             'module' => 'Test',
             'content' => $test->id,
             'note' => 'finish',
+            'agn' => auth()->user()->agency
         ]);
         session()->forget('testResults');
         return redirect()->route('test.summary');

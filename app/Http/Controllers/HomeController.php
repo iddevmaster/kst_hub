@@ -57,7 +57,7 @@ class HomeController extends Controller
     }
 
     public function allCourse(Request $request) {
-        $courses = course::where('permission->all', "true")->paginate(12);
+        $courses = course::where('permission->all', "true")->where('agn', auth()->user()->agency)->paginate(12);
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited all course',
         [
@@ -75,15 +75,28 @@ class HomeController extends Controller
             }
         }
 
-        $courses = course::all();
-        $dpms = department::all();
-        $tests = Test::all();
-        $activitys = Activitylog::orderBy('id', 'desc')->get();
-        $courseDel = course::onlyTrashed()->get();
-        $quizDel = quiz::onlyTrashed()->get();
+        if (auth()->user()->hasRole('superAdmin')) {
+            $courses = course::all();
+            $dpms = department::all();
+            $tests = Test::all();
+            $activitys = Activitylog::orderBy('id', 'desc')->get();
+            $courseDel = course::onlyTrashed()->get();
+            $quizDel = quiz::onlyTrashed()->get();
 
-        $agns = agency::all();
-        $brns = branch::all();
+            $agns = agency::all();
+            $brns = branch::all();
+        } else {
+            $courses = course::where('agn', $request->user()->agency)->get();
+            $dpms = department::where('agency', $request->user()->agency)->get();
+            $tests = Test::where('agn', $request->user()->agency)->get();
+            $activitys = Activitylog::where('agn', $request->user()->agency)->orderBy('id', 'desc')->get();
+            $courseDel = course::where('agn', $request->user()->agency)->onlyTrashed()->get();
+            $quizDel = quiz::where('agn', $request->user()->agency)->onlyTrashed()->get();
+
+            $agns = agency::where('id', $request->user()->agency)->get();
+            $brns = branch::where('agency', $request->user()->agency)->get();
+        }
+
         $roles = Role::all();
         $permissions = Permission::all();
         // $record->restore();
@@ -93,7 +106,7 @@ class HomeController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        if ($request->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || $request->user()->hasRole('admin')) {
+        if ($request->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || $request->user()->hasAnyRole(['admin', 'superAdmin'])) {
             return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel', 'agns', 'brns', 'roles', 'permissions'));
         } else {
             return redirect('/');
@@ -101,16 +114,16 @@ class HomeController extends Controller
     }
 
     public function main(Request $request) {
-        $courses = course::latest()->take(6)->get();
-        $dpms = department::all();
+        $courses = course::where('agn', $request->user()->agency)->latest()->take(6)->get();
+        $dpms = department::where('agency', $request->user()->agency)->get();
         if ($request->user()->role == "new") {
             return redirect()->route('home');
         } else {
-            $allcourses = course::where('permission->all', "true")->take(8)->get();
+            $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->take(8)->get();
             if ($request->user()->hasAnyRole('admin', 'staff')) {
-                $dpmcourses = course::where('permission->dpm', "true")->take(8)->get();
+                $dpmcourses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
             } else {
-                $dpmcourses = course::where('permission->dpm', "true")
+                $dpmcourses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
                  ->where(function ($query) use ($request) {
                      $query->Where('dpm', $request->user()->dpm);
                  })->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
@@ -125,7 +138,7 @@ class HomeController extends Controller
     }
 
     public function home(Request $request) {
-        $courses = course::whereIn("id", $request->user()->courses)->latest()->get();
+        $courses = course::whereIn("id", $request->user()->courses)->orderBy('id', 'desc')->get();
         $user = $request->user();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited Home page',
@@ -141,20 +154,29 @@ class HomeController extends Controller
     }
 
     public function allUsers(Request $request) {
-        $users = User::all();
-        $agns = agency::all();
-        $dpms = department::all();
-        $brns = branch::all();
+        if (auth()->user()->hasRole('superAdmin')) {
+            $users = User::all();
+            $agns = agency::all();
+            $dpms = department::all();
+            $brns = branch::all();
+            $courses = course::all();
+        } else {
+            $users = User::where('agency', $request->user()->agency)->get();
+            $agns = agency::where('id', $request->user()->agency)->get();
+            $dpms = department::where('agency', $request->user()->agency)->get();
+            $brns = branch::where('agency', $request->user()->agency)->get();
+            $courses = course::where('agn', $request->user()->agency)->get();
+        }
+
         $roles = Role::all();
         $permissions = Permission::all();
-        $courses = course::all();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited alluser',
         [
             'user_id' => $request->user(),
         ]);
 
-        if ($request->user()->hasPermissionTo('userm') || $request->user()->hasRole('admin')) {
+        if ($request->user()->hasPermissionTo('userm') || $request->user()->hasAnyRole(['admin', 'superAdmin'])) {
             return view("page.users.allusers", compact("users","dpms","agns","brns", "roles", "permissions", "courses"));
         } else {
             return redirect('/');
@@ -162,14 +184,23 @@ class HomeController extends Controller
     }
 
     public function userDetail(Request $request, $id) {
-        $user = User::find($id);
-        $agns = agency::all();
-        $dpms = department::all();
-        $brns = branch::all();
+        if (auth()->user()->hasRole('superAdmin')) {
+            $agns = agency::all();
+            $dpms = department::all();
+            $brns = branch::all();
+            $courses = course::all();
+            $groups = course_group::all();
+        } else {
+            $agns = agency::where('id', $request->user()->agency)->get();
+            $dpms = department::where('agency', $request->user()->agency)->get();
+            $brns = branch::where('agency', $request->user()->agency)->get();
+            $courses = course::where('agn', $request->user()->agency)->get();
+            $groups = course_group::where('agn', $request->user()->agency)->get();
+        }
+
         $roles = Role::all();
         $permissions = Permission::all();
-        $courses = course::all();
-        $groups = course_group::all();
+        $user = User::find($id);
         $ucourse = course::whereIn("id", $user->courses ?? [])->get();
         $tests = Test::where('tester', $user->id)->orderBy('id', 'desc')->get();
         $ownCourse = course::where('teacher', $user->id)->orderBy('id', 'desc')->get();
@@ -179,7 +210,7 @@ class HomeController extends Controller
             'content' => $id,
             'user' => $request->user(),
         ]);
-        if ($request->user()->hasAnyRole('admin', 'staff')) {
+        if ($request->user()->hasAnyRole('admin', 'staff', 'superAdmin') || $request->user()->hasPermissionTo('userm')) {
             return view("page.users.userDetail", compact("id","user", "groups", "roles", "permissions","dpms","agns","brns", "courses", 'ucourse', 'tests', 'ownCourse'));
         } else {
             Auth::logout();
@@ -189,9 +220,9 @@ class HomeController extends Controller
 
     public function requestAll(Request $request) {
         if ($request->user()->hasAnyRole('admin', 'staff')) {
-            $requests = user_request::orderBy('id', 'desc')->get();
+            $requests = user_request::orderBy('id', 'desc')->where('agn', $request->user()->agency)->get();
         } else {
-            $requests = user_request::where('user', $request->user()->id)->orderBy('id', 'desc')->get();
+            $requests = user_request::where('user', $request->user()->id)->where('agn', $request->user()->agency)->orderBy('id', 'desc')->get();
         }
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited requestAll',
@@ -206,8 +237,8 @@ class HomeController extends Controller
     }
 
     public function ownCourse(Request $request) {
-        $courses = course::where("teacher", auth()->id())->get();
-        $groups = course_group::where('by', auth()->id())->get();
+        $courses = course::where("teacher", auth()->id())->where('agn', $request->user()->agency)->get();
+        $groups = course_group::where('by', auth()->id())->where('agn', $request->user()->agency)->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited ownCourse',
         [
@@ -229,11 +260,11 @@ class HomeController extends Controller
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
 
         if ($request->user()->hasAnyRole('admin', 'staff')) {
-            $courses = course::where('permission->dpm', "true")->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
+            $courses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
         } else {
-            $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+            $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->where('agn', $request->user()->agency)
                  ->orWhere(function ($query) use ($request) {
-                     $query->where('permission->dpm', "true")
+                     $query->where('permission->dpm', "true")->where('agn', $request->user()->agency)
                             ->Where('dpm', $request->user()->dpm);
                  })->paginate(12);
         }
@@ -335,13 +366,13 @@ class HomeController extends Controller
         $data = [];
         $agn = agency::find(auth()->user()->agency);
         if ($type == 'course') {
-            $courses = course::orderBy('id', 'desc')->get();
+            $courses = course::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get();
             $data = ['data' => $courses, 'type' => $type, 'agn' => $agn];
         } elseif ($type == 'test') {
-            $tests = Test::orderBy('id', 'desc')->get();
+            $tests = Test::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get();
             $data = ['data' => $tests, 'type' => $type, 'agn' => $agn];
         } elseif ($type == 'activity') {
-            $activitys = Activitylog::orderBy('id', 'desc')->get();
+            $activitys = Activitylog::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get();
             $data = ['data' => $activitys, 'type' => $type, 'agn' => $agn];
         }
 

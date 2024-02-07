@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('quiz');
             $table->string('tester');
-            $table->string('start')->nullable();
             $table->json('answers');
             $table->integer('score')->default(0);
+            $table->integer('totalScore')->default(0);
+            $table->string('agn');
+            $table->string('start')->nullable();
             $table->string('end')->nullable();
             $table->timestamps();
             $table->softDeletes();
