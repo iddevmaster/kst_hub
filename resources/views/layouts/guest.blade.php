@@ -23,7 +23,7 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="font-sans text-gray-900 antialiased" >
-        <div class="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100" style="background-image: url('{{ asset('img/bg.jpg') }}'); background-size: cover; background-position: center">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100" style="background-image: url('{{ asset('img/bg2.jpg') }}'); background-size: cover; background-position: center">
             <div class="py-4">
                 <a href="/">
                     <img src="/img/logo.png" alt="" >
