@@ -1,4 +1,4 @@
-# newKST
+# KST Hub
  
 install project as :
 - `composer install`
