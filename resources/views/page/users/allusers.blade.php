@@ -153,7 +153,9 @@
                                     @else
                                         <td>
                                             <a class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Detail" href="{{ url('/users/detail/'. $user->id ) }}"><i class="bi bi-file-person-fill"></i></a>
-                                            <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
+                                            @if ($user->role !== 'superAdmin')
+                                                <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete this user." id="delBtn" value="{{ $user->id }}"><i class="bi bi-trash"></i></button>
+                                            @endif
                                             @if ($user->role == 'new')
                                                 <button class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Renew." id="renewBtn" value="{{ $user->id }}" oldVal="{{ $user->startlt }}"><i class="bi bi-calendar2-plus"></i></button>
                                             @endif
