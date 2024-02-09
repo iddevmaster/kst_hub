@@ -361,8 +361,8 @@
                     <div class="py-10">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="sm:rounded-lg p-4 row justify-center">
-                                <div class="p-4 rounded-lg row">
-                                    <div class="col-6 ">
+                                <div class="p-4 rounded-lg grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    <div class="">
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
                                                 <p class="text-2xl font-bold"><i class="bi bi-buildings"></i> {{ __('messages.Agency') }}</p>
@@ -414,7 +414,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="">
                                         <div class="bg-white p-4 shadow rounded-lg">
                                             <div class="flex justify-between mb-3">
                                                 <p class="text-2xl font-bold"><i class="bi bi-building"></i> {{ __('messages.Branch') }}</p>

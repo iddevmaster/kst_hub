@@ -92,8 +92,8 @@
                 </div>
             </div>
 
-            <div class="sm:rounded-lg p-4 row">
-                <div class="bg-light p-4 rounded ">
+            <div class="sm:rounded-lg row w-100">
+                <div class="bg-light p-2 rounded overflow-x-scroll">
                     <table class="table table-sm table-hover" id="users-datatable">
                         <thead>
                             <tr>

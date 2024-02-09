@@ -254,11 +254,11 @@
                     {{ __('messages.users') }}
                 </x-responsive-nav-link>
             @endcan
-            @canAny(['dCourse', 'dQuiz', 'dLog', 'dHistory'])
+            @if (auth()->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('home')">
                     {{ __('messages.dashboard') }}
                 </x-responsive-nav-link>
-            @endcanAny
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
