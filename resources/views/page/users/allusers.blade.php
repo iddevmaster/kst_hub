@@ -285,10 +285,14 @@
                 if (result.isConfirmed) {
                     console.log(result.value);
                     Swal.fire(
-                    'Successed!',
-                    'User has been renewed.',
-                    'success'
-                    )
+                        'Successed!',
+                        'User has been renewed.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload()
+                        }
+                    });
                 }
             })
         })

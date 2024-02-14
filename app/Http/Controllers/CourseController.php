@@ -487,8 +487,13 @@ class CourseController extends Controller
         $request->validate([
             'lessid' => ['string', 'max:255'],
             'topic' => ['required', 'string', 'max:5000'],
-            'desc' => ['required', 'string', 'max:10000'],
         ]);
+
+        if ($request->desc) {
+            $request->validate([
+                'desc' => ['string', 'max:10000'],
+            ]);
+        }
 
         try {
             $lesson = Lesson::find($request->lessid);
