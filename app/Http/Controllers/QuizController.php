@@ -325,17 +325,6 @@ class QuizController extends Controller
             }
         }
 
-        // Activitylog::create([
-        //     'user' => auth()->id(),
-        //     'module' => 'Quiz',
-        //     'content' => $quiz->id,
-        //     'note' => 'copy',
-        // ]);
-        // Log::channel('activity')->info('User '. $request->user()->name .' copy quiz',
-        // [
-        //     'user' => $request->user(),
-        //     'quiz' => $quiz,
-        // ]);
         return response()->json(['success' => $copyQuiz]);
     }
 }
