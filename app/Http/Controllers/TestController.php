@@ -13,6 +13,7 @@ use App\Models\Activitylog;
 class TestController extends Controller
 {
     public function index(Request $request, $cid , $qzid, $ques_num) {
+        dd($ques_num);
         return view("page.quizzes.test", compact('qzid', 'cid', 'ques_num'));
     }
 
