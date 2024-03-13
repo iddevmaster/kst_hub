@@ -209,8 +209,10 @@
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(response.statusText)
+                        return '';
+                    } else {
+                        return response.json();
                     }
-                    return response.json()
                 })
                 .catch(error => {
                     Swal.showValidationMessage(
@@ -221,7 +223,7 @@
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log(result.value , 'error res');
+                console.log(result.value);
             }
         });
 
