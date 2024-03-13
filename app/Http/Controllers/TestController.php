@@ -13,13 +13,6 @@ use App\Models\Activitylog;
 class TestController extends Controller
 {
     public function index(Request $request, $cid , $qzid, $ques_num) {
-
-        Log::channel('activity')->info('User '. $request->user()->name .' start test',
-        [
-            'user' => $request->user(),
-            'course' => $cid,
-            'quiz' => $qzid
-        ]);
         return view("page.quizzes.test", compact('qzid', 'cid', 'ques_num'));
     }
 
