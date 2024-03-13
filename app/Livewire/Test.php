@@ -31,22 +31,23 @@ class Test extends Component
         $this->startTest = Carbon::now()->format('Y-m-d H:i:s');
         $this->quiz = quiz::find($this->testId);
         $all_ques = Question::where('quiz', $this->testId)->count();
-        if ($this->quiz->shuffle_quest && $ques_num === $all_ques) {
+
+        if ($this->quiz->shuffle_quest && $ques_num == $all_ques) {
             $this->questions = Question::where('quiz', $this->testId)->get()->shuffle();  // เรียงจากน้อยไปมาก
-        } elseif (!$this->quiz->shuffle_quest && $ques_num === $all_ques) {
+        } elseif (!$this->quiz->shuffle_quest && $ques_num == $all_ques) {
             $this->questions = Question::where('quiz', $this->testId)->orderBy('id', 'asc')->get();  // เรียงจากน้อยไปมาก
         } elseif ($ques_num < $all_ques) {
             $this->questions = Question::where('quiz', $this->testId)->inRandomOrder()->limit($ques_num)->get();
         }
         session()->put('shuffled_questions', $this->questions);
         // dd($this->questions);
-        $this->totalQuestion = count($this->questions);
+        $this->totalQuestion = count($this->questions ?? []);
         $this->initAnswers();
     }
 
     private function initAnswers()
     {
-        foreach ($this->questions as $question) {
+        foreach ($this->questions ?? [] as $question) {
             $this->answers[$question->id] = null;
             $this->submitAns[$question->id] = null;
             $this->quesType[$question->id] = $question->type ? 'c': 't';
@@ -134,7 +135,7 @@ class Test extends Component
     public function render()
     {
         return view('livewire.test', [
-            'question' => $this->questions[$this->currentQuestion - 1],
+            'question' => $this->questions ? $this->questions[$this->currentQuestion - 1] : [],
             'questNum' => $this->currentQuestion,
             'total'=> $this->totalQuestion,
         ]);
