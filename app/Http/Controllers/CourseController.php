@@ -181,7 +181,7 @@ class CourseController extends Controller
                 'permission' => json_encode($course_perm),
                 'teacher' => $request->user()->id,
                 'dpm' => $request->user()->dpm,
-                'code' => ($dpmName->prefix).($courseNum),
+                'code' => ($dpmName->prefix ?? 'ID').($courseNum),
                 'img' => $filename ?? null,
                 'agn' => $request->user()->agency
             ]);
