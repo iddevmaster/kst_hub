@@ -221,7 +221,7 @@
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log(result.value);
+                console.log(result.value , 'error res');
             }
         });
 
