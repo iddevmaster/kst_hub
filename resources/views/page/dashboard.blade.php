@@ -113,8 +113,8 @@
                                                     <tr>
                                                         <td>{{ $course->code }}</td>
                                                         <td class="text-nowrap" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ $course->title }}</td>
-                                                        <td>{{ $course->getTeacher->name }}</td>
-                                                        <td>{{ $course->getDpm->name }}</td>
+                                                        <td>{{ optional($course->getTeacher)->name }}</td>
+                                                        <td>{{ optional($course->getDpm)->name }}</td>
                                                         <td>{{ count($course->studens ?? []) }}</td>
                                                     </tr>
                                                 @endforeach
@@ -693,7 +693,7 @@
                     extend: 'print',
                     autoPrint: true,
                     title: '{{auth()->user()->agnName->name ?? "Knowledge Service Training"}}',
-                    messageTop: 'All Course',
+                    messageTop: 'รายงานหลักสูตร',
                     messageBottom: 'Printed on ' + window.location.href + ' by {{auth()->user()->name}} at ' + dateString,
                     customize: function (doc) {
                         // Prepend an image to the title (doc.title is empty so we prepend to doc.content[1].table)
@@ -762,7 +762,7 @@
                     extend: 'print',
                     autoPrint: true,
                     title: '{{auth()->user()->agnName->name ?? "Knowledge Service Training"}}',
-                    messageTop: 'All Test ',
+                    messageTop: 'รายงานการทำแบบทดสอบ',
                     messageBottom: 'Printed on ' + window.location.href + ' by {{auth()->user()->name}} at ' + dateString,
                     customize: function (doc) {
                         // Prepend an image to the title (doc.title is empty so we prepend to doc.content[1].table)
@@ -831,7 +831,7 @@
                     extend: 'print',
                     autoPrint: true,
                     title: '{{auth()->user()->agnName->name ?? "Knowledge Service Training"}}',
-                    messageTop: 'Activity Log',
+                    messageTop: 'รายงานประวัติการเข้าใช้ระบบ',
                     messageBottom: 'Printed on ' + window.location.href + ' by {{auth()->user()->name}} at ' + dateString,
                     customize: function (doc) {
                         // Prepend an image to the title (doc.title is empty so we prepend to doc.content[1].table)

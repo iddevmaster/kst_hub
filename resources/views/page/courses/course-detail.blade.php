@@ -101,7 +101,7 @@
                                                         qid="{{$sls->content ?? '0'}}"
                                                         pass="{{$quiz->pass_score ?? '0'}}"
                                                         qBy="{{$quiz->getCreated->name ?? 'unknow'}}"
-                                                        quesNum = "{{$quesnum ?? '0'}}"
+                                                        quesNum = "{{$sls->num_quest ?? $quesnum}}"
                                                     >
                                                         {{ $sls->label }}
                                                         <span class="text-secondary" style="font-size: 12px">{{ __('messages.update') }} {{ $sls->date }} ({{ $sls->type }})</span>
@@ -268,8 +268,8 @@
                 <div class="card p-4">
                     <p class="text-center fw-bold fs-5 mb-4">{{ __('messages.feature') }}</p>
                     <p><b>{{ __('messages.cid') }}: </b> {{ $course->code }}</p>
-                    <p><b>{{ __('messages.Lecturer') }}: </b> {{ $course->getTeacher->name }}</p>
-                    <p><b>{{ __('messages.dpm') }}: </b> {{ $course->getDpm->name }}</p>
+                    <p><b>{{ __('messages.Lecturer') }}: </b> {{ optional($course->getTeacher)->name }}</p>
+                    <p><b>{{ __('messages.dpm') }}: </b> {{ optional($course->getDpm)->name }}</p>
                     <p><b>{{ __('messages.lesson') }}: </b> {{ $lessons->count() }}</p>
                     @php
                         $updatetime = new DateTime($course->updated_at);
@@ -560,6 +560,8 @@
                         <option value="{{$quiz->id}}">{{$quiz->title}}</option>
                     @endforeach
                 </select>
+                <input id="numofques" min="1" type="number" class="mt-3" placeholder="number of questions">
+                <p class="text-xs text-yellow-600">*หากไม่กรอกจำนวนคำถาม จะใช้คำถามทั้งหมด</p>
                 `,
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -569,6 +571,7 @@
                 preConfirm: () => {
                     const label = document.getElementById('swal-input1').value;
                     const content = document.getElementById('selQuiz').value;
+                    const numOfQuest = document.getElementById('numofques').value;
 
                     if (!label) {
                         Swal.showValidationMessage("Label is required!");
@@ -583,7 +586,7 @@
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
-                            body: JSON.stringify({ label: label, content: content, lessId: lessid, addType: addType})
+                            body: JSON.stringify({ label: label, content: content, lessId: lessid, addType: addType , numQuest: numOfQuest ? numOfQuest : 0})
                         })
                         .then(response => {
                             if (!response.ok) {
@@ -646,13 +649,17 @@
                 preConfirm: () => {
                     const label = document.getElementById('labelInput').value;
                     const fileInput = document.getElementById('dropzone-file');
+                    const fileSize = fileInput.files[0] ? fileInput.files[0].size : 0;
 
                     // Ensure a file was selected
                     if (!label) {
                         Swal.showValidationMessage("Label is required!");
                         return;
                     } else if (!fileInput.files || fileInput.files.length === 0) {
-                        Swal.showValidationMessage("File is required!");
+                        Swal.showValidationMessage("กรุณาอัพโหลดไฟล์!");
+                        return;
+                    } else if (fileSize > 25 * 1024 * 1024) {
+                        Swal.showValidationMessage("ขนาดไฟล์เกินขีดจำกัด (สูงสุด 25Mb)!");
                         return;
                     } else {
                         const formData = new FormData();
@@ -789,7 +796,7 @@
                                         {{$test->score}}/{{$test->totalScore}}
                                     </td>
                                     <td class="px-3 py-2">
-                                        @if ($test->score > ($test->totalScore * $test->getQuiz->pass_score / 100))
+                                        @if ($test->score >= ($test->totalScore * $test->getQuiz->pass_score / 100))
                                             <p class="text-green-500">PASS</p>
                                         @else
                                             <p class="text-red-500">FAIL</p>
@@ -808,7 +815,7 @@
                 confirmButtonText: 'Start',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = `/test/start/${cid}/${qid}`; // Replace 'startQuiz' with your route name
+                    window.location.href = `/test/start/${cid}/${qid}/${quesNum}`; // Replace 'startQuiz' with your route name
                 }
             });
         });
