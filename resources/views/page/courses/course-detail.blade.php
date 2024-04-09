@@ -635,7 +635,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500 ">jpeg,png,pdf,svg,doc,docx,xls,xlsx,ppt,pptx,txt,mp4,zip,rar <br> (MAX 25Mb size)</p>
+                                    <p class="text-xs text-gray-500 ">jpeg,png,pdf,svg,doc,docx,xls,xlsx,ppt,pptx,txt,mp4,zip,rar <br> (MAX 120Mb size)</p>
                                 </div>
                                 <input id="dropzone-file" type="file" class="hidden" />
                             </label>
@@ -650,6 +650,7 @@
                     const label = document.getElementById('labelInput').value;
                     const fileInput = document.getElementById('dropzone-file');
                     const fileSize = fileInput.files[0] ? fileInput.files[0].size : 0;
+                    const fileName = fileInput.files[0] ? fileInput.files[0].name : '';
 
                     // Ensure a file was selected
                     if (!label) {
@@ -658,31 +659,45 @@
                     } else if (!fileInput.files || fileInput.files.length === 0) {
                         Swal.showValidationMessage("กรุณาอัพโหลดไฟล์!");
                         return;
-                    } else if (fileSize > 25 * 1024 * 1024) {
-                        Swal.showValidationMessage("ขนาดไฟล์เกินขีดจำกัด (สูงสุด 25Mb)!");
+                    } else if (fileSize > 120 * 1024 * 1024) {
+                        Swal.showValidationMessage("ขนาดไฟล์เกินขีดจำกัด (สูงสุด 120Mb)!");
                         return;
                     } else {
-                        const formData = new FormData();
-                        formData.append('label', label);
-                        formData.append('content', fileInput.files[0]);
-                        formData.append('lessId', lessId);
-                        formData.append('addType', addType);
+                        // Display file name and size
+                        Swal.update({
+                            title: 'กำลังอัพโหลดไฟล์',
+                            html: `<b>${fileName}</b><br>ขนาด: ${(fileSize / (1024 * 1024)).toFixed(2)} MB`,
+                        });
 
-                        // Add your CSRF token
-                        formData.append('_token', '{{ csrf_token() }}');
+                        // Delay the fetch request
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => {
+                                const formData = new FormData();
+                                formData.append('label', label);
+                                formData.append('content', fileInput.files[0]);
+                                formData.append('lessId', lessId);
+                                formData.append('addType', addType);
 
-                        return fetch('/lesson/sublesson/add', {
-                            method: 'POST',
-                            body: formData // Send formData without setting Content-Type header
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(response.statusText)
-                            }
-                            return response.json()
-                        })
-                        .catch(error => {
-                            Swal.showValidationMessage(`Request failed: ${error}`)
+                                // Add your CSRF token
+                                formData.append('_token', '{{ csrf_token() }}');
+
+                                fetch('/lesson/sublesson/add', {
+                                    method: 'POST',
+                                    body: formData // Send formData without setting Content-Type header
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(response.statusText)
+                                    }
+                                    return response.json()
+                                })
+                                .then(data => {
+                                    resolve(data); // Resolve the promise with fetched data
+                                })
+                                .catch(error => {
+                                    reject(`Request failed: ${error}`); // Reject the promise with error message
+                                });
+                            }, 4000); // Delay for 4 seconds (4000 milliseconds)
                         });
                     }
                 },

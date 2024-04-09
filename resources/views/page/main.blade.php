@@ -24,17 +24,19 @@
                             </h3>
                         </div>
                         <!-- Modal body -->
-                        <div class="p-4 md:p-5 space-y-4">
-                            @foreach ($alerts as $index => $alert)
-                                @php
-                                    $courses = App\Models\course::whereIn('id', json_decode($alert->content))->pluck('code', 'title');
-                                @endphp
-                                @foreach ($courses as $title => $code)
-                                    <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
-                                        <span class="font-medium">{{ $index + 1 }}) {{ $code }}</span> :: {{ $title }}
-                                    </div>
+                        <div class="p-4">
+                            <div class="course-container">
+                                @foreach ($alerts as $index => $alert)
+                                    @php
+                                        $courses = App\Models\course::whereIn('id', json_decode($alert->content))->pluck('code', 'title');
+                                    @endphp
+                                    @foreach ($courses as $title => $code)
+                                        <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50" role="alert">
+                                            <span class="font-medium">{{ $index + 1 }}) {{ $code }}</span> :: {{ $title }}
+                                        </div>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
+                            </div>
                         </div>
                         <!-- Modal footer -->
                         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
@@ -171,38 +173,57 @@
 
 </script>
 <style>
-.hoverbg {
-    display: none;
-    border-radius: 5px;
-    transition: 1s;
-}
-.card:hover >.hoverbg {
-    display: flex;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    font-weight: 800;
-    width: 100%;
-    height: 100%;
-    -webkit-animation-name: fadeIn;
-    animation-name: fadeIn;
-    -webkit-animation-duration: .5s;
-    animation-duration: .5s;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-}
-@-webkit-keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-}
-@keyframes fadeIn {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
-}
-.card-header {
-    height: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-</style>
+    .hoverbg {
+        display: none;
+        border-radius: 5px;
+        transition: 1s;
+    }
+    .card:hover >.hoverbg {
+        display: flex;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        font-weight: 800;
+        width: 100%;
+        height: 100%;
+        -webkit-animation-name: fadeIn;
+        animation-name: fadeIn;
+        -webkit-animation-duration: .5s;
+        animation-duration: .5s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+    @-webkit-keyframes fadeIn {
+      0% {opacity: 0;}
+      100% {opacity: 1;}
+    }
+    @keyframes fadeIn {
+        0% {opacity: 0;}
+        100% {opacity: 1;}
+    }
+    .card-header {
+        height: 100px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    .course-container {
+        max-height: 700px;
+        overflow-y: scroll;
+    }
+    @media screen and (max-height: 1200px) {
+        .course-container {
+            max-height: 500px;
+        }
+    }
+    @media screen and (max-height: 800px) {
+        .course-container {
+            max-height: 300px;
+        }
+    }
+    @media screen and (max-height: 500px) {
+        .course-container {
+            max-height: 150px;
+        }
+    }
+    </style>

@@ -237,7 +237,14 @@ class HomeController extends Controller
     }
 
     public function ownCourse(Request $request) {
-        $courses = course::where("teacher", auth()->id())->where('agn', $request->user()->agency)->get();
+        if ($request->user()->hasRole('admin')) {
+            $courses = course::orderBy('id', 'desc')->where('agn', $request->user()->agency)->get();
+        } elseif  ($request->user()->hasRole('superadmin')) {
+            $courses = course::orderBy('id', 'desc')->get();
+        }
+        else {
+            $courses = course::where("teacher", auth()->id())->where('agn', $request->user()->agency)->get();
+        }
         $groups = course_group::where('by', auth()->id())->where('agn', $request->user()->agency)->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited ownCourse',
