@@ -560,7 +560,7 @@
                         <option value="{{$quiz->id}}">{{$quiz->title}}</option>
                     @endforeach
                 </select>
-                <input id="numofques" min="1" type="number" class="mt-3" placeholder="number of questions">
+                <input id="numofques" min="1" max="10" type="number" class="mt-3" placeholder="number of questions">
                 <p class="text-xs text-yellow-600">*หากไม่กรอกจำนวนคำถาม จะใช้คำถามทั้งหมด</p>
                 `,
                 showCancelButton: true,
@@ -572,12 +572,23 @@
                     const label = document.getElementById('swal-input1').value;
                     const content = document.getElementById('selQuiz').value;
                     const numOfQuest = document.getElementById('numofques').value;
+                    const quizzes = @json($quizzes);
+                    let max_ques = 0;
+                    quizzes.forEach(quiz => {
+                        if (quiz.id == content) {
+                            max_ques = quiz.ques_num;
+                        }
+                    })
 
                     if (!label) {
+                        console.log(max_ques);
                         Swal.showValidationMessage("Label is required!");
                         return;
                     } else if (content == 'e') {
                         Swal.showValidationMessage("Please select quiz!");
+                        return;
+                    } else if (numOfQuest > max_ques || numOfQuest < 1) {
+                        Swal.showValidationMessage("Number of questions must between 1 to " + max_ques);
                         return;
                     } else {
                         return fetch('/lesson/sublesson/add', {

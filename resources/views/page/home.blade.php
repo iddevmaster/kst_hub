@@ -42,7 +42,7 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-4 text-center">
                     <i class="bi bi-clock-history text-8xl text-red-500"></i>
                     <p class="text-4xl mt-2 font-bold">Your account has <span class="text-red-500">expired</span></p>
-                    <p>Please contact the Human Resource department to renew it.</p>
+                    <p>Please contact staff to renew it.</p>
                 </div>
             </div>
         </div>

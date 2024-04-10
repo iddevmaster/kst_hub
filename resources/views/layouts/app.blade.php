@@ -125,7 +125,10 @@
                     @endif
                 </div>
                 <div class="text-center flex items-center">
-                    <p>© 2023 KST ID System</p>
+                    @php
+                        $nowdate = Carbon\Carbon::now();
+                    @endphp
+                    <p>© {{ $nowdate->format('Y') }} KST ID System</p>
                 </div>
             </footer>
         </div>

@@ -18,6 +18,7 @@ use App\Notifications\MessageNotification;
 use App\Models\Test;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use App\Models\question;
 use App\Models\user_request;
 use Auth;
 use PDF;
@@ -46,6 +47,11 @@ class HomeController extends Controller
         } else {
             $quizzes = quiz::where('create_by', $request->user()->id)->get();
         }
+        foreach ($quizzes as $quiz) {
+            $ques_num = question::where('quiz', $quiz->id)->count();
+            $quiz['ques_num'] = $ques_num;
+        }
+
         $tested = Test::where('tester', $request->user()->id)->orderBy('id', 'desc')->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited course detail',
