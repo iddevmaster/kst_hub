@@ -160,15 +160,16 @@ class HomeController extends Controller
             $dpms = department::all();
             $brns = branch::all();
             $courses = course::all();
+            $roles = Role::all();
         } else {
             $users = User::where('agency', $request->user()->agency)->get();
             $agns = agency::where('id', $request->user()->agency)->get();
             $dpms = department::where('agency', $request->user()->agency)->get();
             $brns = branch::where('agency', $request->user()->agency)->get();
             $courses = course::where('agn', $request->user()->agency)->get();
+            $roles = Role::where('name', "!=", "superAdmin")->get();
         }
 
-        $roles = Role::all();
         $permissions = Permission::all();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited alluser',
