@@ -14,7 +14,13 @@ use App\Models\Activitylog;
 class QuizController extends Controller
 {
     public function index(Request $request) {
-        $quizs = quiz::where('agn', auth()->user()->agency)->get();
+        if (auth()->user()->hasRole('superAdmin')) {
+            $quizs = quiz::orderBy('id', 'desc')->get();
+        } elseif (auth()->user()->hasRole('admin')) {
+            $quizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get();
+        } else {
+            $quizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get();
+        }
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited allquizzes',
         [
