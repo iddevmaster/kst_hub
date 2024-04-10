@@ -560,7 +560,7 @@
                         <option value="{{$quiz->id}}">{{$quiz->title}}</option>
                     @endforeach
                 </select>
-                <input id="numofques" min="1" max="10" type="number" class="mt-3" placeholder="number of questions">
+                <input id="numofques" min="1" type="number" class="mt-3" placeholder="number of questions">
                 <p class="text-xs text-yellow-600">*หากไม่กรอกจำนวนคำถาม จะใช้คำถามทั้งหมด</p>
                 `,
                 showCancelButton: true,
@@ -587,8 +587,8 @@
                     } else if (content == 'e') {
                         Swal.showValidationMessage("Please select quiz!");
                         return;
-                    } else if (numOfQuest > max_ques || numOfQuest < 1) {
-                        Swal.showValidationMessage("Number of questions must between 1 to " + max_ques);
+                    } else if (numOfQuest > max_ques || numOfQuest < 0) {
+                        Swal.showValidationMessage("Number of questions must between 0 to " + max_ques);
                         return;
                     } else {
                         return fetch('/lesson/sublesson/add', {
