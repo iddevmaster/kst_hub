@@ -114,10 +114,12 @@
                     success: function(response) {
                         // You can add some code here to handle a successful response
                         console.log(response['response']);
+                        window.location.reload();
                     },
                     error: function(error) {
                         // You can add some error handling here
                         console.log(error);
+                        window.location.reload();
                     }
                 });
             });
