@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     Auth::logout();
     return view('auth.login');
-});
+})->name('loginpage');
 
 // Route::get('/home', function () {
 //     return view('page.home');
@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/course/add', [CourseController::class,'store']);
     Route::post('/course/update', [CourseController::class,'update']);
     Route::post('/course/delete', [CourseController::class,'delete']);
+    Route::get('/course/enrolled', [HomeController::class, 'courseEnrolled'])->name('courses-enrolled');
     Route::get('/course{cid}/enroll', [CourseController::class,'enroll'])->name('enroll');
     Route::get('/search-courses', [CourseController::class, 'search'])->name('courses.search');
     Route::get('/search-mycourses', [CourseController::class, 'searchMy'])->name('courses.searchmy');
@@ -95,6 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/lesson/sublesson/delete', [CourseController::class,'subLessDel']);
     Route::get('/courses/search/dpm', [CourseController::class, 'searchDpm'])->name('courses.search.dpm');
     Route::get('/courses/search/all', [CourseController::class, 'searchAll'])->name('courses.search.all');
+    Route::get('/courses/search/enrolled', [CourseController::class, 'searchEn'])->name('courses.search.enrolled');
     Route::get('/course/group/delete/{gid}', [CourseController::class, 'delGroup']);
     Route::post('/course/group/add/', [CourseController::class, 'addGroup'])->name('courses.add.group');
 

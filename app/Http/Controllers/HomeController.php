@@ -126,21 +126,32 @@ class HomeController extends Controller
             return redirect()->route('home');
         } else {
             $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->take(8)->get();
+            $mycourses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
             if ($request->user()->hasAnyRole('admin', 'staff')) {
                 $dpmcourses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
             } else {
                 $dpmcourses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
-                 ->where(function ($query) use ($request) {
-                     $query->Where('dpm', $request->user()->dpm);
-                 })->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
+                 ->where('dpm', $request->user()->dpm)->take(8)->get();
             }
 
             Log::channel('activity')->info('User '. $request->user()->name .' visited main page',
             [
                 'user' => $request->user(),
             ]);
-            return view("page.main", compact("allcourses", "dpms", "dpmcourses"));
+            return view("page.main", compact("allcourses", "dpms", "dpmcourses", "mycourses"));
         }
+    }
+
+    public function courseEnrolled(Request $request) {
+        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
+
+        $dpms = department::all();
+
+        Log::channel('activity')->info('User '. $request->user()->name .' visited enrolled course',
+        [
+            'user' => $request->user(),
+        ]);
+        return view("page.courses.myenrolled", compact("courses","dpms"));
     }
 
     public function home(Request $request) {
@@ -274,13 +285,9 @@ class HomeController extends Controller
         // $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->orWhere('dpm', $request->user()->dpm)->get();
 
         if ($request->user()->hasAnyRole('admin', 'staff')) {
-            $courses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->orWhere("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
+            $courses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->paginate(12);
         } else {
-            $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->where('agn', $request->user()->agency)
-                 ->orWhere(function ($query) use ($request) {
-                     $query->where('permission->dpm', "true")->where('agn', $request->user()->agency)
-                            ->Where('dpm', $request->user()->dpm);
-                 })->paginate(12);
+            $courses = course::where('permission->dpm', "true")->where('dpm', $request->user()->dpm)->paginate(12);
         }
 
         $dpms = department::all();
