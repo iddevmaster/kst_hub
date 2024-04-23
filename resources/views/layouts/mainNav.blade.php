@@ -5,9 +5,9 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <div class="bg-light p-1 rounded">
+                    <div class="p-1 rounded">
                         <a href="{{ route('home') }}">
-                            <img src="/img/logoid_new.png" alt="" width="50">
+                            <img src="/img/logo.png" alt="" width="90">
                         </a>
                     </div>
                 </div>
