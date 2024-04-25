@@ -646,7 +646,7 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                                     </svg>
                                     <p class="mb-2 text-sm text-gray-500 "><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                    <p class="text-xs text-gray-500 ">jpeg,png,pdf,svg,doc,docx,xls,xlsx,ppt,pptx,txt,mp4,zip,rar <br> (MAX 120Mb size)</p>
+                                    <p class="text-xs text-gray-500 ">jpeg,png,pdf,svg,doc,docx,xls,xlsx,ppt,pptx,txt,mp4 <br> (MAX 120Mb size)</p>
                                 </div>
                                 <input id="dropzone-file" type="file" class="hidden" />
                             </label>
@@ -682,7 +682,7 @@
 
                         // Delay the fetch request
                         return new Promise((resolve, reject) => {
-                            setTimeout(() => {
+                            setTimeout(async () => {
                                 const formData = new FormData();
                                 formData.append('label', label);
                                 formData.append('content', fileInput.files[0]);
@@ -692,7 +692,7 @@
                                 // Add your CSRF token
                                 formData.append('_token', '{{ csrf_token() }}');
 
-                                fetch('/lesson/sublesson/add', {
+                                await fetch('/lesson/sublesson/add', {
                                     method: 'POST',
                                     body: formData // Send formData without setting Content-Type header
                                 })
@@ -703,12 +703,21 @@
                                     return response.json()
                                 })
                                 .then(data => {
-                                    resolve(data); // Resolve the promise with fetched data
+                                    if (!data.error) {
+                                        resolve(data); // Resolve the promise with fetched data
+                                    } else {
+                                        reject(`Request failed: ${data.error}`);
+                                        Swal.fire({
+                                            title: "Sorry!",
+                                            text: data.error,
+                                            icon: "error"
+                                        });
+                                    }
                                 })
                                 .catch(error => {
                                     reject(`Request failed: ${error}`); // Reject the promise with error message
                                 });
-                            }, 4000); // Delay for 4 seconds (4000 milliseconds)
+                            }, 1000); // Delay for 1 seconds (1000 milliseconds)
                         });
                     }
                 },
