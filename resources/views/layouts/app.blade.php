@@ -128,7 +128,7 @@
                     @php
                         $nowdate = Carbon\Carbon::now();
                     @endphp
-                    <p>© {{ $nowdate->format('Y') }} KST ID System</p>
+                    <p>© {{ $nowdate->format('Y') }} Hub Training</p>
                 </div>
             </footer>
         </div>
