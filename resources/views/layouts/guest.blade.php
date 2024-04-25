@@ -37,8 +37,12 @@
                     <div class="bg-white rounded p-1"><img src="/img/logoid_new.png" alt="" width="50"></div>
                     <div class="flex items-center text-white text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด 200/222 หมู่2 ถนนชัยพฤกษ์ ตำบลในเมือง อำเภอเมืองขอนแก่น จังหวัดขอนแก่น 40000 <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>
-                <div class="text-center flex items-center text-white">
-                    <p>Powered by © 2023 KST ID System</p>
+                <div class="text-center text-white">
+                    @php
+                        $nowdate = Carbon\Carbon::now();
+                    @endphp
+                    <p>© {{ $nowdate->format('Y') }} Hub Training</p>
+                    <p>Powered By <a class="text-primary" href="https://iddrives.co.th/">ID Drives</a></p>
                 </div>
             </footer>
         </div>
