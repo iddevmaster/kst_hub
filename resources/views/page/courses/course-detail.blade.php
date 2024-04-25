@@ -716,6 +716,11 @@
                                 })
                                 .catch(error => {
                                     reject(`Request failed: ${error}`); // Reject the promise with error message
+                                    Swal.fire({
+                                        title: "Sorry!",
+                                        text: error,
+                                        icon: "error"
+                                    });
                                 });
                             }, 1000); // Delay for 1 seconds (1000 milliseconds)
                         });
