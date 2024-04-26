@@ -109,11 +109,9 @@ class QuizController extends Controller
                 'user' => $request->user(),
                 'quiz' => $quiz,
             ]);
-            alert()->success('Success','Quiz has been saved!');
             return redirect()->back()->with('success','Quiz has been saved.');
         } catch (\Throwable $th) {
             //throw $th;
-            alert()->error('Some thing worng!', $th->getMessage());
             return redirect()->back()->with('error',$th->getMessage());
         }
     }
