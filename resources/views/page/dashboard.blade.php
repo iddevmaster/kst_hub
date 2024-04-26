@@ -497,7 +497,7 @@
                                                                 $numPers = App\Models\User::where('dpm', $dpm->id)->count();
                                                             @endphp
                                                         <td>{{$numPers}}</td>
-                                                        <td>{{optional(optional($dpm->brnName->)->agencyName)->name}}</td>
+                                                        <td>{{ optional(optional($dpm->brnName)->agencyName)->name }}</td>
                                                         <td>{{optional($dpm->brnName)->name}}</td>
                                                     </tr>
                                                 @endforeach
