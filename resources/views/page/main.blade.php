@@ -179,25 +179,30 @@
         $('#default-modal').addClass('hidden');
     }
     $(document).ready(function(){
-        $(".owl-carousel").owlCarousel({
-            loop: true,
-            margin: 10,
-            autoplay: true,
-            autoplayTimeout:4000,
-            autoplaySpeed: 2000,
-            autoplayHoverPause: true,
-            nav: false,
-            responsive: {
-                0: {
-                    items: 1
-                },
-                600: {
-                    items: 3
-                },
-                1000: {
-                    items: 4
+        $(".owl-carousel").each(function() {
+            var $this = $(this);
+            var itemCount = $this.find('.item').length;
+
+            $this.owlCarousel({
+                loop: (itemCount > 4 ? true : false),
+                margin: 10,
+                autoplay: true,
+                autoplayTimeout: 4000,
+                autoplaySpeed: 2000,
+                autoplayHoverPause: true,
+                nav: false,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    600: {
+                        items: 3
+                    },
+                    1000: {
+                        items: 4
+                    }
                 }
-            }
+            });
         });
     });
 
