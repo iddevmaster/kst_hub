@@ -127,7 +127,6 @@ class QuizController extends Controller
                 'time_limit'=> 0,
                 'pass_score'=> $request->passScore,
                 'shuffle_quest'=> $request->shuffq ?? false,
-                'create_by'=> $request->user()->id,
                 'showAns' => $request->showAns ?? false,
             ]);
 
