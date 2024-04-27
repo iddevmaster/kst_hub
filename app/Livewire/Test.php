@@ -54,15 +54,9 @@ class Test extends Component
         }
     }
 
-    public function saveAnswer($questionId, $optionId)
-    {
-        dd("save ans");
-        // $this->answers[$questionId] = $optionId;
-    }
-
     public function gotoNextQuestion()
     {
-        $this->questions = session()->get('shuffled_questions');
+        // $this->questions = session()->get('shuffled_questions');
         if ($this->currentQuestion < $this->totalQuestion) {
             $this->currentQuestion++;
         } else {
@@ -72,7 +66,7 @@ class Test extends Component
 
     public function gotoPreviousQuestion()
     {
-        $this->questions = session()->get('shuffled_questions');
+        // $this->questions = session()->get('shuffled_questions');
         if ($this->currentQuestion > 1) {
             $this->currentQuestion--;
         }
@@ -81,7 +75,7 @@ class Test extends Component
     public function submitTest()
     {
         $this->endTest = Carbon::now()->format('Y-m-d H:i:s');
-        $this->questions = session()->get('shuffled_questions');
+        // $this->questions = session()->get('shuffled_questions');
         foreach ($this->answers as $key => $ans) {
             if ($this->quesType[$key] == 'c') {
                 $this->submitAns[$key] = [
@@ -103,7 +97,7 @@ class Test extends Component
 
                 $this->submitAns[$key] = [
                     "ans"=> $ans,
-                    "status"=> ($ans == $qAns ? 1 : 0 ),
+                    "status"=> ($ans == $qAns ? '1' : '0' ),
                     "type"=> $this->quesType[$key],
                 ];
             }
@@ -117,7 +111,6 @@ class Test extends Component
         //     $submission->option_id = $optionId;
         //     $submission->save();
         // }
-
         // ลิงก์ไปยังหน้าผลลัพธ์หรือการแจ้งเตือน
         session()->flash('testResults', [
             'quiz'=> $this->testId,
@@ -127,7 +120,6 @@ class Test extends Component
             'end' => $this->endTest,
             'submitAns' => $this->submitAns,
         ]);
-        session()->forget('shuffled_questions');
         return redirect()->route('test.finish');
     }
 

@@ -1,6 +1,6 @@
 <div class="card p-4">
     <div class="bg-gray-200 px-4 py-3 mb-4 rounded">
-        <p>{{$questNum}}. {!! $question->title !!}</p>
+        <p>{{$questNum}}. {{ json_encode($questions) }}</p>
     </div>
 
     @if ($question->type)
