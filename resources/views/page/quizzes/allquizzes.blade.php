@@ -38,13 +38,13 @@
                                         <div class="col-span-1 self-center"><p>{{ __('messages.quiz_name') }} :</p></div>
                                         <div class="col-span-3"><input type="text" id="first_name" name="quizname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="{{ __('messages.input_name') }}" required></div>
                                     </div>
-                                    <div class="grid grid-cols-4 mb-4">
+                                    {{-- <div class="grid grid-cols-4 mb-4">
                                         <div class="col-span-1 self-center"><p>{{ __('messages.time_lim') }} :</p></div>
                                         <div class="col-span-3 flex">
                                             <input type="number" id="first_name" readonly name="timelimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " value="0">
                                             <p class="self-center ms-1">{{ __('messages.minute') }}.</p>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="grid grid-cols-4 mb-4">
                                         <div class="col-span-1 self-center"><p>{{ __('messages.pass_sc') }} :</p></div>
                                         <div class="col-span-3 flex">
@@ -175,13 +175,13 @@
                                                                 <div class="col-span-1 self-center"><p>{{ __('messages.quiz_name') }} :</p></div>
                                                                 <div class="col-span-3"><input value="{{$quiz->title}}" type="text" id="first_name" name="quizname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="{{ __('messages.input_name') }}" required></div>
                                                             </div>
-                                                            <div class="grid grid-cols-4 mb-4">
+                                                            {{-- <div class="grid grid-cols-4 mb-4">
                                                                 <div class="col-span-1 self-center"><p>{{ __('messages.time_lim') }} :</p></div>
                                                                 <div class="col-span-3 flex">
                                                                     <input type="number" id="first_name" disabled  name="timelimit" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " value="{{$quiz->time_limit}}">
                                                                     <p class="self-center ms-1">{{ __('messages.minute') }}.</p>
                                                                 </div>
-                                                            </div>
+                                                            </div> --}}
                                                             <div class="grid grid-cols-4 mb-4">
                                                                 <div class="col-span-1 self-center"><p>{{ __('messages.pass_sc') }} :</p></div>
                                                                 <div class="col-span-3 flex">

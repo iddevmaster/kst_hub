@@ -83,13 +83,12 @@ class QuizController extends Controller
     public function store(Request $request) {
         $request->validate([
             'quizname' => ['required', 'string', 'max:1000'],
-            'timelimit' => ['required', 'max:10'],
             'passScore' => ['required', 'max:10'],
         ]);
         try {
             $quiz = quiz::create([
                 'title'=> $request->quizname,
-                'time_limit'=> $request->timelimit,
+                'time_limit'=> 0,
                 'pass_score'=> $request->passScore,
                 'shuffle_quest'=> $request->shuffq ?? false,
                 'create_by'=> $request->user()->id,
@@ -119,14 +118,13 @@ class QuizController extends Controller
     public function update(Request $request, $id) {
         $request->validate([
             'quizname' => ['required', 'string', 'max:1000'],
-            'timelimit' => ['required', 'max:10'],
             'passScore' => ['required', 'max:10'],
         ]);
         try {
             $quiz = quiz::find($id);
             $quiz->update([
                 'title'=> $request->quizname,
-                'time_limit'=> $request->timelimit,
+                'time_limit'=> 0,
                 'pass_score'=> $request->passScore,
                 'shuffle_quest'=> $request->shuffq ?? false,
                 'create_by'=> $request->user()->id,
