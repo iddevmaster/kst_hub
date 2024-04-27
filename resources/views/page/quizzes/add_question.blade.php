@@ -91,8 +91,9 @@
                                 </ol>
                                 <input type="hidden" name="choices" id="lastChoice" value="2">
                             </div>
-                            <div class="p-4 flex justify-center">
-                                <button type="button" id="addAns" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 "><i class="bi bi-plus-lg"></i> {{ __('messages.add') }}</button>
+                            <div class="p-4 flex gap-2 justify-center">
+                                <button type="button" id="addAns" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2"><i class="bi bi-plus-lg"></i> {{ __('messages.add') }}</button>
+                                <button type="button" id="delete-btn" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-2"><i class="bi bi-trash3"></i> ลบ</button>
                             </div>
                         </div>
                         <div class="hidden p-4 rounded-lg bg-gray-50 " id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
@@ -131,8 +132,8 @@
 </x-app-layout>
 <script>
     $(document).ready(function() {
-        var count = $('#choiceList li').length;
         $('#addAns').on('click', function() {
+            var count = $('#choiceList li').length;
             count++;
 
             // Append the new li
@@ -149,12 +150,23 @@
             `);
 
             // Update the lastChoice value
-            updateLastChoice();
+            updateLastChoice(count);
+        });
+
+        $("#delete-btn").click(function() {
+            var count = $('#choiceList li').length;
+            console.log("befor: ",count);
+            if (count > 1) {
+                $("#choiceList li:last").remove();
+                count--;
+            }
+            console.log("after: ",count);
+            updateLastChoice(count);
         });
 
         // Function to update the lastChoice value
-        function updateLastChoice() {
-            $('#lastChoice').val(count);
+        function updateLastChoice(num) {
+            $('#lastChoice').val(num);
         }
     });
 

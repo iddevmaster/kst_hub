@@ -30,6 +30,13 @@
                     </p>
                 </div>
                 <div class="card p-4 mb-4">
+                    <div>
+                        <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
+                            <button type="button" class="w-100  focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 ">
+                                <i class="bi bi-plus-lg"></i> {{ __('messages.add_ques') }}
+                            </button>
+                        </a>
+                    </div>
                     <div class="mb-3 text-center">
                         <p>{{ __('messages.question') }}</p>
                     </div>
@@ -94,13 +101,6 @@
                         </div>
                     </div>
                 @endforeach
-                <div class="flex justify-center my-4 ">
-                    <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
-                        <button type="button" class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
-                            <i class="bi bi-plus-lg"></i> {{ __('messages.add_ques') }}
-                        </button>
-                    </a>
-                </div>
             </div>
         </div>
     </div>

@@ -287,19 +287,6 @@ class QuizController extends Controller
     public function delQuestion(Request $request, $id) {
         try {
             $question = question::find($id)->delete();
-
-            Activitylog::create([
-                'user' => auth()->id(),
-                'module' => 'Question',
-                'content' => $question->id,
-                'note' => 'delete',
-                'agn' => auth()->user()->agency
-            ]);
-            Log::channel('activity')->info('User '. $request->user()->name .' delete question',
-            [
-                'user' => $request->user(),
-                'question' => $question,
-            ]);
             return response()->json(['success' => 'Question has been deleted.']);
         } catch (\Throwable $th) {
             //throw $th;
