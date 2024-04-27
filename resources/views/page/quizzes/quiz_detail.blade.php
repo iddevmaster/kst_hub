@@ -70,7 +70,7 @@
                                 </div>
                                 @if ($quest->type)
                                     <p class="mb-2"><b>{{ __('messages.choices') }}:</b></p>
-                                    <div class="flex lg:gap-20 gap-3.5 bg-gray-200 p-2 flex-wrap rounded">
+                                    <div class="flex lg:gap-x-20 gap-3.5 bg-gray-200 p-2 flex-wrap rounded">
                                         @foreach ($quest->answer as $index => $choice)
                                             <p class="{{ $choice['answer'] ? 'text-green-500' : '' }}">{{$index+1}}. {{$choice['text']}}</p>
                                         @endforeach
