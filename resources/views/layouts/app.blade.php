@@ -110,7 +110,7 @@
 
             <footer class="flex mt-5 justify-around w-full bg-white p-2 flex-wrap">
                 <div class="flex gap-2 align-items-center justify-center flex-wrap mb-2">
-                    <div><img src="/img/logoid_new.png" alt="" width="50"></div>
+                    <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
                     @if ($agn)
                         <div><img src="{{ $agn->logo ? '/uploads/logo/'.$agn->logo : '/img/logoiddrives.png' }}" alt="" width="50"></div>
                         <div class="flex items-center text-sm">
