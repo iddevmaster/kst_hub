@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ReqController;
+use App\Http\Controllers\SSOController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +27,10 @@ Route::get('/', function () {
     Auth::logout();
     return view('auth.login');
 })->name('loginpage');
+
+Route::get("/sso/login", [SSOController::class, "getLogin"])->name('sso.login');
+Route::get("/auth/callback", [SSOController::class, "getCallback"])->name('sso.callback');
+Route::get("/sso/connect", [SSOController::class, "connectUser"])->name('sso.connect');
 
 // Route::get('/home', function () {
 //     return view('page.home');
