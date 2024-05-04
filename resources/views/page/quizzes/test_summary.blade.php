@@ -16,7 +16,7 @@
                         </div>
                         <div class="px-2">
                             <p class="text-xs">{{ __('messages.time_use') }}</p>
-                            <p class="text-3xl font-bold">{{$timeUsege->format('%i.%s')}} min.</p>
+                            <p class="text-3xl font-bold">{{$timeUsege->h > 0 ? $timeUsege->format('%h:%i:%s') : $timeUsege->format('%i.%s')}} {{ __('messages.min') }}</p>
                         </div>
                     </div>
                     <div class="card p-2 rounded-xl flex flex-row bg-gradient-to-br from-green-400 via-green-500 to-green-600 border-0 text-white shadow">
@@ -44,14 +44,18 @@
                         </div>
                         <div class="px-2">
                             <p class="text-xs">{{ __('messages.result') }}</p>
-                            <p class="text-3xl font-bold">{{ $scores > ($totalScore * $quiz->pass_score / 100) ? 'PASS' : 'FAIL' }}</p>
+                            <p class="text-3xl font-bold">{{ $scores > ($totalScore * $quiz->pass_score / 100) ? 'PASS (ผ่าน)' : 'FAIL (ไม่ผ่าน)' }}</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="card p-2 mb-2 bg-gray-100 border-0">
-                    <div class="mb-2">
+                    <div class="flex justify-between flex-wrap mb-2">
                         <p>{{ __('messages.answer') }}:</p>
+                        <div class="flex flex-wrap gap-2">
+                            <p class="flex items-center text-sm"><span class="flex w-3 h-3 me-1 bg-green-500 rounded-full"></span> {{ __('messages.currect') }}</p>
+                            <p class="flex items-center text-sm"><span class="flex w-3 h-3 me-1 bg-red-500 rounded-full"></span> {{ __('messages.incurrect') }}</p>
+                        </div>
                     </div>
                     <div class="flex gap-2 flex-wrap">
                         @php
