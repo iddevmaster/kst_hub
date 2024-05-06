@@ -101,7 +101,7 @@
                                                         qid="{{$sls->content ?? '0'}}"
                                                         pass="{{$quiz->pass_score ?? '0'}}"
                                                         qBy="{{$quiz->getCreated->name ?? 'unknow'}}"
-                                                        quesNum = "{{$sls->num_quest > 0 ? $sls->num_quest : $quesnum}}"
+                                                        quesNum = "{{($sls->num_quest ?? false) ? ($sls->num_quest > 0 ? $sls->num_quest : $quesnum) : $quesnum}}"
                                                     >
                                                         {{ $sls->label }}
                                                         <span class="text-secondary" style="font-size: 12px">{{ __('messages.update') }} {{ $sls->date }} ({{ $sls->type }})</span>
@@ -854,7 +854,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Start',
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result.isConfirmed && quesNum > 0) {
                     window.location.href = `/test/start/${cid}/${qid}/${quesNum}`; // Replace 'startQuiz' with your route name
                 }
             });
