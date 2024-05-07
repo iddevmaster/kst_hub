@@ -92,7 +92,9 @@ class SSOController extends Controller
             if (!Role::where('name', $userArray['role'])->exists()) {
                 Role::create(['name' => $userArray['role']]);
             }
-            $user->assignRole($userArray['role']);
+            if (!$user->hasRole($userArray['role'])) {
+                $user->assignRole($userArray['role']);
+            }
             $user->save();
         }
         $user->course_group = $userArray['course'];
