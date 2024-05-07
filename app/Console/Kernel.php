@@ -2,8 +2,12 @@
 
 namespace App\Console;
 
+use App\Models\agency;
+use App\Models\course_group;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Http;
+use Throwable;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,6 +17,58 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call( function () {
+            try {
+                $response = Http::withHeaders([
+                    "Authorization" => "Basic YWRtaW46aWRkcml2ZXNhZG1pbg=="
+                ])->get(config('auth.sso_host') . "/api/courses");
+
+                // Check for successful response
+                if ($response->ok()) {
+                    echo "Fetch successful! Status code: " . $response->getStatusCode() . "\n";
+                    $this->updateCourse($response->json());
+                    // Process the response data here (e.g., $data = $response->json())
+                } else {
+                    echo "Fetch failed with status code: " . $response->getStatusCode() . "\n";
+                    // Handle the error (e.g., throw an exception)
+                }
+            } catch (Throwable $e) {
+                echo "An error occurred during the fetch: " . $e->getMessage() . "\n";
+                // Handle the exception appropriately
+            }
+        });
+    }
+
+    public function updateCourse ($courses = []): void {
+        echo "Updateing..." ."\n";
+        $agn = agency::where('name', 'TrainingZenter')->first();
+
+        // บันทึกข้อมูลคอร์สลงในฐานข้อมูล
+        foreach ($courses as $course) {
+            $hascourse = course_group::where('code', $course['code'])->orderBy('id', 'desc')->first();
+            if ($hascourse) {
+                $hascourse->update([
+                    "name" => $course['name'],
+                    "agn" => $agn->id,
+                    "by" => "api:sso",
+                    "code" => $course['code']
+                ]);
+            } else {
+                course_group::create([
+                    "name" => $course['name'],
+                    "agn" => $agn->id,
+                    "by" => "api:sso",
+                    "code" => $course['code']
+                ]);
+            }
+
+        }
+
+        // ลบคอร์สที่ไม่มีในข้อมูล API
+        $apiCourseCodes = array_column($courses, 'code');
+        course_group::where('by', 'api:sso')->whereNotIn('code', $apiCourseCodes)->delete();
+
+        echo "Update success! \n";
     }
 
     /**

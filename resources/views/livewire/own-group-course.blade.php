@@ -7,20 +7,15 @@
           {{ __('messages.delete') }}
         </button>
     </div>
-
-    @livewireScripts
-
-    <script>
-        let alertShown = false; // Flag to track whether the alert has been shown
-
-        Livewire.on('error', () => {
-            if (!alertShown) {
-                // Handle success status here, e.g., show a success message
-                alert('Sorry, Something wrong!');
-                alertShown = true; // Set the flag to true to indicate that the alert has been shown
-            }
-        });
-    </script>
+    @if (session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
     @if (count($courses ?? []) > 0)
         @foreach ($courses as $course)

@@ -27,13 +27,15 @@ class OwnGroupCourse extends Component
     public function updateGroup()
     {
         try {
-            $this->group->updat([
+            $this->group->update([
                 'name' => $this->gName,
                 'courses' => json_encode($this->gCourses),
             ]);
             $this->group->save();
+            $this->courses = course::whereIn("id", $this->group->courses ?? [])->get();
+            session()->flash('success', 'บันทึกสำเร็จ');
         } catch (\Throwable $th) {
-            $this->dispatch('error');
+            session()->flash('error', 'ไม่สามารถดำเนินการได้');
         }
 
         $this->switchToGroupMode();

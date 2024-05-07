@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Http;
 
 class User extends Authenticatable
 {
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'courses',
         'icon',
         'startlt',
+        'course_group',
     ];
 
     public function getCoursesAttribute($value)
@@ -65,6 +67,16 @@ class User extends Authenticatable
     }
     public function agnName() {
         return $this->belongsTo(agency::class, 'agency');
+    }
+
+    public function logoutFromSSOServer () {
+        // Send a revoke tokens request to SSO Server
+        $access_token = session()->get("access_token");
+        $response = Http::withHeaders([
+            "Accept" => "application/json",
+            "Authorization" => "Bearer " . $access_token
+        ])->get(config('auth.sso_host') . "/api/logmeout");
+        // die($response);
     }
 
 }

@@ -128,12 +128,29 @@ class HomeController extends Controller
             $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->take(8)->get();
             $mycourses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
             if ($request->user()->hasAnyRole('admin', 'staff')) {
-                $dpmcourses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
+                $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
             } else {
-                $dpmcourses = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
+                $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
                  ->where('dpm', $request->user()->dpm)->take(8)->get();
             }
 
+            $group_courses = [];
+            if ($request->user()->course_group >= 0) {
+                $group = course_group::where('code', $request->user()->course_group)->first();
+                if (count($group->courses ?? []) > 0) {
+                    foreach ($group->courses as $course) {
+                        $getcourse = course::find($course);
+                        if ($getcourse) {
+                            $group_courses[] = $getcourse;
+                        }
+                    }
+                }
+            }
+            if (count($group_courses) > 0) {
+                $dpmcourses = $dpmcourses_query->union($group_courses);
+            } else {
+                $dpmcourses = $dpmcourses_query;
+            }
             Log::channel('activity')->info('User '. $request->user()->name .' visited main page',
             [
                 'user' => $request->user(),
@@ -263,7 +280,7 @@ class HomeController extends Controller
         else {
             $courses = course::where("teacher", auth()->id())->where('agn', $request->user()->agency)->get();
         }
-        $groups = course_group::where('by', auth()->id())->where('agn', $request->user()->agency)->get();
+        $groups = course_group::where('by', auth()->id())->orWhere('agn', $request->user()->agency)->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited ownCourse',
         [

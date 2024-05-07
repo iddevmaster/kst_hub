@@ -11,7 +11,7 @@
                     </button>
                 </div>
 
-                <div class="mb-4 border-b border-gray-200">
+                <div class="mb-4 border-b">
                     <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
                         <li class="me-2" role="presentation">
                             <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">All</button>
@@ -19,12 +19,12 @@
                         @if ($groups)
                             @foreach ($groups as $index => $group)
                                 <li class="me-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="group-{{ $group->id }}-tab" data-tabs-target="#group{{ $group->id }}" type="button" role="tab" aria-controls="group{{ $group->id }}" aria-selected="false">{{ $group->name }}</button>
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-950" id="group-{{ $group->id }}-tab" data-tabs-target="#group{{ $group->id }}" type="button" role="tab" aria-controls="group{{ $group->id }}" aria-selected="false">{{ $group->name }}</button>
                                 </li>
                             @endforeach
                         @endif
                         <li class="me-2" role="presentation">
-                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="addGroup-tab" data-tabs-target="#addGroup" type="button" role="tab" aria-controls="addGroup" aria-selected="false">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="addGroup-tab" data-tabs-target="#addGroup" type="button" role="tab" aria-controls="addGroup" aria-selected="false">
                                 <svg class="w-6 h-6 text-green-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5.757v8.486M5.757 10h8.486M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                 </svg>
