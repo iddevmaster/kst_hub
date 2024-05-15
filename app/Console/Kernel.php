@@ -41,25 +41,30 @@ class Kernel extends ConsoleKernel
 
     public function updateCourse ($courses = []): void {
         echo "Updateing..." ."\n";
-        $agn = agency::where('name', 'TrainingZenter')->first();
 
         // บันทึกข้อมูลคอร์สลงในฐานข้อมูล
         foreach ($courses as $course) {
-            $hascourse = course_group::where('code', $course['code'])->orderBy('id', 'desc')->first();
-            if ($hascourse) {
-                $hascourse->update([
-                    "name" => $course['name'],
-                    "agn" => $agn->id,
-                    "by" => "api:sso",
-                    "code" => $course['code']
-                ]);
-            } else {
-                course_group::create([
-                    "name" => $course['name'],
-                    "agn" => $agn->id,
-                    "by" => "api:sso",
-                    "code" => $course['code']
-                ]);
+            try {
+                $agn = agency::where('name', $course['agn'])->first();
+                $hascourse = course_group::where('code', $course['code'])->orderBy('id', 'desc')->first();
+                if ($hascourse) {
+                    $hascourse->update([
+                        "name" => $course['name'],
+                        "agn" => $agn->id,
+                        "by" => "api:sso",
+                        "code" => $course['code']
+                    ]);
+                } else {
+                    course_group::create([
+                        "name" => $course['name'],
+                        "agn" => $agn->id,
+                        "by" => "api:sso",
+                        "code" => $course['code']
+                    ]);
+                }
+                echo "Updating course: " . $course['code'] . ' / ' . $course['agn'] . " Success! \n";
+            } catch (\Throwable $th) {
+                echo "Updating course: " . $course['code'] . ' / ' . $course['agn'] . " Unsuccess! \n";
             }
 
         }

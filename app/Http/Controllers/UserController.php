@@ -37,14 +37,13 @@ class UserController extends Controller
             'password' => ['required', Rules\Password::defaults()],
             'agn' => ['required', 'string', 'max:255'],
             'brn' => ['required', 'string', 'max:255'],
-            'dpm' => ['required', 'string', 'max:255'],
+            'dpm' => ['string', 'max:255'],
             'role' => ['required', 'string', 'max:255'],
         ], [
             'name.required' => 'The name field is mandatory!',
             'username.required' => 'The username field is mandatory!',
             'agn.required' => 'The agency field is mandatory!',
             'brn.required' => 'The branch field is mandatory!',
-            'dpm.required' => 'The department field is mandatory!',
             'role.required' => 'The role field is mandatory!',
 
         ]);
@@ -56,7 +55,7 @@ class UserController extends Controller
                 'password' => $request->password,
                 'agency' => $request->agn,
                 'brn' => $request->brn,
-                'dpm' => $request->dpm,
+                'dpm' => $request->dpm ?? '',
                 'role' => $request->role,
 
                 'courses' => $request->courses ?? [],
@@ -123,14 +122,13 @@ class UserController extends Controller
                 'username' => ['required', 'string', 'max:255'],
                 'agn' => ['required', 'string', 'max:255'],
                 'brn' => ['required', 'string', 'max:255'],
-                'dpm' => ['required', 'string', 'max:255'],
+                'dpm' => ['string', 'max:255'],
                 'role' => ['required', 'string', 'max:255'],
             ], [
                 'name.required' => 'The name field is mandatory!',
                 'username.required' => 'The username field is mandatory!',
                 'agn.required' => 'The agency field is mandatory!',
                 'brn.required' => 'The branch field is mandatory!',
-                'dpm.required' => 'The department field is mandatory!',
                 'role.required' => 'The role field is mandatory!',
             ]);
 
@@ -142,7 +140,7 @@ class UserController extends Controller
             }
             $user->agency = $request->agn;
             $user->brn = $request->brn;
-            $user->dpm = $request->dpm;
+            $user->dpm = $request->dpm ?? '';
             $user->role = $request->role;
             $user->startlt = ($request->role == 'new' ? date('Y-m-d') : null);
             foreach (Role::all() as $role) {
