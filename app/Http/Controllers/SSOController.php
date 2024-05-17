@@ -96,7 +96,6 @@ class SSOController extends Controller
                 if (!$user->hasRole($userArray['role'])) {
                     $user->assignRole($userArray['role']);
                 }
-                $user->save();
             }
             $user->course_group = $userArray['course_code'];
             $user->save();
