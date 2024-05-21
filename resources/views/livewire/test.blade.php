@@ -21,7 +21,7 @@
             @foreach ($finChoices as $index => $choice)
                 <div class="flex items-center ps-4 border border-gray-200 rounded">
                     <input id="bordered-radio-{{$question->id.$choice['id']}}" type="radio" wire:model="answers.{{ $question->id }}" value="{{ $choice['id'].$choice['answer'] }}" name="bordered-radio" class="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
-                    <label for="bordered-radio-{{$question->id.$choice['id']}}" class="playchoices cursor-pointer py-3 ms-2 text-sm font-medium text-gray-900 ">{{$index + 1}}. {{$choice['text']}}</label>
+                    <label for="bordered-radio-{{$question->id.$choice['id']}}" class="playchoices cursor-pointer py-3 ms-2 text-sm font-medium text-gray-900 ">{{$index + 1}}. <span class="speaktext">{{$choice['text']}}</span></label>
                 </div>
             @endforeach
         </div>
@@ -96,7 +96,7 @@
                 const synth = window.speechSynthesis;
                 const utterance = new SpeechSynthesisUtterance();
 
-                const choice = $(this).text();
+                const choice = $(this).find('.speaktext').text();
                 console.log(choice);
 
                 utterance.text = choice; // Thai text for "Hello, I can speak Thai."
