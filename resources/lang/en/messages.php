@@ -104,6 +104,7 @@ return [
     'lesson' => 'Lessons',
     'please' => "Please",
     'itrs' => 'in top right to get all lesson',
+    'lang' => 'Language',
 
     //Request
     'Request All' => 'Request All',

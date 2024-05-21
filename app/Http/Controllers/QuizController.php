@@ -317,4 +317,13 @@ class QuizController extends Controller
 
         return response()->json(['success' => $copyQuiz]);
     }
+
+    public function changeLang($qid, $lang) {
+        $ques = question::where('quiz', $qid)->get();
+        foreach ($ques as $key => $quest) {
+            $quest->lang = $lang;
+            $quest->save();
+        }
+        return response()->json(['success' => 'Question language has been changed.']);
+    }
 }

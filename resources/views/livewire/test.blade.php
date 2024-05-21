@@ -1,6 +1,11 @@
 <div class="card p-4">
-    <div class="bg-gray-200 px-4 py-3 mb-4 rounded">
-        <p>{{$questNum}}. {!! $question->title !!}</p>
+    <div class="bg-gray-200 px-4 py-3 mb-4 rounded d-flex justify-between">
+        <div id="question">
+            <p>{{$questNum}}. {!! $question->title !!}</p>
+        </div>
+        <div class="fs-4" id="playbtn" style="cursor: pointer">
+            <i class="bi bi-megaphone"></i>
+        </div>
     </div>
 
     @if ($question->type)
@@ -49,4 +54,32 @@
             </button>
         @endif
     </div>
+    <script>
+        document.getElementById('playbtn').addEventListener('click', function() {
+            if (window.speechSynthesis) {
+                // Speech Synthesis is supported
+                const synth = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance();
+
+                console.log(synth.getVoices());
+
+                const question = document.getElementById('question');
+                const paragraphs = Array.from(question.getElementsByTagName("p"));
+                var textContent = "";
+                paragraphs.forEach(element => {
+                    textContent += element.textContent;
+                });
+                console.log(textContent);
+
+                utterance.text = textContent; // Thai text for "Hello, I can speak Thai."
+                utterance.lang = "{{ $question->lang }} ?? 'th-TH'";
+                synth.speak(utterance);
+
+            } else {
+                // Speech Synthesis not supported
+                alert("Your browser doesn't support Text-to-Speech.");
+            }
+
+        });
+    </script>
 </div>
