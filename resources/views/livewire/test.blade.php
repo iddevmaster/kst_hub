@@ -68,11 +68,13 @@
                 var textContent = "";
                 paragraphs.forEach(element => {
                     textContent += element.textContent;
+                    textContent += '';
                 });
                 console.log(textContent);
 
                 utterance.text = textContent; // Thai text for "Hello, I can speak Thai."
                 utterance.lang = "{{ $question->lang }} ?? 'th-TH'";
+                utterance.rate = 0.7;
                 synth.speak(utterance);
 
             } else {
