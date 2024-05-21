@@ -96,6 +96,8 @@
                 const synth = window.speechSynthesis;
                 const utterance = new SpeechSynthesisUtterance();
 
+                synth.cancel();
+
                 const choice = $(this).find('.speaktext').text();
                 console.log(choice);
 
