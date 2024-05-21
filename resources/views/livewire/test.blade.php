@@ -19,9 +19,9 @@
                 }
             @endphp
             @foreach ($finChoices as $index => $choice)
-                <div class="flex items-center ps-4 border border-gray-200 rounded ">
+                <div class="flex items-center ps-4 border border-gray-200 rounded">
                     <input id="bordered-radio-{{$question->id.$choice['id']}}" type="radio" wire:model="answers.{{ $question->id }}" value="{{ $choice['id'].$choice['answer'] }}" name="bordered-radio" class="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
-                    <label for="bordered-radio-{{$question->id.$choice['id']}}" class="cursor-pointer py-3 ms-2 text-sm font-medium text-gray-900 ">{{$index + 1}}. {{$choice['text']}}</label>
+                    <label for="bordered-radio-{{$question->id.$choice['id']}}" class="playchoices cursor-pointer py-3 ms-2 text-sm font-medium text-gray-900 ">{{$index + 1}}. {{$choice['text']}}</label>
                 </div>
             @endforeach
         </div>
@@ -74,16 +74,47 @@
 
                 utterance.text = textContent; // Thai text for "Hello, I can speak Thai."
                 const voices = synth.getVoices();
-                utterance.voice = voices[304];
-                // utterance.lang = "{{ $question->lang }} ?? 'th-TH'";
+                if ("{{ $question->lang }}" == 'th-TH') {
+                    utterance.voice = voices[304];
+                } else {
+                    utterance.lang = "{{ $question->lang ?? 'th-TH' }}";
+                }
                 utterance.rate = 0.7;
-                synth.speak(utterance);
+                if (synth.getVoices().length > 0) {
+                    synth.speak(utterance);
+                }
 
             } else {
                 // Speech Synthesis not supported
                 alert("Your browser doesn't support Text-to-Speech.");
             }
 
+        });
+        $('.playchoices').click(function() {
+            if (window.speechSynthesis) {
+                // Speech Synthesis is supported
+                const synth = window.speechSynthesis;
+                const utterance = new SpeechSynthesisUtterance();
+
+                const choice = $(this).text();
+                console.log(choice);
+
+                utterance.text = choice; // Thai text for "Hello, I can speak Thai."
+                const voices = synth.getVoices();
+                if ("{{ $question->lang }}" == 'th-TH') {
+                    utterance.voice = voices[304];
+                } else {
+                    utterance.lang = "{{ $question->lang ?? 'th-TH' }}";
+                }
+                utterance.rate = 0.7;
+                if (synth.getVoices().length > 0) {
+                    synth.speak(utterance);
+                }
+
+            } else {
+                // Speech Synthesis not supported
+                alert("Your browser doesn't support Text-to-Speech.");
+            }
         });
     </script>
 </div>
