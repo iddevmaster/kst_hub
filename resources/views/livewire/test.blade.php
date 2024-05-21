@@ -73,7 +73,9 @@
                 console.log(textContent);
 
                 utterance.text = textContent; // Thai text for "Hello, I can speak Thai."
-                utterance.lang = "{{ $question->lang }} ?? 'th-TH'";
+                const voices = synth.getVoices();
+                utterance.voice = voices[304];
+                // utterance.lang = "{{ $question->lang }} ?? 'th-TH'";
                 utterance.rate = 0.7;
                 synth.speak(utterance);
 
