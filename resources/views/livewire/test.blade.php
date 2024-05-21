@@ -106,7 +106,7 @@
                 } else {
                     utterance.lang = "{{ $question->lang ?? 'th-TH' }}";
                 }
-                utterance.rate = 0.7;
+                utterance.rate = 0.8;
                 if (synth.getVoices().length > 0) {
                     synth.speak(utterance);
                 }
