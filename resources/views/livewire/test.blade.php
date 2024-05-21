@@ -60,7 +60,7 @@
                 // Speech Synthesis is supported
                 const synth = window.speechSynthesis;
                 const utterance = new SpeechSynthesisUtterance();
-
+                synth.cancel();
                 console.log(synth.getVoices());
 
                 const question = document.getElementById('question');
