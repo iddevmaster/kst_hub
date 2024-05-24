@@ -78,7 +78,7 @@
         });
 
         $('#playaudio').on('pause', function(){
-            $('#playpauseIcon').html('<i class="bi bi-play-fill"></i>');
+            $('#playpauseIcon').html('<i id="playIcon" class="bi bi-play-fill"></i>');
             console.log('Audio has been paused');
         });
         $('#playaudio').on('play', function(){
