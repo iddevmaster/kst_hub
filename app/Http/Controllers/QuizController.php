@@ -209,6 +209,20 @@ class QuizController extends Controller
             $question->answer = json_encode( $choices );
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
             $question->agn = auth()->user()->agency;
+
+            $store_audio = [];
+            if ($request->audios) {
+                foreach ($request->audios as $audio) {
+                    if ($audio) {
+                        $store_audio[] = $audio;
+                    }
+                }
+            }
+
+            if (count($store_audio) > 0) {
+                $question->audio = json_encode($store_audio);
+            }
+
             $question->save();
 
             Activitylog::create([
@@ -257,6 +271,18 @@ class QuizController extends Controller
                     'text'=> '',
                     'answer'=> $request->writing,
                 ];
+            }
+
+            $store_audio = [];
+            if ($request->audios) {
+                foreach ($request->audios as $audio) {
+                    if ($audio) {
+                        $store_audio[] = $audio;
+                    }
+                }
+            }
+            if (count($store_audio) > 0) {
+                $question->audio = json_encode($store_audio);
             }
 
             $question->answer = json_encode( $choices );
@@ -316,14 +342,5 @@ class QuizController extends Controller
         }
 
         return response()->json(['success' => $copyQuiz]);
-    }
-
-    public function changeLang($qid, $lang) {
-        $ques = question::where('quiz', $qid)->get();
-        foreach ($ques as $key => $quest) {
-            $quest->lang = $lang;
-            $quest->save();
-        }
-        return response()->json(['success' => 'Question language has been changed.']);
     }
 }

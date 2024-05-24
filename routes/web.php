@@ -118,7 +118,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/delete/{id}', [QuizController::class, 'destroy'])->name('quiz.del');
     Route::get('/quiz/record/{qid}', [QuizController::class, 'testRecord'])->name('quiz.record');
     Route::get('/quiz/copy/{id}', [QuizController::class, 'copyQuiz'])->name('quiz.copy');
-    Route::get('/quiz/{qid}/change-lang/{lang}', [QuizController::class, 'changeLang'])->name('quiz.changeLang');
 
     // request
     Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');

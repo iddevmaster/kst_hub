@@ -1,10 +1,11 @@
 <div class="card p-4">
     <div class="bg-gray-200 px-4 py-3 mb-4 rounded d-flex justify-between">
-        <div id="question">
+        <div class="d-flex">
             <p>{{$questNum}}. {!! $question->title !!}</p>
         </div>
         <div class="fs-4" id="playbtn" style="cursor: pointer">
-            <i class="bi bi-megaphone"></i>
+            <div id="playpauseIcon"><i id="playIcon" class="bi bi-play-fill"></i></div>
+            <audio id="playaudio" preload sourcelist="{{ $question->audio ?? '[]' }}"></audio>
         </div>
     </div>
 
@@ -21,7 +22,7 @@
             @foreach ($finChoices as $index => $choice)
                 <div class="flex items-center ps-4 border border-gray-200 rounded">
                     <input id="bordered-radio-{{$question->id.$choice['id']}}" type="radio" wire:model="answers.{{ $question->id }}" value="{{ $choice['id'].$choice['answer'] }}" name="bordered-radio" class="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500  focus:ring-2 ">
-                    <label for="bordered-radio-{{$question->id.$choice['id']}}" class="playchoices cursor-pointer py-3 ms-2 text-sm font-medium text-gray-900 ">{{$index + 1}}. <span class="speaktext">{{$choice['text']}}</span></label>
+                    <label for="bordered-radio-{{$question->id.$choice['id']}}" class="cursor-pointer py-3 ms-2 text-sm font-medium text-gray-900 ">{{$index + 1}}. <span class="speaktext">{{$choice['text']}}</span></label>
                 </div>
             @endforeach
         </div>
@@ -55,68 +56,33 @@
         @endif
     </div>
     <script>
-        document.getElementById('playbtn').addEventListener('click', function() {
-            if (window.speechSynthesis) {
-                // Speech Synthesis is supported
-                const synth = window.speechSynthesis;
-                const utterance = new SpeechSynthesisUtterance();
-                synth.cancel();
-                console.log(synth.getVoices());
+        $('#playIcon').on('click', function() {
+            const sourcelist = $('#playaudio').attr('sourcelist');
+            let source = JSON.parse(sourcelist);
+            console.log(source);
+            let current = 0;
 
-                const question = document.getElementById('question');
-                const paragraphs = Array.from(question.getElementsByTagName("p"));
-                var textContent = "";
-                paragraphs.forEach(element => {
-                    textContent += element.textContent;
-                    textContent += '';
-                });
-                console.log(textContent);
-
-                utterance.text = textContent; // Thai text for "Hello, I can speak Thai."
-                const voices = synth.getVoices();
-                if ("{{ $question->lang }}" == 'th-TH') {
-                    utterance.voice = voices[304];
+            $('#playaudio').attr('src', source[current]);
+            $('#playaudio').trigger('play');
+            $('#playaudio').on('ended', function(){
+                current++;
+                if(current < source.length){
+                    $(this).attr('src', source[current]);
+                    this.play();
                 } else {
-                    utterance.lang = "{{ $question->lang ?? 'th-TH' }}";
+                    current = 0;
+                    $(this).attr('src', source[current]);
                 }
-                utterance.rate = 0.7;
-                if (synth.getVoices().length > 0) {
-                    synth.speak(utterance);
-                }
-
-            } else {
-                // Speech Synthesis not supported
-                alert("Your browser doesn't support Text-to-Speech.");
-            }
-
+            });
         });
-        $('.playchoices').click(function() {
-            if (window.speechSynthesis) {
-                // Speech Synthesis is supported
-                const synth = window.speechSynthesis;
-                const utterance = new SpeechSynthesisUtterance();
 
-                synth.cancel();
-
-                const choice = $(this).find('.speaktext').text();
-                console.log(choice);
-
-                utterance.text = choice; // Thai text for "Hello, I can speak Thai."
-                const voices = synth.getVoices();
-                if ("{{ $question->lang }}" == 'th-TH') {
-                    utterance.voice = voices[304];
-                } else {
-                    utterance.lang = "{{ $question->lang ?? 'th-TH' }}";
-                }
-                utterance.rate = 0.8;
-                if (synth.getVoices().length > 0) {
-                    synth.speak(utterance);
-                }
-
-            } else {
-                // Speech Synthesis not supported
-                alert("Your browser doesn't support Text-to-Speech.");
-            }
+        $('#playaudio').on('pause', function(){
+            $('#playpauseIcon').html('<i class="bi bi-play-fill"></i>');
+            console.log('Audio has been paused');
+        });
+        $('#playaudio').on('play', function(){
+            $('#playpauseIcon').html('<i id="pauseIcon" class="bi bi-pause-fill"></i>');
+            console.log('Audio has playing...');
         });
     </script>
 </div>

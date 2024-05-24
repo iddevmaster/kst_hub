@@ -29,6 +29,13 @@
                         @endphp
                     </p>
                 </div>
+                <div class="flex justify-center mt-4 ">
+                    <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
+                        <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 ">
+                            <i class="bi bi-plus-lg"></i> {{ __('messages.add_ques') }}
+                        </button>
+                    </a>
+                </div>
                 <div class="card p-4 mb-4">
                     <div class="mb-3 text-center">
                         <p>{{ __('messages.question') }}</p>
@@ -40,19 +47,6 @@
                             </button>
                         @endforeach
                     </div>
-                </div>
-
-                <div class="flex justify-center mt-4 ">
-                    <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
-                        <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 ">
-                            <i class="bi bi-plus-lg"></i> {{ __('messages.add_ques') }}
-                        </button>
-                    </a>
-                </div>
-                <div class="flex justify-center">
-                    <button type="button" quizid="{{ $quiz->id }}" class="changeLangbtn transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 ">
-                        <i class="bi bi-arrow-clockwise"></i> เปลี่ยนภาษา
-                    </button>
                 </div>
             </div>
             <div class="col-lg-10 col-sm-12 col-md-8 mb-4" id="content">
@@ -73,7 +67,16 @@
                                     <p ><b>{{ __('messages.type') }}:</b> &nbsp;{{$quest->type ? 'Multiple choice' : 'Short answer'}}</p>
                                     <p ><b>{{ __('messages.score') }}:</b> &nbsp;{{$quest->score}}</p>
                                     <p ><b>{{ __('messages.shuff_ques') }}:</b> &nbsp;{{$quest->shuffle_ch ? "Yes" : "No"}}</p>
-                                    <p><b>{{ __('messages.lang') }}:</b> &nbsp;{{$quest->lang}}</p>
+                                </div>
+                                <div>
+                                    <div class="d-flex">
+                                        <p class="align-self-center me-2"><b>เสียงบรรยาย:</b> </p>
+                                        @if ($quest->audio)
+                                            <audio preload controls sourcelist="{{ $quest->audio }}"></audio>
+                                        @else
+                                            <p class="text-danger">-ไม่พบเสียงบรรยาย-</p>
+                                        @endif
+                                    </div>
                                 </div>
                                 @if ($quest->type)
                                     <p class="mb-2"><b>{{ __('messages.choices') }}:</b></p>
@@ -193,61 +196,23 @@
 
         });
 
-        $('.changeLangbtn').click(function() {
-            // Get the notification ID from the data attribute
-            const quizId = $(this).attr('quizid');
-            Swal.fire({
-                title: `Are you sure?`,
-                html: `
-                <select class="form-select" aria-label="Default select example" id="lang_select">
-                    <option value="" selected disabled>Open this select menu</option>
-                    <option value="th-TH">Thailand</option>
-                    <option value="zh-CN">Chinese</option>
-                    <option value="my-MM">Myanmar</option>
-                    <option value="en-US">English</option>
-                    <option value="fil-PH">Philippines</option>
-                    <option value="lo-LA">Laos</option>
-                </select>
-                        `,
-                showCancelButton: true,
-                preConfirm: () => {
-                    const lang_select = document.getElementById("lang_select").value;
-                    if (!lang_select) {
-                        Swal.showValidationMessage(`You need to select a language`);
-                    } else {
-                        console.log(lang_select);
-                        $.ajax({
-                            url: "/quiz/"+ quizId +"/change-lang/" + lang_select,
-                            method: 'GET',
-                            success: function (response) {
-                                // console.log(response);
-                                Swal.fire({
-                                    title: "Success",
-                                    // text: "That thing is still around?",
-                                    icon: "success"
-                                }).then((res) => {
-                                    if (res.isConfirmed) {
-                                        window.location.reload();
-                                    }
-                                });
-                            },
-                            error: (error) => {
-                                // console.log(error);
-                                Swal.fire({
-                                    title: "Sorry!",
-                                    text: "Something wrong!",
-                                    icon: "error"
-                                }).then((res) => {
-                                    if (res.isConfirmed) {
-                                        window.location.reload();
-                                    }
-                                });
-                            }
-                        });
-                    }
-                },
-                showLoaderOnConfirm: true,
-                allowOutsideClick: () => !Swal.isLoading()
+        $('audio').each(function(){
+            const sourcelist = $(this).attr('sourcelist');
+            let source = JSON.parse(sourcelist);
+            console.log("source: ", source);
+            let current = 0;
+
+            $(this).attr('src', source[current]);
+
+            $(this).on('ended', function(){
+                current++;
+                if(current < source.length){
+                    $(this).attr('src', source[current]);
+                    this.play();
+                } else {
+                    current = 0;
+                    $(this).attr('src', source[current]);
+                }
             });
         });
     });
