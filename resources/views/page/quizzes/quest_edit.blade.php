@@ -130,7 +130,7 @@
                         <div class="d-flex justify-between">
                             <div class="ps-5 grow">
                                 @php
-                                    $audiolists = json_decode($quest->audio ?? []);
+                                    $audiolists = json_decode($quest->audio ?? '');
                                 @endphp
                                 <ol class="list-decimal d-flex flex-wrap" id="audioList">
                                     @if (count($audiolists ?? []) > 0)
