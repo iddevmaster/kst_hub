@@ -4,7 +4,7 @@
             <p>{{$questNum}}. {!! $question->title !!}</p>
         </div>
         <div class="fs-4" id="playbtn" style="cursor: pointer">
-            <div id="playpauseIcon"><i id="playIcon" class="bi bi-play-fill"></i></div>
+            <div id="playIcon"><i class="bi bi-play-fill"></i></div>
             <audio id="playaudio" preload sourcelist="{{ $question->audio ?? '[]' }}"></audio>
         </div>
     </div>
@@ -78,11 +78,11 @@
         });
 
         $('#playaudio').on('pause', function(){
-            $('#playpauseIcon').html('<i id="playIcon" class="bi bi-play-fill"></i>');
+            $('#playIcon').html('<i class="bi bi-play-fill"></i>');
             console.log('Audio has been paused');
         });
         $('#playaudio').on('play', function(){
-            $('#playpauseIcon').html('<i id="pauseIcon" class="bi bi-pause-fill"></i>');
+            $('#playIcon').html('<i class="bi bi-pause-fill"></i>');
             console.log('Audio has playing...');
         });
     </script>
