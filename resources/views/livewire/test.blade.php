@@ -57,6 +57,7 @@
     </div>
     <script>
         $('#playIcon').on('click', function() {
+            $('#playaudio').trigger('pause');
             const sourcelist = $('#playaudio').attr('sourcelist');
             let source = JSON.parse(sourcelist);
             console.log(source);
