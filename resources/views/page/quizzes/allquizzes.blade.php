@@ -250,6 +250,111 @@
                                             {{ __('copy') }}
                                             <div class="tooltip-arrow" data-popper-arrow></div>
                                         </div>
+
+                                        <a href="#" data-quiz-id="{{$quiz->id}}" data-tooltip-target="tooltip-impq" data-modal-target="default-modal" data-modal-toggle="default-modal" class="text-lg text-yellow-500  hover:text-yellow-700 hover:underline"><i class="bi bi-box-arrow-in-down"></i></a>
+                                        <div id="tooltip-impq" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            นำเข้าข้อสอบ
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+
+                                            <!-- Main modal -->
+                                            <div id="default-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                                <div class="relative p-4 w-full max-w-2xl max-h-full">
+                                                    <!-- Modal content -->
+                                                    <div class="relative bg-white rounded-lg shadow">
+                                                        <!-- Modal header -->
+                                                        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                                                            <h3 class="text-xl font-semibold text-gray-900">
+                                                                นำเข้าข้อสอบ
+                                                            </h3>
+                                                            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-hide="default-modal">
+                                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                                </svg>
+                                                                <span class="sr-only">Close modal</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="{{ route('quiz.importques', ['qid' => $quiz->id]) }}" method="post">
+                                                            @csrf
+                                                            <!-- Modal body -->
+                                                            <div class="p-4 md:p-5 space-y-4">
+                                                                <div id="quizcontainer" class="overflow-auto max-h-screen">
+                                                                    <div class="flex gap-2">
+                                                                        <div class="w-full">
+                                                                            <label for="quizsel" class="ms-2 text-sm font-medium text-gray-900 ">แบบทดสอบ</label>
+                                                                            <select required id="quizsel" name="quizsel1[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                                                                @foreach ($quizs as $index => $quiz)
+                                                                                    @php
+                                                                                        $questions = App\Models\question::where('quiz', $quiz->id)->count();
+                                                                                    @endphp
+                                                                                    <option value="{{$quiz->id}}">{{$quiz->title}} ({{ $questions }} ข้อ)</option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="w-fit">
+                                                                            <label for="quesnum" class="ms-2 text-sm font-medium text-gray-900 ">จำนวนข้อ</label>
+                                                                            <input type="text" id="quesnum" name="quizsel1[]" class="bg-gray-50 border w-1/2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " required />
+                                                                        </div>
+                                                                        <div class="w-fit">
+                                                                            <label for="shuff" class="ms-2 text-sm font-medium text-gray-900 ">สุ่ม</label>
+                                                                            <input id="shuff" name="quizsel1[]" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <button type="button" id="addquiznumbtn" onclick="addQuiz()" class="text-white mx-1 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 text-center "><i class="bi bi-plus-lg"></i></button>
+                                                                <button type="button" id="addquiznumbtn" onclick="delQuiz()" class="text-white mx-1 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 text-center "><i class="bi bi-dash-lg"></i></button>
+                                                                <script>
+                                                                    let num = 2;
+                                                                    function addQuiz() {
+                                                                        var quizContainer = document.getElementById('quizcontainer');
+                                                                        var newQuiz = document.createElement('div');
+                                                                        newQuiz.className = "flex gap-2";
+                                                                        newQuiz.innerHTML = `
+                                                                            <div class="w-full">
+                                                                                <label for="quizsel" class="ms-2 text-sm font-medium text-gray-900 ">แบบทดสอบ</label>
+                                                                                <select id="quizsel" name="quizsel${num}[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                                                                                    @foreach ($quizs as $index => $quiz)
+                                                                                        @php
+                                                                                            $questions = App\Models\question::where('quiz', $quiz->id)->count();
+                                                                                        @endphp
+                                                                                        <option value="{{$quiz->id}}">{{$quiz->title}} ({{ $questions }} ข้อ)</option>
+                                                                                    @endforeach
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="w-fit">
+                                                                                <label for="quesnum" class="ms-2 text-sm font-medium text-gray-900 ">จำนวนข้อ</label>
+                                                                                <input type="text" id="quesnum" name="quizsel${num}[]" class="bg-gray-50 border w-1/2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " placeholder="John" required />
+                                                                            </div>
+                                                                            <div class="w-fit">
+                                                                                <label for="shuff" class="ms-2 text-sm font-medium text-gray-900 ">สุ่ม</label>
+                                                                                <input id="shuff" name="quizsel${num}[]" type="checkbox" value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2">
+                                                                            </div>
+                                                                        `;
+                                                                        quizContainer.appendChild(newQuiz);
+                                                                        num++;
+                                                                    }
+
+                                                                    function delQuiz() {
+                                                                        $('#quizcontainer').children().last().remove();
+                                                                    }
+                                                                </script>
+                                                                @if(session('error'))
+                                                                    <div class="alert alert-danger mt-2">
+                                                                        <ul>
+                                                                            <li>{{ session('error') }}</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                @endif
+                                                            </div>
+                                                            <!-- Modal footer -->
+                                                            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b ">
+                                                                <button data-modal-hide="default-modal" type="submit" class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Save</button>
+                                                                <button data-modal-hide="default-modal" type="button" class="py-2.5 mx-1 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Decline</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -284,6 +389,7 @@
         @endif
 
         $(document).ready(function() {
+
             $('.delQuizBtn').click(function() {
                 // Get the notification ID from the data attribute
                 const delQuizId = $(this).data('quiz-id');

@@ -343,4 +343,34 @@ class QuizController extends Controller
 
         return response()->json(['success' => $copyQuiz]);
     }
+
+    public function importQues(Request $request, $qid) {
+        $datas = $request->all();
+        array_shift($datas);
+        foreach ($datas as $data) {
+            $quiz = quiz::find($data[0]);
+            $quest_num = question::where('quiz', $quiz->id)->count();
+            if ($data[1] > $quest_num) {
+                return redirect()->back()->with('error','The number of questions is greater than the number of questions in the quiz.');
+            }
+            if ($qid !== $data[0]) {
+                if ($data[2] ?? false) {
+                    $questions = Question::where('quiz', $data[0])->inRandomOrder()->limit($data[1])->get();
+                } else {
+                    $questions = Question::where('quiz', $data[0])->limit($data[1])->get();
+                }
+
+                // duplicate questions
+                if ($questions) {
+                    foreach ($questions as $question) {
+                        $copyQues = $question->replicate()->fill([
+                            'quiz' => $qid
+                        ]);
+                        $copyQues->save();
+                    }
+                }
+            }
+        }
+        return redirect()->back()->with('success','Questions has been imported.');
+    }
 }
