@@ -323,7 +323,7 @@
                                                                             </div>
                                                                             <div class="w-fit">
                                                                                 <label for="quesnum" class="ms-2 text-sm font-medium text-gray-900 ">จำนวนข้อ</label>
-                                                                                <input type="text" id="quesnum" name="quizsel${num}[]" class="bg-gray-50 border w-1/2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " placeholder="John" required />
+                                                                                <input type="text" id="quesnum" name="quizsel${num}[]" class="bg-gray-50 border w-1/2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 " required />
                                                                             </div>
                                                                             <div class="w-fit">
                                                                                 <label for="shuff" class="ms-2 text-sm font-medium text-gray-900 ">สุ่ม</label>
