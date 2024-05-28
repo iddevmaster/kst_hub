@@ -130,7 +130,8 @@ Route::middleware('auth')->group(function () {
 
     // Take Exam
     Route::get('/test/start/{cid}/{qzid}/{ques_num}', [TestController::class, 'index'])->name('test.start');
-    Route::get('/test/summary', [TestController::class, 'testSummary'])->name('test.summary');
+    Route::get('/test/summary/', [TestController::class, 'testSummary'])->name('test.summary');
+    Route::get('/test/history/{cid}/{testid}', [TestController::class, 'testHistory'])->name('test.history');
     Route::get('/test/finish', [TestController::class, 'finishTest'])->name('test.finish');
 
     // Export file

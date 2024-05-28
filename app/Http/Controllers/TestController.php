@@ -36,6 +36,24 @@ class TestController extends Controller
         return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
     }
 
+    public function testHistory ($cid, $testid) {
+        $test = Test::find($testid);
+        $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $test->start);
+        $endDate = Carbon::createFromFormat('Y-m-d H:i:s', $test->end);
+        $timeUsege = $startDate->diff($endDate);  // $diff->format('%d days, %h hours, %i minutes');
+
+
+        $scores = $test->score ?? 0;
+        $totalScore = $test->totalScore ?? 0;
+        $quizId = $test->quiz;
+        $answers = $test->answers ?? [];
+        $quests = question::whereIn('id', array_keys($answers))->get();
+        //  clear session -> session()->forget('scores');
+        $quiz = quiz::find($quizId);
+
+        return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
+    }
+
     public function finishTest(Request $request) {
         $testResults = session('testResults');
         // session()->flash('testResults', [

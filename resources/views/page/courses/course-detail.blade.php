@@ -838,7 +838,7 @@
                         </thead>
                         <tbody>
                             @foreach ($tested as $index => $test)
-                                <tr class="bg-white border-b  ">
+                                <tr class="bg-white border-b" onclick="window.location.href='/test/history/${cid}/{{ $test->id }}';">
                                     <td class="px-3 py-2">
                                         {{$index +1}}
                                     </td>
