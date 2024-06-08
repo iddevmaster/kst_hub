@@ -88,62 +88,67 @@
             @endif
 
             {{-- specific course carousel --}}
-            <div class="overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5" style="background-color: var(--bg-color2);">
-                <div class="mb-3 flex justify-between">
-                    <p class="text-md sm:text-xl fw-bold">{{ __('messages.classroom') }}</p>
-                    <a href="{{route('classroom')}}" class="btn btn-sm text-xs sm:text-md btn-primary">{{ __('messages.seemore') }} <i class="bi bi-chevron-double-right"></i></a>
-                </div>
-                <div class="owl-carousel">
-                    @foreach ($dpmcourses as $course)
-                    <div class="item">
-                        <div class="card w-100" style="height: 200px">
-                            <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
-                            <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
-                                {{-- course Img --}}
-                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded  ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
-                            </div>
-                            <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
-                                <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
-                                {{-- <p class="card-title fw-bold mb-0 text-xs" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p> --}}
-                                <p class="card-text text-gray-200 text-sm">{{ Str::limit($course->description, 35) }}</p>
-                            </div>
-                            {{-- <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
-                                <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="btn btn-primary btn-sm">view course <i class="bi bi-chevron-double-right"></i></a>
-                            </div> --}}
-                        </div>
+            @if (count($dpmcourses ?? []) > 0)
+                <div class="overflow-hidden shadow-sm sm:rounded-lg p-4 mb-5" style="background-color: var(--bg-color2);">
+                    <div class="mb-3 flex justify-between">
+                        <p class="text-md sm:text-xl fw-bold">{{ __('messages.classroom') }}</p>
+                        <a href="{{route('classroom')}}" class="btn btn-sm text-xs sm:text-md btn-primary">{{ __('messages.seemore') }} <i class="bi bi-chevron-double-right"></i></a>
                     </div>
-                    @endforeach
+                    <div class="owl-carousel">
+                        @foreach ($dpmcourses as $course)
+                        <div class="item">
+                            <div class="card w-100" style="height: 200px">
+                                <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
+                                <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                    {{-- course Img --}}
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded  ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
+                                </div>
+                                <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
+                                    <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
+                                    {{-- <p class="card-title fw-bold mb-0 text-xs" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p> --}}
+                                    <p class="card-text text-gray-200 text-sm">{{ Str::limit($course->description, 35) }}</p>
+                                </div>
+                                {{-- <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
+                                    <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="btn btn-primary btn-sm">view course <i class="bi bi-chevron-double-right"></i></a>
+                                </div> --}}
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+
+            @endif
 
             {{-- all course carousel --}}
-            <div class="overflow-hidden shadow-sm sm:rounded-lg p-4" style="background-color: var(--bg-color2);">
-                <div class="mb-3 flex justify-between">
-                    <p class="text-md sm:text-xl fw-bold">{{ __('messages.all_course') }}</p>
-                    <a href="{{route('course.all')}}" class="btn btn-sm text-xs sm:text-md btn-primary">{{ __('messages.seemore') }} <i class="bi bi-chevron-double-right"></i></a>
-                </div>
-                <div class="owl-carousel">
-                    @foreach ($allcourses as $course)
-                    <div class="item">
-                        <div class="card w-100" style="height: 200px">
-                            <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
-                            <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
-                                {{-- course Img --}}
-                                <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
-                            </div>
-                            <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
-                                <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
-                                {{-- <p class="card-title fw-bold mb-0 text-xs" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p> --}}
-                                <p class="card-text text-gray-200 text-sm">{{ Str::limit($course->description, 35) }}</p>
-                            </div>
-                            {{-- <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
-                                <a href="" class="btn btn-primary btn-sm">view course <i class="bi bi-chevron-double-right"></i></a>
-                            </div> --}}
-                        </div>
+            @if (count($allcourses ?? []) > 0)
+                <div class="overflow-hidden shadow-sm sm:rounded-lg p-4" style="background-color: var(--bg-color2);">
+                    <div class="mb-3 flex justify-between">
+                        <p class="text-md sm:text-xl fw-bold">{{ __('messages.all_course') }}</p>
+                        <a href="{{route('course.all')}}" class="btn btn-sm text-xs sm:text-md btn-primary">{{ __('messages.seemore') }} <i class="bi bi-chevron-double-right"></i></a>
                     </div>
-                    @endforeach
+                    <div class="owl-carousel">
+                        @foreach ($allcourses as $course)
+                        <div class="item">
+                            <div class="card w-100" style="height: 200px">
+                                <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
+                                <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                    {{-- course Img --}}
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
+                                </div>
+                                <div class="card-body text-white" style="border-radius: 0px 0px 5px 5px">
+                                    <h5 class="card-title fw-bold mb-2">{{ Str::limit($course->title, 30) }}</h5>
+                                    {{-- <p class="card-title fw-bold mb-0 text-xs" style="color: var(--primary-color)">By: {{ optional($course->getDpm)->name }}</p> --}}
+                                    <p class="card-text text-gray-200 text-sm">{{ Str::limit($course->description, 35) }}</p>
+                                </div>
+                                {{-- <div class="card-footer d-flex justify-content-end" style="background-color: var(--primary-color)">
+                                    <a href="" class="btn btn-primary btn-sm">view course <i class="bi bi-chevron-double-right"></i></a>
+                                </div> --}}
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

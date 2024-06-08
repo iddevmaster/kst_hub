@@ -125,13 +125,14 @@ class HomeController extends Controller
         if ($request->user()->role == "new") {
             return redirect()->route('home');
         } else {
-            $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->take(8)->get();
             $mycourses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
+            $mycoursesIds = $mycourses ? $mycourses->pluck('id') : [];
+            $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->whereNotIn('id', $mycoursesIds)->take(8)->get();
             if ($request->user()->hasAnyRole('admin', 'staff')) {
-                $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
+                $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->whereNotIn('id', $mycoursesIds)->take(8)->get();
             } else {
                 $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
-                 ->where('dpm', $request->user()->dpm)->take(8)->get();
+                 ->where('dpm', $request->user()->dpm)->whereNotIn('id', $mycoursesIds)->take(8)->get();
             }
 
             $group_courses = [];
