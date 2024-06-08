@@ -4,7 +4,7 @@
 
 
 return [
-    'kst_name' => 'Knowledge Service Training',
+    'kst_name' => 'HUB Trainingzenter',
 
     // Menu Bar
     'home' => 'Home',
