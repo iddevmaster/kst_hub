@@ -130,7 +130,7 @@ class HomeController extends Controller
             if ($request->user()->hasAnyRole('admin', 'staff')) {
                 $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
             } else {
-                $dpmcourses_query = course::where('permission->dpm', "true")->whereNot("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->where('agn', $request->user()->agency)
+                $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)
                  ->where('dpm', $request->user()->dpm)->take(8)->get();
             }
 
