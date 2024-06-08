@@ -128,7 +128,7 @@ class HomeController extends Controller
             $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->take(8)->get();
             $mycourses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
             if ($request->user()->hasAnyRole('admin', 'staff')) {
-                $dpmcourses_query = course::where('permission->dpm', "true")->whereNot("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->where('agn', $request->user()->agency)->take(8)->get();
+                $dpmcourses_query = course::where('permission->dpm', "true")->where('agn', $request->user()->agency)->take(8)->get();
             } else {
                 $dpmcourses_query = course::where('permission->dpm', "true")->whereNot("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->where('agn', $request->user()->agency)
                  ->where('dpm', $request->user()->dpm)->take(8)->get();
@@ -139,7 +139,7 @@ class HomeController extends Controller
                 $group = course_group::where('code', $request->user()->course_group)->first();
                 if (count($group->courses ?? []) > 0) {
                     foreach ($group->courses as $course) {
-                        $getcourse = course::where('id', $course)->whereNot("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->get();
+                        $getcourse = course::find($course);
                         if ($getcourse) {
                             $group_courses[] = $getcourse;
                         }
