@@ -24,6 +24,9 @@ class quiz extends Model
     public function getCreated() {
         return $this->belongsTo(User::class, 'create_by');
     }
+    public function getAgn() {
+        return $this->belongsTo(agency::class, 'agn');
+    }
 
     public function getForCoursesAttribute($value)
     {
