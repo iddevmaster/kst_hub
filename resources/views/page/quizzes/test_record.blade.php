@@ -17,6 +17,9 @@
                                     {{ __('messages.user_name') }}
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    ฝ่าย
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     {{ __('messages.score') }}
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -45,6 +48,9 @@
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap ">
                                         {{ optional($test->getTester)->name }}
                                     </th>
+                                    <td class="px-6 py-4">
+                                        {{ optional($test->getTester->getBrn)->name }}
+                                    </td>
                                     <td class="px-6 py-4">
                                         {{ $test->score }} / {{ $test->totalScore }}
                                     </td>
