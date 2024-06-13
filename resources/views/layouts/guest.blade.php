@@ -34,7 +34,7 @@
             <footer class="flex flex-wrap mt-5 w-100 justify-around w-full " >
                 <div class="flex flex-wrap gap-2 justify-center text-center md:text-start align-items-center">
                     <div><img src="/img/logoiddrives.png" alt="" width="50"></div>
-                    <div class="bg-white rounded p-1"><img src="/img/logoid_new.png" alt="" width="50"></div>
+                    {{-- <div class="bg-white rounded p-1"><img src="/img/logoid_new.png" alt="" width="50"></div> --}}
                     <div class="flex items-center text-white text-sm"><p style="height: fit-content">บริษัท ไอดีไดรฟ์ จำกัด 200/222 หมู่2 ถนนชัยพฤกษ์ ตำบลในเมือง อำเภอเมืองขอนแก่น จังหวัดขอนแก่น 40000 <br> Tel : 043-228 899 www.iddrives.co.th Email : idofficer@iddrives.co.th</p></div>
                 </div>
                 <div class="text-center text-white">
