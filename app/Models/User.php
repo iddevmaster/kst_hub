@@ -71,11 +71,15 @@ class User extends Authenticatable
 
     public function logoutFromSSOServer () {
         // Send a revoke tokens request to SSO Server
-        $access_token = session()->get("access_token");
-        $response = Http::withHeaders([
-            "Accept" => "application/json",
-            "Authorization" => "Bearer " . $access_token
-        ])->get(config('auth.sso_host') . "/api/logmeout");
+        try {
+            $access_token = session()->get("access_token");
+            $response = Http::withHeaders([
+                "Accept" => "application/json",
+                "Authorization" => "Bearer " . $access_token
+            ])->get(config('auth.sso_host') . "/api/logmeout");
+        } catch (\Throwable $th) {
+            // throw $th;
+        }
         // die($response);
     }
 
