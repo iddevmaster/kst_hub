@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\agency;
 use App\Models\branch;
+use App\Models\course_group;
 use App\Models\department;
 use App\Models\User;
+use App\Models\user_has_group;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -32,7 +34,7 @@ class SSOController extends Controller
     public function getCallback(Request $request) {
         $state = $request->session()->pull("state");
 
-        throw_unless(strlen($state) > 0 && $state == $request->state , InvalidArgumentException::class);
+        // throw_unless(strlen($state) > 0 && $state == $request->state , InvalidArgumentException::class);
 
         $response = Http::asForm()->post(
             config('auth.sso_host') . "/oauth/token",
@@ -56,6 +58,7 @@ class SSOController extends Controller
                 "Authorization" => "Bearer " . $access_token
             ])->get( config('auth.sso_host') . "/api/user");
             $userArray = $response->json();
+            // dd($userArray);
             try {
                 $username = $userArray['username'];
             } catch (\Throwable $th) {
@@ -68,20 +71,20 @@ class SSOController extends Controller
                 $user->username = $username;
                 $user->password = $username;
 
-                $agn = agency::where('name', $userArray['agency'])->first();
+                $agn = agency::where('agn_id', $userArray['agency']['agn_id'])->first();
                 if ($agn) {
                     $user->agency = $agn->id;
                 } else {
-                    $agn = agency::create(['name' => $userArray['agency']]);
+                    $agn = agency::create(['name' => $userArray['agency']['name'], 'agn_id' => $userArray['agency']['agn_id']]);
                     $user->agency = $agn->id;
                 }
-
-                $brn = branch::where('name', $userArray['branch'])->first();
+                $brn = branch::where('brn_id', $userArray['branch']['brn_id'])->first();
                 if ($brn) {
                     $user->brn = $brn->id;
                 } else {
                     $brn = new branch;
-                    $brn->name = $userArray['branch'];
+                    $brn->name = $userArray['branch']['name'];
+                    $brn->brn_id = $userArray['branch']['brn_id'];
                     $brn->agency = $agn->id;
                     $brn->save();
                     $user->brn = $brn->id;
@@ -96,13 +99,53 @@ class SSOController extends Controller
                 if (!$user->hasRole($userArray['role'])) {
                     $user->assignRole($userArray['role']);
                 }
+            } else {
+                $agn = agency::where('agn_id', $userArray['agency']['agn_id'])->orWhere('name', $userArray['agency']['name'])->first();
+                if ($agn) {
+                    $agn->update(['name' => $userArray['agency']['name'], 'agn_id' => $userArray['agency']['agn_id']]);
+                    $user->agency = $agn->id;
+                } else {
+                    $agn = agency::create(['name' => $userArray['agency']['name'], 'agn_id' => $userArray['agency']['agn_id']]);
+                    $user->agency = $agn->id;
+                }
+                $brn = branch::where('brn_id', $userArray['branch']['brn_id'])->orWhere('name', $userArray['branch']['name'])->first();
+                if ($brn) {
+                    $brn->update(['name' => $userArray['branch']['name'], 'brn_id' => $userArray['branch']['brn_id'], 'agency' => $agn->id]);
+                    $user->brn = $brn->id;
+                } else {
+                    $brn = new branch;
+                    $brn->name = $userArray['branch']['name'];
+                    $brn->brn_id = $userArray['branch']['brn_id'];
+                    $brn->agency = $agn->id;
+                    $brn->save();
+                    $user->brn = $brn->id;
+                }
             }
-            $user->course_group = $userArray['course_code'];
+
+            $course_g = course_group::where('code', $userArray['courses'][0]['course_type'])->first();
+            if (!$course_g) {
+                $course_g = course_group::create([
+                    "name" => $userArray['courses'][0]['name'],
+                    "agn" => $user->agency,
+                    "by" => "api:sso",
+                    "code" => $userArray['courses'][0]['course_type']
+                ]);
+            }
+
             $user->save();
+
+            $user_group = user_has_group::where('user_id', $user->id)->where('group_id', $course_g->id)->first();
+            if (!$user_group) {
+                user_has_group::create([
+                    'user_id' => $user->id,
+                    'group_id' => $course_g->id
+                ]);
+            }
+
             Auth::login($user);
             return redirect(route('main'));
         } catch (\Throwable $th) {
-            return redirect('/')->with('error', 'Failed to connect to SSO Server!');
+            return redirect('/')->with('error', 'Failed to connect to SSO Server!' . $th->getMessage());
         }
     }
 }

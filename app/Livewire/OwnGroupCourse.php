@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\course_has_group;
 use Livewire\Component;
 use App\Models\course_group;
 use App\Models\course;
@@ -18,7 +19,8 @@ class OwnGroupCourse extends Component
     public function mount($gid)
     {
         $this->group = course_group::find($gid);
-        $this->courses = course::whereIn("id", $this->group->courses ?? [])->get();
+        $course_list = course_has_group::where('group_id', $this->group->id)->get(['course_id']);
+        $this->courses = course::whereIn("id", $course_list ?? [])->get();
         $this->all_courses = course::where("teacher", auth()->id())->get();
         $this->gCourses = $this->courses->pluck('id')->toArray();
         $this->gName =  $this->group->name;
@@ -29,10 +31,20 @@ class OwnGroupCourse extends Component
         try {
             $this->group->update([
                 'name' => $this->gName,
-                'courses' => json_encode($this->gCourses),
             ]);
-            $this->group->save();
-            $this->courses = course::whereIn("id", $this->group->courses ?? [])->get();
+            $selectedCourses = $this->gCourses;
+            foreach ($selectedCourses as $key => $selectedCourse) {
+                $gcourse = course_has_group::where('group_id', $this->group->id)->where('course_id', $selectedCourse)->get();
+                if (count($gcourse) == 0) {
+                    course_has_group::create([
+                        'group_id' => $this->group->id,
+                        'course_id' => $selectedCourse,
+                    ]);
+                }
+            }
+            course_has_group::where('group_id', $this->group->id)->whereNotIn('course_id', $selectedCourses)->delete();
+            $course_list = course_has_group::where('group_id', $this->group->id)->get(['course_id']);
+            $this->courses = course::whereIn("id", $course_list ?? [])->get();
             session()->flash('success', 'บันทึกสำเร็จ');
         } catch (\Throwable $th) {
             session()->flash('error', 'ไม่สามารถดำเนินการได้');

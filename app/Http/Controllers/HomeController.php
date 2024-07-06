@@ -18,7 +18,10 @@ use App\Notifications\MessageNotification;
 use App\Models\Test;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use App\Models\course_has_group;
 use App\Models\question;
+use App\Models\user_has_course;
+use App\Models\user_has_group;
 use App\Models\user_request;
 use Auth;
 use PDF;
@@ -122,10 +125,11 @@ class HomeController extends Controller
     public function main(Request $request) {
         $courses = course::where('agn', $request->user()->agency)->latest()->take(6)->get();
         $dpms = department::where('agency', $request->user()->agency)->get();
+        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
         if ($request->user()->role == "new") {
             return redirect()->route('home');
         } else {
-            $mycourses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->take(8)->get();
+            $mycourses = course::whereIn("id", $course_list)->take(8)->get();
             $mycoursesIds = $mycourses ? $mycourses->pluck('id') : [];
             $allcourses = course::where('permission->all', "true")->where('agn', $request->user()->agency)->whereNotIn('id', $mycoursesIds)->take(8)->get();
             if ($request->user()->hasAnyRole('admin', 'staff')) {
@@ -136,17 +140,17 @@ class HomeController extends Controller
             }
 
             $group_courses = [];
-            if ($request->user()->course_group >= 0) {
-                $group = course_group::where('code', $request->user()->course_group)->first();
-                if (count($group->courses ?? []) > 0) {
-                    foreach ($group->courses as $course) {
-                        $getcourse = course::find($course);
-                        if ($getcourse) {
-                            $group_courses[] = $getcourse;
-                        }
+            $user_group = user_has_group::where('user_id', $request->user()->id)->get(['group_id']);
+            foreach ($user_group as $group) {
+                $courses = course_has_group::where('group_id', $group->group_id)->get(['course_id']);
+                foreach ($courses as $course) {
+                    $getcourse = course::find($course->course_id);
+                    if ($getcourse) {
+                        $group_courses[] = $getcourse;
                     }
                 }
             }
+
             if (count($group_courses) > 0) {
                 $dpmcourses = $dpmcourses_query->union($group_courses);
             } else {
@@ -161,7 +165,8 @@ class HomeController extends Controller
     }
 
     public function courseEnrolled(Request $request) {
-        $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
+        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
+        $courses = course::whereIn("id", $course_list)->paginate(12);
 
         $dpms = department::all();
 

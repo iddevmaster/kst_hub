@@ -110,12 +110,15 @@
                                             </thead>
                                             <tbody class="text-start">
                                                 @foreach ($courses as $course)
+                                                    @php
+                                                        $total_student = App\Models\user_has_course::where('course_id', $course->id)->count();
+                                                    @endphp
                                                     <tr>
                                                         <td>{{ $course->code }}</td>
                                                         <td class="text-nowrap" data-toggle="tooltip" data-placement="top" title="{{ $course->title }}">{{ $course->title }}</td>
                                                         <td>{{ optional($course->getTeacher)->name }}</td>
                                                         <td>{{ optional($course->getDpm)->name }}</td>
-                                                        <td>{{ count($course->studens ?? []) }}</td>
+                                                        <td>{{ $total_student }}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

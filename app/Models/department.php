@@ -16,6 +16,7 @@ class department extends Model
         "branch",
         "course",
         "prefix",
+        "dpm_id",
     ] ;
 
     public function brnName() {

@@ -112,6 +112,7 @@
                                             } else {
                                                 $prog_avg = 0;
                                             }
+                                            $user_course = App\Models\user_has_course::where('user_id', $id)->where('course_id', $course->id)->first();
                                         @endphp
                                         <tr>
                                             <th scope="row"><button class="text-danger delete-btn" value="{{ $course->id }}" userId="{{ $user->id }}"><i class="bi bi-trash"></i></button></th>
@@ -127,7 +128,7 @@
                                                 </div> --}}
                                             </td>
                                             <td>
-                                                {{ $course->studens[$user->id] ?? '' }}
+                                                {{ $user_course->created_at ?? '' }}
                                             </td>
                                         </tr>
                                     @endforeach

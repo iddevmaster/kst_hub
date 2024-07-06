@@ -130,8 +130,11 @@
                                         {{ $quiz->title }}
                                     </th>
                                     <th class="px-6 py-4">
-                                        @foreach ($quiz->for_courses as $item)
-                                            <p>{{$item}}</p>
+                                        @php
+                                            $for_courses = App\Models\course_has_quiz::where('quiz_id', $quiz->id)->get();
+                                        @endphp
+                                        @foreach ($for_courses ?? [] as $course_quiz)
+                                            <p>{{ optional($course_quiz->getCourse)->code }}</p>
                                         @endforeach
                                     </th>
                                     <td class="px-6 py-4">

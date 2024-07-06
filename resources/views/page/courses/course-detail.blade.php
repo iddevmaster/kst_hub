@@ -4,7 +4,7 @@
             <p>{{ $course->title }}</p>
             @if (($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                 <button class="badge btn btn-secondary" disabled>{{ __('messages.own') }}</button>
-            @elseif ($course->studens[Auth::user()->id] ?? false)
+            @elseif (App\Models\user_has_course::where('user_id', Auth::user()->id)->where('course_id', $course->id)->exists())
                 <button class="badge btn btn-success" disabled>{{ __('messages.enrolled') }}</button>
             @else
             <a href="{{ route('enroll', ['cid' => $course->id]) }}"><button class="badge btn" style="background-color: var(--primary-color)" >{{ __('messages.enroll') }}</button></a>
@@ -19,7 +19,7 @@
                     <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
                 </div>
 
-                @if (($course->studens[Auth::user()->id] ?? false) || ($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
+                @if ((App\Models\user_has_course::where('user_id', Auth::user()->id)->where('course_id', $course->id)->exists()) || ($course->teacher == Auth::user()->id) || (auth()->user()->hasAnyRole(['admin', 'superAdmin'])))
                     @foreach ($lessons as $lesson)
                         <div class="card p-4 mb-4">
                             <p class="fw-bold fs-5">{{ $lesson->topic }}</p>

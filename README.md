@@ -21,4 +21,7 @@ after you install project,the default admin user is :
 - Password: `iddrivesadmin`
 
 
-`php artisan schedule:run`
+Command :
+- `php artisan schedule:run`
+- `php artisan update:coursegroup`
+- `php artisan update:normalize`

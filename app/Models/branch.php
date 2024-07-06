@@ -12,6 +12,7 @@ class branch extends Model
     protected $fillable = [
         "name",
         "agency",
+        "brn_id",
     ] ;
 
     public function agencyName() {

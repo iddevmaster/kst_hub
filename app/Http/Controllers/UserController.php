@@ -15,6 +15,9 @@ use App\Http\Controllers\Exception;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
 use App\Models\course_group;
+use App\Models\course_has_group;
+use App\Models\user_has_course;
+use App\Models\user_has_group;
 
 class UserController extends Controller
 {
@@ -221,45 +224,16 @@ class UserController extends Controller
 
     public function addCourse(Request $request) {
         try {
-            $user = User::find( $request->uid );
-            $courses = course::whereIn('id', $request->courses )->get();
-            $courseContainer = [];
-            $stdContainer = [];
-            $oCourses = $user->courses ?? [];
-            if (count($oCourses) > 0) {
-                $courseContainer = array_unique(array_merge($oCourses, $request->courses));
-            } else {
-                $courseContainer = $request->courses;
+            foreach ($request->courses ?? [] as $cid) {
+                if (!user_has_course::where('user_id', $request->uid)->where('course_id', $cid)->exists()) {
+                    user_has_course::create([
+                        'user_id' => $request->uid,
+                        'course_id' => $cid
+                    ]);
+                }
             }
 
-            foreach ($courses as $course) {
-                $oStd = $course->studens;
-                if (count($oStd ?? []) > 0) {
-                    $stdContainer = $oStd;
-                }
-                if (!($stdContainer[$user->id] ?? false)) {
-                    $stdContainer[$user->id] = date('Y-m-d');
-                }
-                $course->studens = $stdContainer;
-                $course->save();
-            }
-            $user->courses = $courseContainer;
-            $user->save();
-
-            Activitylog::create([
-                'user' => auth()->id(),
-                'module' => 'User',
-                'content' => json_encode($request->courses),
-                'note' => 'add course',
-                'agn' => auth()->user()->agency
-            ]);
-            Log::channel('activity')->info('User '. $request->user()->name .' add couser to user',
-            [
-                'user' => $request->user(),
-                'user_added' => $user,
-                'course_add' => $courses,
-            ]);
-            return response()->json(['success' => $stdContainer ]);
+            return response()->json(['success' => $request->courses ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
         }
@@ -267,45 +241,11 @@ class UserController extends Controller
 
     public function removeCourse(Request $request) {
         try {
-            $course = course::find($request->cid);
-            $user = User::find($request->uid);
-
-            if (!$course || !$user) {
-                return response()->json(['error' => 'Course or User not found.'], 404);
+            $uuser_course = user_has_course::where('user_id', $request->uid)->where('course_id', $request->cid)->get();
+            if ($uuser_course) {
+                $uuser_course->delete();
             }
 
-            // remove student from course
-            $studentsC = $course->studens;
-            if (array_key_exists($request->uid, $studentsC)) {
-                unset($studentsC[$request->uid]);
-            }
-
-            // remove course from user
-            $userCourse = [];
-            foreach ($user->courses as $courseId) {
-                if ($request->cid != $courseId) {
-                    $userCourse[] = $courseId;
-                }
-            }
-
-            // save to database
-            $course->studens = $studentsC;
-            $user->courses = $userCourse;
-            $user->save();
-            $course->save();
-
-            Activitylog::create([
-                'user' => auth()->id(),
-                'module' => 'User',
-                'content' => $course->id,
-                'note' => 'remove course',
-                'agn' => auth()->user()->agency
-            ]);
-            Log::channel('activity')->info('User '. $request->user()->name .' remove course from user',
-            [
-                'user' => $request->user(),
-                'user_remove_from' => $user,
-            ]);
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
@@ -342,46 +282,24 @@ class UserController extends Controller
 
     public function addGroup(Request $request) {
         try {
-            $user = User::find( $request->uid );
-            $group = course_group::whereIn('id', $request->groups ?? [])->first();
-            $courses = course::whereIn('id', $group->courses ?? [] )->get();
-            $courseContainer = [];
-            $stdContainer = [];
-            $oCourses = $user->courses ?? [];
-            if (count($oCourses) > 0) {
-                $courseContainer = array_unique(array_merge($oCourses, $group->courses ?? []));
-            } else {
-                $courseContainer = $group->courses ?? [];
+            if (!user_has_group::where('user_id', $request->uid)->where('group_id', $request->groups)->exists()) {
+                user_has_group::create([
+                    'user_id' => $request->uid,
+                    'group_id' => $request->groups
+                ]);
             }
 
+            $courses = course_has_group::whereIn('group_id', $request->groups)->get(['course_id']);
             foreach ($courses as $course) {
-                $oStd = $course->studens;
-                if (count($oStd ?? []) > 0) {
-                    $stdContainer = $oStd;
+                if (!user_has_course::where('user_id', $request->uid)->where('course_id', $course->course_id)->exists()) {
+                    user_has_course::create([
+                        'user_id' => $request->uid,
+                        'course_id' => $course->course_id
+                    ]);
                 }
-                if (!($stdContainer[$user->id] ?? false)) {
-                    $stdContainer[$user->id] = date('Y-m-d');
-                }
-                $course->studens = $stdContainer;
-                $course->save();
             }
-            $user->courses = $courseContainer;
-            $user->save();
 
-            Activitylog::create([
-                'user' => auth()->id(),
-                'module' => 'User',
-                'content' => json_encode($request->courses),
-                'note' => 'add course',
-                'agn' => auth()->user()->agency
-            ]);
-            Log::channel('activity')->info('User '. $request->user()->name .' add couser to user',
-            [
-                'user' => $request->user(),
-                'user_added' => $user,
-                'course_add' => $courses,
-            ]);
-            return response()->json(['success' => $courseContainer]);
+            return response()->json(['success' => $request->all()]);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
         }
