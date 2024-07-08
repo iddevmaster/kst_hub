@@ -31,7 +31,7 @@
                                 <select class="form-select form-select-sm" id="agn" name="agn" disabled>
                                     @foreach ($agns as $agn)
                                         <option value="{{ $agn->id }}"
-                                            @if ($user->dpm == $agn->id)
+                                            @if ($user->agency == $agn->id)
                                                 selected
                                             @endif
                                         >{{ $agn->name }}</option>
