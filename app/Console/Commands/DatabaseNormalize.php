@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\course;
 use App\Models\course_has_quiz;
 use App\Models\quiz;
+use App\Models\User;
 use App\Models\user_has_course;
 use Illuminate\Console\Command;
 
@@ -38,7 +39,7 @@ class DatabaseNormalize extends Command
                 foreach ($quiz_course as $key => $course) {
                     $course_id = course::where('code', $course)->first(['id']);
                     if (!$course_id) {
-                        echo "quiz |$quiz->id| course |$course| not found!!!\n";
+                        echo "quiz |$quiz->id| course |$course| not found.\n";
                         continue;
                     } else {
                         echo "course {$course_id->id} quiz $quiz->id Updating \n";
@@ -68,14 +69,22 @@ class DatabaseNormalize extends Command
             foreach ($courses ?? [] as $course) {
                 $course_student = $course->studens;
                 foreach ($course_student ?? [] as $key => $student) {
-                    if (!user_has_course::where('user_id', $key)->where('course_id', $course->id)->exists()) {
-                        user_has_course::create([
-                            'user_id' => $key,
-                            'course_id' => $course->id
-                        ]);
-                        echo "user " . $key . " has course " . $course->id . " has been added !!!\n";
+                    // Check if both user and course exist
+                    $userExists = User::where('id', $key)->exists();
+                    $courseExists = course::where('id', $course->id)->exists();
+                    if ($userExists && $courseExists) {
+                        if (!user_has_course::where('user_id', $key)->where('course_id', $course->id)->exists()) {
+                            user_has_course::create([
+                                'user_id' => $key,
+                                'course_id' => $course->id
+                            ]);
+                            echo "user " . $key . " has course " . $course->id . " has been added !!!\n";
+                        } else {
+                            echo "user " . $key . " course " . $course->id . " already exists.\n";
+                        }
                     } else {
-                        echo "user " . $key . " course " . $course->id . " already exists.\n";
+                        echo "user $key or course $course->id not found.\n";
+                        continue;
                     }
                 }
             }
