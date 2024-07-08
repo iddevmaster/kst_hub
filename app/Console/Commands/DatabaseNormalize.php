@@ -37,6 +37,7 @@ class DatabaseNormalize extends Command
                 $quiz_course = $quiz->for_courses;
                 foreach ($quiz_course as $key => $course) {
                     $course_id = course::where('code', $course)->first(['id']);
+                    echo "course {$course_id} quiz $quiz->id Updating \n";
                     if (!course_has_quiz::where('course_id', $course_id->id)->where('quiz_id', $quiz->id)->exists()) {
                         course_has_quiz::create([
                             'course_id' => $course_id->id,
