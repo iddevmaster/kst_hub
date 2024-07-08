@@ -36,9 +36,9 @@ class DatabaseNormalize extends Command
             foreach ($quizzes as $quiz) {
                 $quiz_course = $quiz->for_courses;
                 foreach ($quiz_course as $key => $course) {
-                    $course_id = course::where('code', 'LIKE' , "%$course%")->first(['id']);
+                    $course_id = course::where('code', $course)->first(['id']);
                     if (!$course_id) {
-                        echo "course |$course| not found!!!\n";
+                        echo "quiz |$quiz->id| course |$course| not found!!!\n";
                         continue;
                     } else {
                         echo "course {$course_id->id} quiz $quiz->id Updating \n";
