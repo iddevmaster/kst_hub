@@ -51,7 +51,7 @@ class DatabaseNormalize extends Command
             echo "course has quiz Update success!!!\n";
         } catch (\Throwable $th) {
             //throw $th;
-            echo "error : " . $th . "\n";
+            echo "error : " . $th->getMessage() . "\n";
         }
         echo "\n";
 
@@ -76,7 +76,7 @@ class DatabaseNormalize extends Command
             echo "user has course Update success!!!\n";
         } catch (\Throwable $th) {
             //throw $th;
-            echo "error : " . $th . "\n";
+            echo "error : " . $th->getMessage() . "\n";
         }
         echo "\n";
     }
