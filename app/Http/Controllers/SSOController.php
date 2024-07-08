@@ -58,7 +58,7 @@ class SSOController extends Controller
                 "Authorization" => "Bearer " . $access_token
             ])->get( config('auth.sso_host') . "/api/user");
             $userArray = $response->json();
-            dd($userArray);
+            // dd($userArray);
             try {
                 $username = $userArray['username'];
             } catch (\Throwable $th) {
