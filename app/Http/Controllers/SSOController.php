@@ -120,6 +120,7 @@ class SSOController extends Controller
                     $brn->save();
                     $user->brn = $brn->id;
                 }
+
             }
 
             $course_g = course_group::where('code', $userArray['courses'][0]['course_type'])->first();
