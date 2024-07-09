@@ -85,7 +85,8 @@ class TestController extends Controller
             'score' => $scores,
             'totalScore' => $totalScore,
             'end'=> $testResults['end'],
-            'agn' => auth()->user()->agency
+            'agn' => auth()->user()->agency,
+            'course_id' => $testResults['courseId'],
         ]);
 
         session([
