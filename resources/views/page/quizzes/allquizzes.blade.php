@@ -363,6 +363,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $quizs->links() }}
                 </div>
             </div>
         </div>

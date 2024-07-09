@@ -15,11 +15,11 @@ class QuizController extends Controller
 {
     public function index(Request $request) {
         if (auth()->user()->hasRole('superAdmin')) {
-            $quizs = quiz::orderBy('id', 'desc')->get();
+            $quizs = quiz::orderBy('id', 'desc')->paginate(10);
         } elseif (auth()->user()->hasRole('admin')) {
-            $quizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get();
+            $quizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->paginate(10);
         } else {
-            $quizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get();
+            $quizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->paginate(10);
         }
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited allquizzes',
