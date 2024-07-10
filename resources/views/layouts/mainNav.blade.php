@@ -198,16 +198,18 @@
                             กลับไปยัง Hub SSO
                         </x-dropdown-link>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                        @if (!(Auth::user()->role === 'customer'))
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('messages.logout') }}
-                            </x-dropdown-link>
-                        </form>
+                                <x-dropdown-link :href="route('logout')"
+                                        onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                                    {{ __('messages.logout') }}
+                                </x-dropdown-link>
+                            </form>
+                        @endif
                         <hr>
                         <div class="flex justify-center gap-2">
                             <a href="{{ route('switch-language', ['locale' => 'en']) }}" data-toggle="tooltip" title="English"><img src="/img/english.png" class="hover:scale-90" width="30" alt=""></a>
@@ -287,7 +289,7 @@
                     กลับไปยัง Hub SSO
                 </x-responsive-nav-link>
 
-                @if (!(Auth::user()->role == 'customer'))
+                @if (!(Auth::user()->role === 'customer'))
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
