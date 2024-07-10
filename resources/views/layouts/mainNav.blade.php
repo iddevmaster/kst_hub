@@ -287,7 +287,7 @@
                     กลับไปยัง Hub SSO
                 </x-responsive-nav-link>
 
-                @if (!(Auth::user()->role === 'customer'))
+                @if (!(Auth::user()->role == 'customer'))
                     <!-- Authentication -->
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
