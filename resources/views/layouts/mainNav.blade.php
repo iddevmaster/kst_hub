@@ -303,6 +303,11 @@
                 @endif
             </div>
         </div>
+        <hr>
+                        <div class="flex justify-center gap-2">
+                            <a href="{{ route('switch-language', ['locale' => 'en']) }}" data-toggle="tooltip" title="English"><img src="/img/english.png" class="hover:scale-90" width="30" alt=""></a>
+                            <a href="{{ route('switch-language', ['locale' => 'th']) }}" data-toggle="tooltip" title="Thai"><img src="/img/thai.png" class="hover:scale-90" width="30" alt=""></a>
+                        </div>
     </div>
 </nav>
 <script>
