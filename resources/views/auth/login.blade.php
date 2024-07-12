@@ -6,9 +6,6 @@
 
         {{-- get error message from session --}}
         @if (session('error'))
-            @php
-                dd(session('error'));
-            @endphp
             <div class="alert alert-danger" role="alert">
                 {{ session('error') }}
             </div>
