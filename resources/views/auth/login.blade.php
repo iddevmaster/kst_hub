@@ -52,10 +52,10 @@
             <x-primary-button class="ml-3">
                 {{ __('Log in') }}
             </x-primary-button>
-            <div class="flex justify-center">
+            {{-- <div class="flex justify-center">
                 <p class="px-2">หรือ</p>
                 <a href="{{ route('sso.login') }}"><button type="button" class="btn btn-primary">SSO Login</button></a>
-            </div>
+            </div> --}}
             {{-- <x-secondary-button class="ml-3">
                 <a href="{{ route('register') }}">Register</a>
             </x-secondary-button> --}}
