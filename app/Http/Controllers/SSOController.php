@@ -58,7 +58,7 @@ class SSOController extends Controller
                 "Authorization" => "Bearer " . $access_token
             ])->get( config('auth.sso_host') . "/api/user");
             $userArray = $response->json();
-            dd($userArray);
+
             try {
                 $username = $userArray['username'];
             } catch (\Throwable $th) {
@@ -147,7 +147,6 @@ class SSOController extends Controller
             return redirect(route('main'));
         } catch (\Throwable $th) {
             // show error
-            dd($th);
             return redirect('/')->with('error', 'Failed to connect to SSO Server!' . $th->getMessage());
         }
     }
