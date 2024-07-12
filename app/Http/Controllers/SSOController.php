@@ -147,8 +147,8 @@ class SSOController extends Controller
             return redirect(route('main'));
         } catch (\Throwable $th) {
             // show error
-            throw $th;
-            // return redirect('/')->with('error', 'Failed to connect to SSO Server!' . $th->getMessage());
+            dd($th);
+            return redirect('/')->with('error', 'Failed to connect to SSO Server!' . $th->getMessage());
         }
     }
 }
