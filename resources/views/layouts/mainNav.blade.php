@@ -63,6 +63,31 @@
                             {{ __('messages.users') }}
                         </a>
                     @endcan
+                    @if (auth()->user()->hasAnyPermission(['dCourse', 'dQuiz']) || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <a href="#" >
+                                    Report
+                                </a>
+                            </x-slot>
+
+                            <x-slot name="content">
+                                @if (auth()->user()->hasAnyPermission(['dCourse']) || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
+                                    <x-dropdown-link :href="route('course.report')">
+                                        Course report
+                                    </x-dropdown-link>
+                                @endif
+                                @if (auth()->user()->hasAnyPermission(['dQuiz']) || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
+                                    <x-dropdown-link :href="route('test.report')">
+                                        Test report
+                                    </x-dropdown-link>
+                                @endif
+                                <x-dropdown-link :href="route('learning.report')">
+                                    Learning report
+                                </x-dropdown-link>
+                            </x-slot>
+                        </x-dropdown>
+                    @endif
                     @if (auth()->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
                         <a href="{{route('dashboard')}}" >
                             {{ __('messages.dashboard') }}
