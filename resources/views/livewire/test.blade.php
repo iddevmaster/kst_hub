@@ -35,7 +35,7 @@
     @endif
 
     <div class="flex justify-between">
-        <button wire:click="gotoPreviousQuestion" {{$questNum <= 1 ? 'disabled' : ''}} type="button" class="flex text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2   focus:outline-none ">
+        <button wire:click="gotoPreviousQuestion" {{$questNum <= 1 ? 'disabled' : ''}} type="button" class="pauseAudio flex text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2   focus:outline-none ">
             <svg class="w-4 h-4 me-1 text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4m6-8L7 5l4 4"/>
             </svg>
@@ -43,11 +43,11 @@
         </button>
         <p class="hidden self-center sm:block md:block lg:block">Question: <b>{{$questNum}}</b> / {{$total}}</p>
         @if ($questNum >= $total)
-            <button wire:click="gotoNextQuestion" type="button" class="flex text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
+            <button wire:click="gotoNextQuestion" type="button" class="pauseAudio flex text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 focus:outline-none dark:focus:ring-green-800">
                 Submit
             </button>
         @else
-            <button wire:click="gotoNextQuestion" type="button" class="flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2   focus:outline-none ">
+            <button wire:click="gotoNextQuestion" type="button" class="pauseAudio flex text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 me-2 mb-2   focus:outline-none ">
                 Next
                 <svg class="w-4 h-4 ms-1 text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 9 4-4-4-4M1 9l4-4-4-4"/>
@@ -84,6 +84,12 @@
         $('#playaudio').on('play', function(){
             $('#playIcon').html('<i class="bi bi-pause-fill"></i>');
             console.log('Audio has playing...');
+        });
+
+        $('.pauseAudio').on('click', function() {
+            $('#playaudio').trigger('pause');
+            $('#playIcon').html('<i class="bi bi-play-fill"></i>');
+            console.log('Audio has been paused');
         });
     </script>
 </div>
