@@ -72,7 +72,7 @@ class QuizController extends Controller
     }
 
     public function quizDetail(Request $request, $id) {
-        $questions = question::where("quiz", $id)->get();
+        $questions = question::where("quiz", $id)->paginate(20);
         $quiz = quiz::find($id);
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited quiz detail',
@@ -375,5 +375,51 @@ class QuizController extends Controller
             }
         }
         return redirect()->back()->with('success','Questions has been imported.');
+    }
+
+    public function importQuestion($id) {
+        $quiz = quiz::find($id);
+        return view("page.quizzes.quest_import", compact("id", "quiz"));
+    }
+
+    public function importQuesFile(Request $request, $id) {
+        // number | question | choice1 | choice2 | choice3 | choice4 | answer | audio_link_quest | audio_link1 | audio_link2 | audio_link3 | audio_link4
+        try {
+            $questions = json_decode($request->questions, associative: true) ?? [];
+            foreach ($questions ?? [] as $questData) {
+                if ($questData && count($questData) == 12) {
+                    $newQuest = new question;
+                    $newQuest->quiz = $id;
+                    $newQuest->shuffle_ch = 0;
+                    $newQuest->score = 1;
+                    $newQuest->type = 1; // type 1 = choice , type 0 = text
+                    $newQuest->agn = auth()->user()->agency;
+
+                    $choices = [];
+                    $audioList = array_slice($questData, 7);
+                    for ($i=1; $i <= 4; $i++) {
+                        $choiceText = preg_replace('/^[A-D]\./', '', $questData[$i + 1]);
+                        $choices[] = [
+                            'id'=> $i,
+                            'type'=> 'choice',
+                            'text'=> trim($choiceText),
+                            'answer'=> $i == $questData[6] ? 1 : 0,
+                        ];
+                    }
+                    // need assign
+                    $newQuest->title = "<p>" . $questData[1] . "</p>";
+                    $newQuest->answer = json_encode( $choices );
+                    $newQuest->audio = json_encode(array_slice($questData, 7));
+                    $newQuest->save();
+                } else {
+                    return response()->json(['error' => 'Invalid question data.'], 500);
+                }
+            }
+
+            return response()->json(['success' => "Store quest to quiz $id successfully." ], 200);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
     }
 }

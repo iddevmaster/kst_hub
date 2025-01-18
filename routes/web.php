@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/quiz/update/{id}', [QuizController::class,'update'])->name('quiz.update');
     Route::get('/quiz/detail/{id}', [QuizController::class,'quizDetail'])->name('quiz.detail');
     Route::get('/quiz/question/add/{id}', [QuizController::class, 'addQuestion'])->name('quiz.quest.add');
+    Route::get('/quiz/{id}/question/import', [QuizController::class, 'importQuestion'])->name('quiz.quest.import');
     Route::get('/quiz{qid}/question{id}/edit', [QuizController::class, 'editQuestion'])->name('quiz.quest.edit');
     Route::post('/quiz/question/store/{id}', [QuizController::class, 'storeQuestion'])->name('quiz.quest.store');
     Route::post('/quiz/question/update/{id}', [QuizController::class, 'updateQuestion'])->name('quiz.quest.update');
@@ -120,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/record/{qid}', [QuizController::class, 'testRecord'])->name('quiz.record');
     Route::get('/quiz/copy/{id}', [QuizController::class, 'copyQuiz'])->name('quiz.copy');
     Route::post('/quiz/import-question/{qid}', [QuizController::class, 'importQues'])->name('quiz.importques');
+    Route::post('/quiz/{id}/file/import', [QuizController::class, 'importQuesFile'])->name('quiz.quest.importfile');
 
     // request
     Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');
