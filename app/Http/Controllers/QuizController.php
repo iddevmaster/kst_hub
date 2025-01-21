@@ -411,8 +411,6 @@ class QuizController extends Controller
                     $newQuest->answer = json_encode( $choices );
                     $newQuest->audio = json_encode(array_slice($questData, 7));
                     $newQuest->save();
-                } else {
-                    return response()->json(['error' => 'Invalid question data.'], 500);
                 }
             }
 
