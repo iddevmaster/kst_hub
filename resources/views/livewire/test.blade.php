@@ -3,7 +3,7 @@
         <div class="d-flex">
             <p>{{ $questNum }}. {!! $question->title !!}</p>
         </div>
-        <div class="fs-4" id="playbtn" style="cursor: pointer">
+        <div class="fs-1 text-red-600" id="playbtn" style="cursor: pointer">
             <div id="playIcon"><i class="bi bi-play-fill"></i></div>
             <audio id="playaudio" preload sourcelist="{{ $question->audio ?? '[]' }}"></audio>
         </div>
