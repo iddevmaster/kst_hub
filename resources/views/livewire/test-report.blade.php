@@ -28,6 +28,13 @@
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
+                    <select id="small" wire:model="formData.filter_brn" aria-label="Filter brn"
+                        class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="" selected>เลือกสาขา</option>
+                        @foreach ($branches as $brn)
+                            <option value="{{ $brn->id }}">{{ $brn->name }}</option>
+                        @endforeach
+                    </select>
                     <select id="small" wire:model="formData.filter_quiz" aria-label="Filter quiz"
                         class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
                         <option value="" selected>เลือกแบบทดสอบ</option>
@@ -65,6 +72,7 @@
                     <th scope="col">#</th>
                     <th scope="col"> {{ __('messages.Quiz') }}</th>
                     <th scope="col">{{ __('messages.User') }}</th>
+                    <th scope="col">{{ __('messages.Branch') }}</th>
                     <th scope="col">{{ __('messages.Score') }}</th>
                     <th scope="col">{{ __('messages.Date') }}</th>
                 </tr>
@@ -78,6 +86,7 @@
                                 title="{{ optional($test->getQuiz)->title }}">{{ optional($test->getQuiz)->title }}
                             </td>
                             <td>{{ optional($test->getTester)->name }}</td>
+                            <td>{{ optional(optional($test->getTester)->getBrn)->name ?? "-" }}</td>
                             <td>{{ $test->score }} / {{ $test->totalScore }}</td>
                             <td>{{ Carbon\Carbon::parse($test->start)->format('d-m-Y') }}</td>
                         </tr>

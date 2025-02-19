@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\branch;
 use App\Models\quiz;
 use App\Models\Test;
 use App\Models\User;
@@ -13,16 +14,19 @@ class TestReport extends Component
     public $formData = [];
     public $users;
     public $quizzes;
+    public $branches;
     public function mount()
     {
         if (auth()->user()->role == 'superAdmin') {
             $this->tests = Test::orderBy('created_at', 'desc')->get();
             $this->users = User::orderBy('created_at', 'desc')->get(['id', 'name']);
+            $this->branches = branch::orderBy('created_at', 'desc')->get();
             $this->quizzes = quiz::orderBy('created_at', 'desc')->get(['id', 'title']);
         } else {
             $this->tests = Test::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc')->get();
             $this->users = User::where('agency', auth()->user()->agency)->orderBy('created_at', 'desc')->get(['id', 'name']);
             $this->quizzes = quiz::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc')->get(['id', 'title']);
+            $this->branches = branch::where('agency', auth()->user()->agency)->orderBy('created_at', 'desc')->get();
         }
     }
 
@@ -37,6 +41,12 @@ class TestReport extends Component
             }
         }
         // check if formdata has key filter_course
+        if (array_key_exists('filter_brn', $this->formData)) {
+            if ($this->formData['filter_brn'] != null) {
+                $user_list = User::where('brn', $this->formData['filter_brn'])->pluck('id')->toArray() ?? [];
+                $filter_tests = $filter_tests->whereIn('tester', $user_list);
+            }
+        }
         if (array_key_exists('filter_quiz', $this->formData)) {
             if ($this->formData['filter_quiz'] != null) {
                 $filter_tests = $filter_tests->where('quiz', $this->formData['filter_quiz']);
