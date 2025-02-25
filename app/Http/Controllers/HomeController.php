@@ -242,7 +242,10 @@ class HomeController extends Controller
         $roles = Role::all();
         $permissions = Permission::all();
         $user = User::find($id);
-        $ucourse = course::whereIn("id", $user->courses ?? [])->get();
+
+        $course_list = user_has_course::where('user_id', $user->id)->get(['course_id']);
+        $ucourse = course::whereIn("id", $course_list ?? [])->get();
+
         $tests = Test::where('tester', $user->id)->orderBy('id', 'desc')->get();
         $ownCourse = course::where('teacher', $user->id)->orderBy('id', 'desc')->get();
 
