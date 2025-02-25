@@ -241,10 +241,7 @@ class UserController extends Controller
 
     public function removeCourse(Request $request) {
         try {
-            $uuser_course = user_has_course::where('user_id', $request->uid)->where('course_id', $request->cid)->first();
-            if ($uuser_course) {
-                $uuser_course->delete();
-            }
+            user_has_course::where('user_id', $request->uid)->where('course_id', $request->cid)->delete();
 
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
