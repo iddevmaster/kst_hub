@@ -143,6 +143,8 @@ class SSOController extends Controller
                 ]);
             }
 
+            $user_group = user_has_group::where('user_id', $user->id)->whereNot('group_id', $course_g->id)->delete();
+
             Auth::login($user);
             return redirect(route('main'));
         } catch (\Throwable $th) {
