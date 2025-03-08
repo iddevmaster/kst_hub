@@ -72,7 +72,12 @@ class QuizController extends Controller
     }
 
     public function quizDetail(Request $request, $id) {
-        $questions = question::where("quiz", $id)->paginate(20);
+        $searchText = $request->search ?? '';
+        if ($request->search ?? false) {
+            $questions = question::where("quiz", $id)->where('title', 'LIKE', "%" . $request->search . "%")->paginate(20);
+        } else {
+            $questions = question::where("quiz", $id)->paginate(20);
+        }
         $quiz = quiz::find($id);
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited quiz detail',
@@ -80,7 +85,7 @@ class QuizController extends Controller
             'user' => $request->user(),
             'quiz' => $quiz,
         ]);
-        return view("page.quizzes.quiz_detail", compact("id", "questions", 'quiz'));
+        return view("page.quizzes.quiz_detail", compact("id", "questions", 'quiz', 'searchText'));
     }
 
     public function store(Request $request) {

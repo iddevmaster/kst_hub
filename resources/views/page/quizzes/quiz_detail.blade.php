@@ -59,7 +59,22 @@
                 </div> --}}
             </div>
             <div class="col-lg-10 col-sm-12 col-md-8 mb-4" id="content">
-                {{ $questions->links() }}
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <form action="{{ route('quiz.detail', ['id' => $quiz->id ]) }}" method="get">
+                            @csrf
+                            <div class="flex">
+                                <input type="text" id="search" name="search" class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" placeholder="{{ __('messages.search') }}" value="{{ $searchText ?? '' }}">
+                                <button type="submit" class=" focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2">
+                                    {{ __('messages.search') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        {{ $questions->links() }}
+                    </div>
+                </div>
                 @foreach ($questions as $index => $quest)
                     <div id="accordion-open" data-accordion="open" class="my-2">
                         <h2 id="accordion-open-heading{{$index}}">
