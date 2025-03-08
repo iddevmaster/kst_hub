@@ -60,7 +60,7 @@
             </div>
             <div class="col-lg-10 col-sm-12 col-md-8 mb-4" id="content">
                 <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
                         <form action="{{ route('quiz.detail', ['id' => $quiz->id ]) }}" method="get">
                             @csrf
                             <div class="flex">
@@ -71,7 +71,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="col-lg-8 col-md-8 col-sm-12">
                         {{ $questions->links() }}
                     </div>
                 </div>
