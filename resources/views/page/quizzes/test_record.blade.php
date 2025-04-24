@@ -103,7 +103,7 @@ $(document).ready(function() {
         ordering: true,     // Enables column ordering
         info: true,         // 'Showing x to y of z entries' string
         lengthChange: true, // Allows the user to change number of rows shown
-        pageLength: 5,      // Set number of rows per page
+        pageLength: 10,      // Set number of rows per page
         dom: 'Blfrtip',
         buttons: [
             'excel',
