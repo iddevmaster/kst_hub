@@ -27,6 +27,11 @@ class Test extends Model
         return json_decode($value, true);
     }
 
+    public function getCourse()
+    {
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
     public function getTester() {
         return $this->belongsTo(User::class, 'tester');
     }
