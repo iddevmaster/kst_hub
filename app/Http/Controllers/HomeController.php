@@ -85,9 +85,9 @@ class HomeController extends Controller
         }
 
         if (auth()->user()->hasRole('superAdmin')) {
-            $courses = course::all();
+            // $courses = course::all();
             $dpms = department::all();
-            $tests = Test::all();
+            // $tests = Test::all();
             $activitys = Activitylog::orderBy('id', 'desc')->get();
             $courseDel = course::onlyTrashed()->get();
             $quizDel = quiz::onlyTrashed()->get();
@@ -95,9 +95,9 @@ class HomeController extends Controller
             $agns = agency::all();
             $brns = branch::all();
         } else {
-            $courses = course::where('agn', $request->user()->agency)->get();
+            // $courses = course::where('agn', $request->user()->agency)->get();
             $dpms = department::where('agency', $request->user()->agency)->get();
-            $tests = Test::where('agn', $request->user()->agency)->get();
+            // $tests = Test::where('agn', $request->user()->agency)->get();
             $activitys = Activitylog::where('agn', $request->user()->agency)->orderBy('id', 'desc')->get();
             $courseDel = course::where('agn', $request->user()->agency)->onlyTrashed()->get();
             $quizDel = quiz::where('agn', $request->user()->agency)->onlyTrashed()->get();
@@ -105,7 +105,8 @@ class HomeController extends Controller
             $agns = agency::where('id', $request->user()->agency)->get();
             $brns = branch::where('agency', $request->user()->agency)->get();
         }
-
+        $tests = [];
+        $courses = [];
         $roles = Role::all();
         $permissions = Permission::all();
         // $record->restore();

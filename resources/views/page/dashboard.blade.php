@@ -25,7 +25,7 @@
             {{-- Tabs Bar --}}
             <div class="border-b border-gray-200 mb-4">
                 <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
-                    @can('dCourse')
+                    {{-- @can('dCourse')
                         <li class="me-2">
                             <a href="#course" id="course-tab" data-tabs-target="#course" type="button" role="tab" aria-controls="course" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
                                 <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
@@ -44,7 +44,7 @@
                                 {{ __('messages.Test') }}
                             </a>
                         </li>
-                    @endcan
+                    @endcan --}}
                     @can('dLog')
                         <li class="me-2">
                             <a href="#log" id="log-tab" data-tabs-target="#log" type="button" role="tab" aria-controls="log" aria-selected="false" class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300  group">
@@ -83,7 +83,7 @@
             <div id="default-tab-content">
 
                 {{-- course Content --}}
-                <div class="hidden p-2 rounded-lg bg-gray-50" id="course" role="tabpanel" aria-labelledby="course-tab">
+                {{-- <div class="hidden p-2 rounded-lg bg-gray-50" id="course" role="tabpanel" aria-labelledby="course-tab">
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="sm:rounded-lg p-2">
@@ -128,10 +128,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- test content --}}
-                <div class="hidden p-4 rounded-lg bg-gray-50" id="test" role="tabpanel" aria-labelledby="test-tab">
+                {{-- <div class="hidden p-4 rounded-lg bg-gray-50" id="test" role="tabpanel" aria-labelledby="test-tab">
                     <div class="py-2">
                         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                             <div class="sm:rounded-lg p-2">
@@ -183,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 {{-- log content --}}
                 <div class="hidden p-4 rounded-lg bg-gray-50 " id="log" role="tabpanel" aria-labelledby="log-tab">
