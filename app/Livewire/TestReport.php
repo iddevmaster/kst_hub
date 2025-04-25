@@ -65,11 +65,6 @@ class TestReport extends Component
         $this->tests = $filter_tests->get();
     }
 
-    public function exportToPdf()
-    {
-        $this->dispatchBrowserEvent('exportToPdf'); // Trigger JavaScript function (explained later)
-    }
-
     public function render()
     {
         return view('livewire.test-report');

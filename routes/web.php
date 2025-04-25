@@ -143,9 +143,11 @@ Route::middleware('auth')->group(function () {
     // Report
     Route::get('/report/course', [ReportController::class, 'courseReport'])->name('course.report');
     Route::get('/report/test', [ReportController::class, 'testReport'])->name('test.report');
+    Route::get('/report/summary', [ReportController::class, 'summaryReport'])->name('summary.report');
     Route::get('/report/learning', [ReportController::class, 'learningReport'])->name('learning.report');
     Route::get('/export2pdf/course', [ReportController::class, 'courseExport'])->name('course.export');
     Route::get('/export2pdf/test', [ReportController::class, 'testExport'])->name('test.export');
+    Route::get('/export2pdf/summary', [ReportController::class, 'summaryExport'])->name('summary.export');
 
 
     Route::get('/language/{locale}', function ($locale) {

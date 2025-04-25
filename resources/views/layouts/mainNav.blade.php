@@ -81,6 +81,9 @@
                                     <x-dropdown-link :href="route('test.report')">
                                         Test report
                                     </x-dropdown-link>
+                                    <x-dropdown-link :href="route('summary.report')">
+                                        Summary Report
+                                    </x-dropdown-link>
                                 @endif
                                 <x-dropdown-link :href="route('learning.report')">
                                     Learning report
