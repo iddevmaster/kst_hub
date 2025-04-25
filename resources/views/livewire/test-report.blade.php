@@ -78,10 +78,13 @@
                 </tr>
             </thead>
             <tbody class="text-start">
-                @if (count($tests ?? []) > 0)
+                @if ($tests->count() > 0)
+                    @php
+                        $page = $tests->currentPage();
+                    @endphp
                     @foreach ($tests as $index => $test)
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td>{{ (($page -1) * 10) + $index+1 }}</td>
                             <td class="text-nowrap" data-toggle="tooltip" data-placement="top"
                                 title="{{ optional($test->getQuiz)->title }}">{{ optional($test->getQuiz)->title }}
                             </td>
@@ -100,5 +103,6 @@
                 @endif
             </tbody>
         </table>
+        {{ $tests->links() }}
     </div>
 </div>

@@ -6,11 +6,15 @@ use App\Models\branch;
 use App\Models\quiz;
 use App\Models\Test;
 use App\Models\User;
+
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class TestReport extends Component
 {
-    public $tests;
+    use WithPagination;
+
+    protected $testsQuery;
     public $formData = [];
     public $users;
     public $quizzes;
@@ -18,12 +22,12 @@ class TestReport extends Component
     public function mount()
     {
         if (auth()->user()->role == 'superAdmin') {
-            $this->tests = Test::orderBy('created_at', 'desc')->get();
+            $this->testsQuery = Test::orderBy('created_at', 'desc');
             $this->users = User::orderBy('created_at', 'desc')->get(['id', 'name']);
             $this->branches = branch::orderBy('created_at', 'desc')->get();
             $this->quizzes = quiz::orderBy('created_at', 'desc')->get(['id', 'title']);
         } else {
-            $this->tests = Test::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc')->get();
+            $this->testsQuery = Test::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc');
             $this->users = User::where('agency', auth()->user()->agency)->orderBy('created_at', 'desc')->get(['id', 'name']);
             $this->quizzes = quiz::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc')->get(['id', 'title']);
             $this->branches = branch::where('agency', auth()->user()->agency)->orderBy('created_at', 'desc')->get();
@@ -62,11 +66,14 @@ class TestReport extends Component
                 $filter_tests = $filter_tests->where('created_at', '<=', $this->formData['filter_edate']);
             }
         }
-        $this->tests = $filter_tests->get();
+        $this->testsQuery = $filter_tests;
     }
 
     public function render()
     {
-        return view('livewire.test-report');
+        $tests = $this->testsQuery->paginate(20);
+        return view('livewire.test-report', [
+            'tests' => $tests,
+        ]);
     }
 }
