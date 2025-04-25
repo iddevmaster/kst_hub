@@ -603,75 +603,75 @@
 
     const testData = @json($testData);
 
-    new Chart(testch, {
-        type: 'doughnut',
-        data: {
-            labels: [
-                'PASS',
-                'FAIL'
-            ],
-            datasets: [{
-                label: 'Amount',
-                data: testData,
-                backgroundColor: [
-                    '#4ade80',
-                    'rgb(255, 99, 132)'
-                ],
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-            }
-        },
-    });
+    // new Chart(testch, {
+    //     type: 'doughnut',
+    //     data: {
+    //         labels: [
+    //             'PASS',
+    //             'FAIL'
+    //         ],
+    //         datasets: [{
+    //             label: 'Amount',
+    //             data: testData,
+    //             backgroundColor: [
+    //                 '#4ade80',
+    //                 'rgb(255, 99, 132)'
+    //             ],
+    //             hoverOffset: 4
+    //         }]
+    //     },
+    //     options: {
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom',
+    //             },
+    //         }
+    //     },
+    // });
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: dpmList,
-            datasets: [{
-                label: 'course amount',
-                data: seriesList,
-                borderWidth: 1,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(255, 205, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(201, 203, 207, 0.2)'
-                ],
-                borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 159, 64)',
-                    'rgb(255, 205, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(54, 162, 235)',
-                    'rgb(153, 102, 255)',
-                    'rgb(201, 203, 207)'
-                ],
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-            }
-        }
-    });
+    // new Chart(ctx, {
+    //     type: 'bar',
+    //     data: {
+    //         labels: dpmList,
+    //         datasets: [{
+    //             label: 'course amount',
+    //             data: seriesList,
+    //             borderWidth: 1,
+    //             backgroundColor: [
+    //                 'rgba(255, 99, 132, 0.2)',
+    //                 'rgba(255, 159, 64, 0.2)',
+    //                 'rgba(255, 205, 86, 0.2)',
+    //                 'rgba(75, 192, 192, 0.2)',
+    //                 'rgba(54, 162, 235, 0.2)',
+    //                 'rgba(153, 102, 255, 0.2)',
+    //                 'rgba(201, 203, 207, 0.2)'
+    //             ],
+    //             borderColor: [
+    //                 'rgb(255, 99, 132)',
+    //                 'rgb(255, 159, 64)',
+    //                 'rgb(255, 205, 86)',
+    //                 'rgb(75, 192, 192)',
+    //                 'rgb(54, 162, 235)',
+    //                 'rgb(153, 102, 255)',
+    //                 'rgb(201, 203, 207)'
+    //             ],
+    //         }]
+    //     },
+    //     options: {
+    //         scales: {
+    //             y: {
+    //                 beginAtZero: true
+    //             }
+    //         },
+    //         responsive: true,
+    //         plugins: {
+    //             legend: {
+    //                 position: 'bottom',
+    //             },
+    //         }
+    //     }
+    // });
 
     $(document).ready(function() {
         var currentDate = new Date();
