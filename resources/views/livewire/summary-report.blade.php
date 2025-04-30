@@ -75,8 +75,7 @@
                     <th scope="col">{{ __('messages.Branch') }}</th>
                     <th scope="col">คะแนนที่ดีที่สุด</th>
                     <th scope="col">จำนวนครั้งที่ทำ</th>
-                    <th scope="col">ค่าเฉลี่ย</th>
-                    <th scope="col">วันที่สอบล่าสุด</th>
+                    <th>ค่าเฉลี่ย</th>
                 </tr>
             </thead>
             <tbody class="text-start">
@@ -95,7 +94,6 @@
                             <td>{{ $test->best_score }}</td>
                             <td>{{ $test->times_tested }}</td>
                             <td>{{ $test->average_score }}</td>
-                            <td>{{ Carbon\Carbon::parse($test->latest_at)->thaidate('j M Y - H:i') }}</td>
                         </tr>
                     @endforeach
                 @else

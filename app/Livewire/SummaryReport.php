@@ -29,7 +29,7 @@ class SummaryReport extends Component
     public $branches;
     public function mount()
     {
-        // $this->formData['filter_sdate'] = now()->format('Y-m-d');
+        $this->formData['filter_sdate'] = now()->format('Y-m-d');
         if (auth()->user()->role == 'superAdmin') {
             $this->users = User::orderBy('created_at', 'desc')->get(['id', 'name']);
             $this->branches = branch::orderBy('created_at', 'desc')->get();
@@ -52,8 +52,7 @@ class SummaryReport extends Component
             'course_id',
             DB::raw('COUNT(*) as times_tested'),
             DB::raw('MAX(score) as best_score'),
-            DB::raw('ROUND(AVG(score), 2) as average_score'),
-            DB::raw('MAX(created_at) as latest_at')
+            DB::raw('ROUND(AVG(score), 2) as average_score')
         )->groupBy(['quiz', 'course_id', 'tester']);
         if (!$isAdmin) {
             $query->where('agn', auth()->user()->agency);
@@ -75,8 +74,7 @@ class SummaryReport extends Component
             'course_id',
             DB::raw('COUNT(*) as times_tested'),
             DB::raw('MAX(score) as best_score'),
-            DB::raw('ROUND(AVG(score), 2) as average_score'),
-            DB::raw('MAX(created_at) as latest_at')
+            DB::raw('ROUND(AVG(score), 2) as average_score')
         )->groupBy(['quiz', 'course_id', 'tester']);
 
         // Check if formData has key filter_user
@@ -112,7 +110,7 @@ class SummaryReport extends Component
 
     public function render()
     {
-        $tests = $this->testsQuery->paginate(20);
+        $tests = $this->testsQuery->get();
 
         return view('livewire.summary-report', [
             'tests' => $tests,
