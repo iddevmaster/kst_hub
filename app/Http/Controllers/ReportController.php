@@ -119,7 +119,8 @@ class ReportController extends Controller
             'course_id',
             DB::raw('COUNT(*) as times_tested'),
             DB::raw('MAX(score) as best_score'),
-            DB::raw('ROUND(AVG(score), 2) as average_score')
+            DB::raw('ROUND(AVG(score), 2) as average_score'),
+            DB::raw('MAX(created_at) as latest_at')
         )->groupBy(['quiz', 'course_id', 'tester']);
 
         if (Auth::user()->role !== 'superAdmin') {
