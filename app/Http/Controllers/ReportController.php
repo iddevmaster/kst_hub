@@ -116,7 +116,7 @@ class ReportController extends Controller
         $fdate = $search_data['date'] ? Carbon::parse($search_data['date'])->thaidate('j M Y') : null;
         $fbrn = $search_data['brn'] ?? null;
         $ftype = $search_data['type'] ?? null;
-        $tests = Test::select(
+        $testQuery = Test::select(
             'tester',
             'quiz',
             'course_id',
@@ -124,9 +124,13 @@ class ReportController extends Controller
             DB::raw('MAX(score) as best_score'),
             DB::raw('ROUND(AVG(score), 2) as average_score')
             )
-            ->whereIn('tester', $search_data['users'])
-            ->groupBy(['quiz', 'course_id', 'tester'])->orderBy(DB::raw('ROUND(AVG(score), 2)'), 'desc')->get();
+            ->whereIn('tester', $search_data['users']);
 
+        if ($search_data['quiz'] != null) {
+            $testQuery->where('quiz', $search_data['quiz']);
+        }
+
+        $tests = $testQuery->groupBy(['quiz', 'course_id', 'tester'])->orderBy(DB::raw('ROUND(AVG(score), 2)'), 'desc')->get();
         return view('page.exports.summary', compact('tests', 'fdate', 'fbrn', 'ftype'));
     }
 }
