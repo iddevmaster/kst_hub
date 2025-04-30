@@ -88,7 +88,7 @@
     <header>
         <img src="/img/logo.png" width="60" alt="">
         <h3>ศูนย์ฝึกอบรมเทรนนิ่งเซนเตอร์</h3>
-        <p>ลำดับผลการทดสอบ</p>
+        <p>ลำดับผลการทดสอบของผู้สอบใบอนุญาต</p>
         <div id="filtered">
             @if ($ftype)
                 <p>ประเภท: <u>{{ $ftype }}</u></p> &nbsp;
