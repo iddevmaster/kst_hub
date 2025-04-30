@@ -114,7 +114,7 @@
                     <th scope="col">คะแนนที่ดีที่สุด</th>
                     <th scope="col">จำนวนครั้งที่ทำ</th>
                     <th>ค่าเฉลี่ย</th>
-                    <th>วันที่สอบล่าสุด</th>
+                    {{-- <th>วันที่สอบล่าสุด</th> --}}
                 </tr>
             </thead>
             <tbody class="text-start">
@@ -127,7 +127,7 @@
                             <td>{{ $test->best_score }}</td>
                             <td>{{ $test->times_tested }}</td>
                             <td>{{ $test->average_score }}</td>
-                            <td>{{ Carbon\Carbon::parse($test->latest_at)->thaidate('j M Y - H:i') }}</td>
+                            {{-- <td>{{ Carbon\Carbon::parse($test->latest_at)->thaidate('j M Y - H:i') }}</td> --}}
                         </tr>
                     @endforeach
                 @else
