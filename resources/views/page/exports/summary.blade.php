@@ -90,17 +90,14 @@
         <h3>ศูนย์ฝึกอบรมเทรนนิ่งเซนเตอร์</h3>
         <p>ลำดับผลการทดสอบ</p>
         <div id="filtered">
+            @if ($ftype)
+                <p>ประเภท: <u>{{ $ftype }}</u></p> &nbsp;
+            @endif
             @if ($fbrn)
-                <p>สาขา: <u>{{ $fbrn->name }}</u></p>
+                <p>สาขา: <u>{{ $fbrn }}</u></p> &nbsp;
             @endif
-            @if ($fuser)
-                <p>ผู้ทดสอบ: <u>{{ $fuser->name }}</u></p>
-            @endif
-            @if ($fquiz)
-                <p>ชุดข้อสอบ: <u>{{ $fquiz->title }}</u></p>
-            @endif
-            @if ($fsdate)
-                <p>ประจำวันที่: <u>{{ $fsdate }}</u></p>
+            @if ($fdate)
+                <p>ประจำวันที่: <u>{{ $fdate }}</u></p> &nbsp;
             @endif
         </div>
     </header>
@@ -132,7 +129,7 @@
                     @endforeach
                 @else
                     <tr>
-                        <td colspan="5" class="text-center"><span
+                        <td colspan="6" class="text-center"><span
                                 class="bg-pink-100 text-pink-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-pink-400">ไม่พบข้อมูล</span>
                         </td>
                     </tr>

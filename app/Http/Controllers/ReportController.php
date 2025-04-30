@@ -112,62 +112,21 @@ class ReportController extends Controller
     }
 
     public function summaryExport(Request $request) {
-        $search_data = json_decode($request->searchData ?? "", true);
-        $filter_tests = Test::select(
+        $search_data = json_decode($request->filterData ?? "", true);
+        $fdate = $search_data['date'] ? Carbon::parse($search_data['date'])->thaidate('j M Y') : null;
+        $fbrn = $search_data['brn'] ?? null;
+        $ftype = $search_data['type'] ?? null;
+        $tests = Test::select(
             'tester',
             'quiz',
             'course_id',
             DB::raw('COUNT(*) as times_tested'),
             DB::raw('MAX(score) as best_score'),
             DB::raw('ROUND(AVG(score), 2) as average_score')
-        )->groupBy(['quiz', 'course_id', 'tester']);
+            )
+            ->whereIn('tester', $search_data['users'])
+            ->groupBy(['quiz', 'course_id', 'tester'])->orderBy(DB::raw('ROUND(AVG(score), 2)'), 'desc')->get();
 
-        if (Auth::user()->role !== 'superAdmin') {
-            $filter_tests->where('agn', auth()->user()->agency);
-        }
-        $fuser = null;
-        $fquiz = null;
-        $fsdate = null;
-        $fedate = null;
-        $fbrn = null;
-
-        if ($search_data) {
-            // check if formdata has key filter_user
-            if (array_key_exists('filter_user', $search_data)) {
-                if ($search_data['filter_user'] != null) {
-                    $filter_tests->where('tester', $search_data['filter_user']);
-                    $fuser = User::find($search_data['filter_user']);
-                }
-            }
-
-            if (array_key_exists('filter_brn', $search_data) && $search_data['filter_brn'] != null) {
-                $user_list = User::where('brn', $search_data['filter_brn'])->pluck('id')->toArray() ?? [];
-                $filter_tests->whereIn('tester', $user_list);
-                $fbrn = branch::find($search_data['filter_brn']);
-            }
-
-            // check if formdata has key filter_course
-            if (array_key_exists('filter_quiz', $search_data)) {
-                if ($search_data['filter_quiz'] != null) {
-                    $filter_tests->where('quiz', $search_data['filter_quiz']);
-                    $fquiz = quiz::find($search_data['filter_quiz']);
-                }
-            }
-            if (array_key_exists('filter_sdate', $search_data)) {
-                if ($search_data['filter_sdate'] != null) {
-                    $filter_tests->where('created_at', '>=', $search_data['filter_sdate'] . ' 00:00:00')
-                    ->where('created_at', '<=', $search_data['filter_sdate'] . ' 23:59:59');
-                    $fsdate = Carbon::parse($search_data['filter_sdate'])->format('d/m/Y');
-                }
-            }
-            // if (array_key_exists('filter_edate', $search_data)) {
-            //     if ($search_data['filter_edate'] != null) {
-            //         $filter_tests = $filter_tests->where('created_at', '<=', $search_data['filter_edate']);
-            //         $fedate = Carbon::parse($search_data['filter_edate'])->format('d/m/Y');
-            //     }
-            // }
-        }
-        $tests = $filter_tests->orderBy(DB::raw('ROUND(AVG(score), 2)'), 'desc')->get();
-        return view('page.exports.summary', compact('tests', 'fuser', 'fquiz', 'fsdate', 'fedate', 'fbrn'));
+        return view('page.exports.summary', compact('tests', 'fdate', 'fbrn', 'ftype'));
     }
 }
