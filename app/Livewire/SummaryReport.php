@@ -29,7 +29,7 @@ class SummaryReport extends Component
     public $branches;
     public function mount()
     {
-        $this->formData['filter_sdate'] = now()->format('Y-m-d');
+        // $this->formData['filter_sdate'] = now()->format('Y-m-d');
         if (auth()->user()->role == 'superAdmin') {
             $this->users = User::orderBy('created_at', 'desc')->get(['id', 'name']);
             $this->branches = branch::orderBy('created_at', 'desc')->get();
