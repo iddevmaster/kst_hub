@@ -66,7 +66,7 @@ class SummaryReport extends Component
         $this->filterData['date'] = $this->formData['filter_date'];
         $this->filterData['brn'] = $this->branches[$this->formData['filter_brn']];
         $this->filterData['type'] = $this->course_types[$this->formData['filter_type']];
-        $this->filterData['quiz'] = $this->course_types[$this->formData['filter_quiz']];
+        $this->filterData['quiz'] = $this->formData['filter_quiz'];
         $apiUrl = 'http://www.dsmsys.net/'. $this->formData['filter_brn'] . '/api/examlist/?date=' . $this->formData['filter_date'] . '&course_type_id=' . $this->formData['filter_type'];
         $this->is_loading = true;
         try {
