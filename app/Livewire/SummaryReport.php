@@ -22,6 +22,7 @@ class SummaryReport extends Component
         'filter_date' => null,
         'filter_brn' => null,
         'filter_type' => null,
+        'filter_quiz' => null,
     ];
     public $filterData = [
         'date' => null,
@@ -47,10 +48,17 @@ class SummaryReport extends Component
     ];
     public $is_loading = false;
     public $user_ids= [];
+    public $quizzes;
 
     public function mount()
     {
         $this->formData['filter_date'] = now()->format('Y-m-d');
+
+        if (auth()->user()->role == 'superAdmin') {
+            $this->quizzes = quiz::orderBy('created_at', 'desc')->get(['id', 'title']);
+        } else {
+            $this->quizzes = quiz::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc')->get(['id', 'title']);
+        }
     }
 
     public function searchTest()
@@ -58,6 +66,7 @@ class SummaryReport extends Component
         $this->filterData['date'] = $this->formData['filter_date'];
         $this->filterData['brn'] = $this->branches[$this->formData['filter_brn']];
         $this->filterData['type'] = $this->course_types[$this->formData['filter_type']];
+        $this->filterData['quiz'] = $this->course_types[$this->formData['filter_quiz']];
         $apiUrl = 'http://www.dsmsys.net/'. $this->formData['filter_brn'] . '/api/examlist/?date=' . $this->formData['filter_date'] . '&course_type_id=' . $this->formData['filter_type'];
         $this->is_loading = true;
         try {
@@ -75,7 +84,7 @@ class SummaryReport extends Component
                 $ids = collect($testerList)->pluck('std_id')->all();
                 $this->user_ids = User::whereIn('username', $ids)->pluck('id')->all();
                 $this->filterData['users'] = $this->user_ids;
-                $this->testsQuery = Test::select(
+                $query = Test::select(
                     'tester',
                     'quiz',
                     'course_id',
@@ -83,8 +92,13 @@ class SummaryReport extends Component
                     DB::raw('MAX(score) as best_score'),
                     DB::raw('ROUND(AVG(score), 2) as average_score')
                     )
-                    ->whereIn('tester', $this->user_ids)
-                    ->groupBy(['quiz', 'course_id', 'tester'])->orderBy(DB::raw('ROUND(AVG(score), 2)'), 'desc')->get();
+                    ->whereIn('tester', $this->user_ids);
+
+                if ($this->formData['filter_quiz'] != null) {
+                    $query->where('quiz', $this->formData['filter_quiz']);
+                }
+
+                $this->testsQuery = $query->groupBy(['quiz', 'course_id', 'tester'])->orderBy(DB::raw('ROUND(AVG(score), 2)'), 'desc')->get();
             }
         } catch (\Exception $e) {
             session()->flash('error', 'An error occurred: ' . $e->getMessage());

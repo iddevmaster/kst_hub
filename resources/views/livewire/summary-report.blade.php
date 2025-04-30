@@ -31,6 +31,13 @@
                 </div>
 
                 <div class="flex flex-wrap flex-md-nowrap gap-2">
+                    <select id="quizFilter" wire:model="formData.filter_quiz" aria-label="Filter quiz"
+                        class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="" selected>แบบทดสอบทั้งหมด</option>
+                        @foreach ($quizzes as $quiz)
+                            <option value="{{ $quiz->id }}">{{ $quiz->title }}</option>
+                        @endforeach
+                    </select>
                     <input type="date" id="startDate" wire:model="formData.filter_date"
                         value="{{ $formData['filter_date'] }}" required
                         class="block w-full w-md-5/6 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500"
