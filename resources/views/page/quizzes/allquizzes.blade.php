@@ -155,6 +155,7 @@
                                             {{ __('messages.edit')}}
                                             <div class="tooltip-arrow" data-popper-arrow></div>
                                         </div>
+
                                         <!-- Main modal -->
                                         <div id="static-modal{{$quiz->id}}" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                                             <div class="relative p-4 w-full max-w-2xl max-h-full">
@@ -289,10 +290,10 @@
                                                                         <label for="quizsel" class="ms-2 text-sm font-medium text-gray-900 ">แบบทดสอบ</label>
                                                                         <select required id="quizsel" name="quizsel1[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                                                                             @foreach ($importQuizs as $index => $impquiz)
-                                                                                @php
+                                                                                {{-- @php
                                                                                     $questions = App\Models\question::where('quiz', $impquiz->id)->count();
-                                                                                @endphp
-                                                                                <option value="{{$impquiz->id}}">{{$impquiz->title}} ({{ $questions }} ข้อ)</option>
+                                                                                @endphp --}}
+                                                                                <option value="{{$impquiz->id}}">{{$impquiz->title}}</option>
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
