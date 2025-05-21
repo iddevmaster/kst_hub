@@ -389,44 +389,39 @@ class QuizController extends Controller
 
     public function importQuesFile(Request $request, $id) {
         // number | question | choice1 | choice2 | choice3 | choice4 | answer | audio_link_quest | audio_link1 | audio_link2 | audio_link3 | audio_link4
-        try {
-            $questions = json_decode($request->questions, associative: true) ?? [];
-            foreach ($questions ?? [] as $questData) {
-                if ($questData && count($questData) >= 7) {
-                    $newQuest = new question;
-                    $newQuest->quiz = $id;
-                    $newQuest->shuffle_ch = 0;
-                    $newQuest->score = 1;
-                    $newQuest->type = 1; // type 1 = choice , type 0 = text
-                    $newQuest->agn = auth()->user()->agency;
+        $questions = json_decode($request->questions, associative: true) ?? [];
+        $success_count = 0;
+        foreach ($questions ?? [] as $questData) {
+            if ((count($questData ?? []) >= 7)) {
+                $newQuest = new question;
+                $newQuest->quiz = $id;
+                $newQuest->shuffle_ch = 0;
+                $newQuest->score = 1;
+                $newQuest->type = 1; // type 1 = choice , type 0 = text
+                $newQuest->agn = auth()->user()->agency;
 
-                    $choices = [];
+                $choices = [];
 
-                    for ($i=1; $i <= 4; $i++) {
-                        $choiceText = preg_replace('/^[A-D]\./', '', $questData[$i + 1]);
-                        $choices[] = [
-                            'id'=> $i,
-                            'type'=> 'choice',
-                            'text'=> trim($choiceText),
-                            'answer'=> $i == $questData[6] ? 1 : 0,
-                        ];
-                    }
-                    // need assign
-                    $newQuest->title = "<p>" . $questData[1] . "</p>";
-                    $newQuest->answer = json_encode( $choices );
-                    if (count($questData) == 12) {
-                        $newQuest->audio = json_encode(array_slice($questData, 7));
-                    }
-                    $newQuest->save();
-                } else {
-                    return response()->json(['error' => 'Invalid question data.'], 422);
+                for ($i=1; $i <= 4; $i++) {
+                    $choiceText = preg_replace('/^[A-D]\./', '', $questData[$i + 1]);
+                    $choices[] = [
+                        'id'=> $i,
+                        'type'=> 'choice',
+                        'text'=> trim($choiceText),
+                        'answer'=> $i == $questData[6] ? 1 : 0,
+                    ];
                 }
+                // need assign
+                $newQuest->title = "<p>" . $questData[1] . "</p>";
+                $newQuest->answer = json_encode( $choices );
+                if (count($questData) == 12) {
+                    $newQuest->audio = json_encode(array_slice($questData, 7));
+                }
+                $newQuest->save();
+                $success_count++;
             }
-
-            return response()->json(['success' => "Store quest to quiz $id successfully." ], 200);
-        } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json(['error' => $th->getMessage()], 500);
         }
+
+        return response()->json(['success' => $success_count ], 200);
     }
 }

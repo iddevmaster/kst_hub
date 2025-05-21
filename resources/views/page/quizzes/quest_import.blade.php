@@ -84,6 +84,7 @@
             const eachChunkSize = chunkSet.length;
             var formData = new FormData();
             formData.append('questions', JSON.stringify(chunkSet));
+            console.log("chunkSet: ",chunkSet);
             fetch(this.action, {
                 method: 'POST',
                 body: formData,
@@ -93,16 +94,13 @@
             }).then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        successCount += eachChunkSize;
+                        successCount += data.success;
+                        failCount += (eachChunkSize - data.success);
                         updateImportStatus(successCount, failCount);
                         console.log(`Imported chunk ${index} successfully count : ${successCount}`);
-                    } else {
-                        failCount += eachChunkSize;
-                        updateImportStatus(successCount, failCount);
-                        console.log(`Failed to import chunk ${index} count : ${failCount}`);
                     }
                 }).catch(error => {
-                    console.error('Error:', error);
+                    console.log('Error:', error);
                     failCount += eachChunkSize;
                     updateImportStatus(successCount, failCount);
                     console.log(`Failed to import chunk ${index} count : ${failCount}`);
