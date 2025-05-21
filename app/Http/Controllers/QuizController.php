@@ -392,7 +392,7 @@ class QuizController extends Controller
         try {
             $questions = json_decode($request->questions, associative: true) ?? [];
             foreach ($questions ?? [] as $questData) {
-                if ($questData && count($questData) == 12) {
+                if ($questData && count($questData) >= 7) {
                     $newQuest = new question;
                     $newQuest->quiz = $id;
                     $newQuest->shuffle_ch = 0;
@@ -401,7 +401,7 @@ class QuizController extends Controller
                     $newQuest->agn = auth()->user()->agency;
 
                     $choices = [];
-                    $audioList = array_slice($questData, 7);
+
                     for ($i=1; $i <= 4; $i++) {
                         $choiceText = preg_replace('/^[A-D]\./', '', $questData[$i + 1]);
                         $choices[] = [
@@ -414,8 +414,12 @@ class QuizController extends Controller
                     // need assign
                     $newQuest->title = "<p>" . $questData[1] . "</p>";
                     $newQuest->answer = json_encode( $choices );
-                    $newQuest->audio = json_encode(array_slice($questData, 7));
+                    if (count($questData) == 12) {
+                        $newQuest->audio = json_encode(array_slice($questData, 7));
+                    }
                     $newQuest->save();
+                } else {
+                    return response()->json(['error' => 'Invalid question data.'], 422);
                 }
             }
 
