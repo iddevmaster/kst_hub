@@ -414,6 +414,7 @@ class QuizController extends Controller
                 // need assign
                 $newQuest->title = "<p>" . $questData[1] . "</p>";
                 $newQuest->answer = json_encode( $choices );
+                $newQuest->order = $questData[0];
                 if (count($questData) == 12) {
                     $newQuest->audio = json_encode(array_slice($questData, 7));
                 }

@@ -19,6 +19,7 @@ class question extends Model
         'agn',
         'lang',
         'audio',
+        'order',
     ];
 
     public function getAnswerAttribute($value)
