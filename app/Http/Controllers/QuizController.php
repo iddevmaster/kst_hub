@@ -74,9 +74,9 @@ class QuizController extends Controller
     public function quizDetail(Request $request, $id) {
         $searchText = $request->search ?? '';
         if ($request->search ?? false) {
-            $questions = question::where("quiz", $id)->where('title', 'LIKE', "%" . $request->search . "%")->paginate(20);
+            $questions = question::where("quiz", $id)->where('title', 'LIKE', "%" . $request->search . "%")->orderBy('order', 'asc')->paginate(20);
         } else {
-            $questions = question::where("quiz", $id)->paginate(20);
+            $questions = question::where("quiz", $id)->orderBy('order', 'asc')->paginate(20);
         }
         $quiz = quiz::find($id);
 
