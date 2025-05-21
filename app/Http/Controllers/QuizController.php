@@ -25,10 +25,6 @@ class QuizController extends Controller
             $importQuizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get(['id', 'title']);
         }
 
-        Log::channel('activity')->info('User '. $request->user()->name .' visited allquizzes',
-        [
-            'user' => $request->user(),
-        ]);
         if ($request->user()->hasPermissionTo('quiz')) {
             return view("page.quizzes.allquizzes", compact("quizs", "importQuizs"));
         } else {
