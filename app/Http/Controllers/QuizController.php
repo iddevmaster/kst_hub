@@ -16,15 +16,15 @@ class QuizController extends Controller
     public function index(Request $request) {
         if (auth()->user()->hasRole('superAdmin')) {
             $quizs = quiz::orderBy('id', 'desc')->paginate(10);
-            // $importQuizs = quiz::orderBy('id', 'desc')->get(['id', 'title']);
+            $importQuizs = quiz::orderBy('id', 'desc')->get(['id', 'title']);
         } elseif (auth()->user()->hasRole('admin')) {
             $quizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->paginate(10);
-            // $importQuizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get(['id', 'title']);
+            $importQuizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get(['id', 'title']);
         } else {
             $quizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->paginate(10);
-            // $importQuizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get(['id', 'title']);
+            $importQuizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get(['id', 'title']);
         }
-        $importQuizs = [];
+
         if ($request->user()->hasPermissionTo('quiz')) {
             return view("page.quizzes.allquizzes", compact("quizs", "importQuizs"));
         } else {
