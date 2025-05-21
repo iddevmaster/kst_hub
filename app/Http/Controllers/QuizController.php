@@ -186,8 +186,11 @@ class QuizController extends Controller
 
     public function storeQuestion(Request $request, $id) {
         try {
+            $lastQuest = question::where('quiz', $id)->orderBy('id', 'desc')->first();
+
             $question = new question;
             $question->quiz = $id;
+            $question->order = $lastQuest ? $lastQuest->order + 1 : 1;
             $question->title = $request->title;
             $question->score = $request->score;
             $question->shuffle_ch = $request->shuffle ?? false;
