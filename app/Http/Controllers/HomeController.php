@@ -45,11 +45,14 @@ class HomeController extends Controller
     public function courseDetail(Request $request, $id) {
         $lessons = lesson::where("course", $id)->get();
         $course = course::find($id);
-        if ($request->user()->hasAnyRole(['admin','staff'])) {
+        if ($request->user()->hasRole('superadmin')) {
             $quizzes = quiz::all();
+        } elseif ($request->user()->hasAnyRole(['admin','staff'])) {
+            $quizzes = quiz::where('agn', $request->user()->agency)->get();
         } else {
             $quizzes = quiz::where('create_by', $request->user()->id)->get();
         }
+
         foreach ($quizzes as $quiz) {
             $ques_num = question::where('quiz', $quiz->id)->count();
             $quiz['ques_num'] = $ques_num;
