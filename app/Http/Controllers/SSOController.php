@@ -59,6 +59,10 @@ class SSOController extends Controller
             ])->get( config('auth.sso_host') . "/api/user");
             $userArray = $response->json();
 
+            if ($userArray['role'] ?? '' == 'staff') {
+                dd($userArray);
+            }
+
             try {
                 $username = $userArray['username'];
             } catch (\Throwable $th) {
