@@ -87,7 +87,7 @@
                                         รายงานการทดสอบ
                                     </x-dropdown-link>
                                     <x-dropdown-link :href="route('summary.report')">
-                                        รายงานสรุป
+                                        ผู้สอบใบอนุญาต
                                     </x-dropdown-link>
                                 @endif
                                 <x-dropdown-link :href="route('learning.report')">
@@ -358,7 +358,7 @@
                         รายงานการทดสอบ
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('summary.report')" :active="request()->routeIs('home')">
-                        รายงานสรุป
+                        ผู้สอบใบอนุญาต
                     </x-responsive-nav-link>
                 @endif
                 <x-responsive-nav-link :href="route('learning.report')" :active="request()->routeIs('home')">
