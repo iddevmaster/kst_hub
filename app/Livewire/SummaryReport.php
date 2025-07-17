@@ -65,6 +65,10 @@ class SummaryReport extends Component
 
     public function searchTest()
     {
+        $this->testsQuery = [];
+        $this->user_ids = [];
+        $this->user_unfound = [];
+        $this->user_untest = [];
         $this->filterData['date'] = $this->formData['filter_date'];
         $this->filterData['brn'] = $this->branches[$this->formData['filter_brn']];
         $this->filterData['type'] = $this->course_types[$this->formData['filter_type']];
