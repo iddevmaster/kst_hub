@@ -48,6 +48,8 @@ class SummaryReport extends Component
     ];
     public $is_loading = false;
     public $user_ids= [];
+    public $user_unfound= [];
+    public $user_untest= [];
     public $quizzes;
 
     public function mount()
@@ -82,8 +84,24 @@ class SummaryReport extends Component
 
             if ($testerList && count($testerList) > 0) {
                 $ids = collect($testerList)->pluck('std_id')->all();
-                $this->user_ids = User::whereIn('username', $ids)->pluck('id')->all();
+                foreach ($ids ?? [] as $username) {
+                    $find_user = User::where('username', $username)->first();
+                    if ($find_user) {
+                        $this->user_ids[] = $find_user->id;
+                    } else {
+                        $this->user_unfound[] = collect($testerList)->where('std_id', $username)->first();
+                    }
+                }
+                // $this->user_ids = User::whereNotIn('username', $ids)->pluck('id')->all();
                 $this->filterData['users'] = $this->user_ids;
+
+                foreach ($this->user_ids ?? [] as $user_id) {
+                    if (!Test::where('tester', $user_id)->exists()) {
+                        $user_data = User::find($user_id);
+                        $this->user_untest[] = $user_data->name;
+                    }
+                }
+
                 $query = Test::select(
                     'tester',
                     'quiz',

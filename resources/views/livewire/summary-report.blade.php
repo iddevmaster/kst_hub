@@ -91,7 +91,7 @@
                 </tr>
             </thead>
             <tbody class="text-start">
-                @if (count($tests ?? []) > 0)
+                @if (count($tests ?? []) > 0 || count($user_unfound ?? []) > 0)
                     @foreach ($tests as $index => $test)
                         <tr>
                             <td>{{ $index + 1 }}</td>
@@ -103,6 +103,24 @@
                             <td>{{ $test->best_score }}</td>
                             <td>{{ $test->times_tested }}</td>
                             <td>{{ $test->average_score }}</td>
+                        </tr>
+                    @endforeach
+                    @foreach ($user_untest as $index => $user_name)
+                        <tr>
+                            <td>{{ count($tests ?? []) + $index + 1 }}</td>
+                            <td class="text-nowrap">-ไม่พบ-</td>
+                            <td>{{ $user_name }}</td>
+                            <td>{{ $branches[$formData['filter_brn']] ?? "-" }}</td>
+                            <td colspan="3" class="text-center text-danger">-ไม่พบประวัติการทำแบบทดสอบ-</td>
+                        </tr>
+                    @endforeach
+                    @foreach ($user_unfound as $index => $user)
+                        <tr>
+                            <td>{{ count($tests ?? []) + count($user_untest ?? []) + $index + 1 }}</td>
+                            <td class="text-nowrap">-ไม่พบ-</td>
+                            <td>{{ $user['std_name'] . " " . $user['std_last_name'] }}</td>
+                            <td>{{ $branches[$formData['filter_brn']] ?? "-" }}</td>
+                            <td colspan="3" class="text-center text-danger">-ไม่พบประวัติการใช้งานระบบ-</td>
                         </tr>
                     @endforeach
                 @else
