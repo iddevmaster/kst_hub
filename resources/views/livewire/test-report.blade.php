@@ -84,7 +84,7 @@
                     @endphp
                     @foreach ($tests as $index => $test)
                         <tr>
-                            <td>{{ (($page -1) * 10) + $index+1 }}</td>
+                            <td>{{ (($page -1) * 20) + $index+1 }}</td>
                             <td class="text-nowrap" data-toggle="tooltip" data-placement="top"
                                 title="{{ optional($test->getQuiz)->title }}">{{ optional($test->getQuiz)->title }}
                             </td>
