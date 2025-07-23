@@ -23,21 +23,21 @@
                 <div class="flex gap-2 mb-2">
                     <select id="small" wire:model="formData.filter_user"
                         class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="" selected>เลือกผู้ใช้</option>
+                        <option value="" selected>ผู้ใช้ทั้งหมด</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
                     </select>
                     <select id="small" wire:model="formData.filter_brn" aria-label="Filter brn"
                         class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="" selected>เลือกสาขา</option>
+                        <option value="" selected>สาขาทั้งหมด</option>
                         @foreach ($branches as $brn)
                             <option value="{{ $brn->id }}">{{ $brn->name }}</option>
                         @endforeach
                     </select>
                     <select id="small" wire:model="formData.filter_quiz" aria-label="Filter quiz"
                         class="block w-full p-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="" selected>เลือกแบบทดสอบ</option>
+                        <option value="" selected>แบบทดสอบทั้งหมด</option>
                         @foreach ($quizzes as $quiz)
                             <option value="{{ $quiz->id }}">{{ $quiz->title }}</option>
                         @endforeach
