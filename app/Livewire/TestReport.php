@@ -71,9 +71,9 @@ class TestReport extends Component
 
     public function render()
     {
-        $tests = $this->testsQuery->paginate(20);
+        // $tests = $this->testsQuery->paginate(20);
         return view('livewire.test-report', [
-            'tests' => $tests,
+            'tests' => $this->testsQuery->paginate(20),
         ]);
     }
 }
