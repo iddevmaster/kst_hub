@@ -34,40 +34,41 @@ class TestReport extends Component
         }
     }
 
-    // public function searchTest()
-    // {
+    public function searchTest()
+    {
+        $this->resetPage();
 
-    //     $filter_tests = Test::orderBy('created_at', 'desc');
-    //     // check if formdata has key filter_user
-    //     if (array_key_exists('filter_user', $this->formData)) {
-    //         if ($this->formData['filter_user'] != null) {
-    //             $filter_tests = $filter_tests->where('tester', $this->formData['filter_user']);
-    //         }
-    //     }
-    //     // check if formdata has key filter_course
-    //     if (array_key_exists('filter_brn', $this->formData)) {
-    //         if ($this->formData['filter_brn'] != null) {
-    //             $user_list = User::where('brn', $this->formData['filter_brn'])->pluck('id')->toArray() ?? [];
-    //             $filter_tests = $filter_tests->whereIn('tester', $user_list);
-    //         }
-    //     }
-    //     if (array_key_exists('filter_quiz', $this->formData)) {
-    //         if ($this->formData['filter_quiz'] != null) {
-    //             $filter_tests = $filter_tests->where('quiz', $this->formData['filter_quiz']);
-    //         }
-    //     }
-    //     if (array_key_exists('filter_sdate', $this->formData)) {
-    //         if ($this->formData['filter_sdate'] != null) {
-    //             $filter_tests = $filter_tests->where('created_at', '>=', $this->formData['filter_sdate']);
-    //         }
-    //     }
-    //     if (array_key_exists('filter_edate', $this->formData)) {
-    //         if ($this->formData['filter_edate'] != null) {
-    //             $filter_tests = $filter_tests->where('created_at', '<=', $this->formData['filter_edate']);
-    //         }
-    //     }
-    //     $this->testsQuery = $filter_tests;
-    // }
+        // $filter_tests = Test::orderBy('created_at', 'desc');
+        // // check if formdata has key filter_user
+        // if (array_key_exists('filter_user', $this->formData)) {
+        //     if ($this->formData['filter_user'] != null) {
+        //         $filter_tests = $filter_tests->where('tester', $this->formData['filter_user']);
+        //     }
+        // }
+        // // check if formdata has key filter_course
+        // if (array_key_exists('filter_brn', $this->formData)) {
+        //     if ($this->formData['filter_brn'] != null) {
+        //         $user_list = User::where('brn', $this->formData['filter_brn'])->pluck('id')->toArray() ?? [];
+        //         $filter_tests = $filter_tests->whereIn('tester', $user_list);
+        //     }
+        // }
+        // if (array_key_exists('filter_quiz', $this->formData)) {
+        //     if ($this->formData['filter_quiz'] != null) {
+        //         $filter_tests = $filter_tests->where('quiz', $this->formData['filter_quiz']);
+        //     }
+        // }
+        // if (array_key_exists('filter_sdate', $this->formData)) {
+        //     if ($this->formData['filter_sdate'] != null) {
+        //         $filter_tests = $filter_tests->where('created_at', '>=', $this->formData['filter_sdate']);
+        //     }
+        // }
+        // if (array_key_exists('filter_edate', $this->formData)) {
+        //     if ($this->formData['filter_edate'] != null) {
+        //         $filter_tests = $filter_tests->where('created_at', '<=', $this->formData['filter_edate']);
+        //     }
+        // }
+        // $this->testsQuery = $filter_tests;
+    }
 
     public function updated($propertyName)
     {
