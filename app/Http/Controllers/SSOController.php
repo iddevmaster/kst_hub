@@ -138,7 +138,7 @@ class SSOController extends Controller
                         ]);
                     }
                 } else {
-                    return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get course information! Try again."));
+                    return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode(json_encode($userArray)));
                 }
 
                 $user->save();
