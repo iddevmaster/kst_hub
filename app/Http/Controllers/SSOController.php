@@ -65,10 +65,6 @@ class SSOController extends Controller
                 return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get login information! Try again."));
             }
 
-            if ($username == "1409902897821") {
-                return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode(json_encode($userArray['courses'])));
-            }
-
             if ($userArray['role'] == 'staff') {
                 $user = User::where('username', 'iddriverstaff')->first();
             } else {
@@ -143,7 +139,7 @@ class SSOController extends Controller
                         ]);
                     }
                 } else {
-                    return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode(json_encode($userArray)));
+                    return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get course information! Try again."));
                 }
 
                 $user->save();
