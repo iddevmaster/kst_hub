@@ -154,7 +154,7 @@ class SSOController extends Controller
         } catch (\Throwable $th) {
             // show error
             // return redirect('/')->with('error', 'Failed to connect to SSO Server!');
-            return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode('Failed to connect to SSO Server!'));
+            return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode($th->getMessage()));
         }
     }
 }
