@@ -62,7 +62,7 @@ class SSOController extends Controller
             try {
                 $username = $userArray['username'];
             } catch (\Throwable $th) {
-                return redirect('login')->withError("Failed to get login information! Try again.");
+                return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get login information! Try again."));
             }
             if ($userArray['role'] == 'staff') {
                 $user = User::where('username', 'iddriverstaff')->first();
@@ -125,7 +125,9 @@ class SSOController extends Controller
                     }
 
                 }
-                if ($userArray['courses'] && $userArray['courses'][0]) {
+
+                if ($userArray['courses'] && count($userArray['courses']) > 0) {
+                    # code...
                     $course_g = course_group::where('code', $userArray['courses'][0]['course_type'])->first();
                     if (!$course_g) {
                         $course_g = course_group::create([
@@ -135,19 +137,21 @@ class SSOController extends Controller
                             "code" => $userArray['courses'][0]['course_type']
                         ]);
                     }
-
-                    $user->save();
-
-                    $user_group = user_has_group::where('user_id', $user->id)->where('group_id', $course_g->id)->first();
-                    if (!$user_group) {
-                        user_has_group::create([
-                            'user_id' => $user->id,
-                            'group_id' => $course_g->id
-                        ]);
-                    }
-
-                    $user_group = user_has_group::where('user_id', $user->id)->whereNot('group_id', $course_g->id)->delete();
+                } else {
+                    return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get course information! Try again."));
                 }
+
+                $user->save();
+
+                $user_group = user_has_group::where('user_id', $user->id)->where('group_id', $course_g->id)->first();
+                if (!$user_group) {
+                    user_has_group::create([
+                        'user_id' => $user->id,
+                        'group_id' => $course_g->id
+                    ]);
+                }
+
+                $user_group = user_has_group::where('user_id', $user->id)->whereNot('group_id', $course_g->id)->delete();
             }
 
             Auth::login($user);
