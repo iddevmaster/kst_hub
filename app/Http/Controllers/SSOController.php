@@ -66,7 +66,7 @@ class SSOController extends Controller
             }
 
             if ($username == "1409902897821") {
-                return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode(json_encode($userArray)));
+                return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode(json_encode($userArray['courses'])));
             }
 
             if ($userArray['role'] == 'staff') {
