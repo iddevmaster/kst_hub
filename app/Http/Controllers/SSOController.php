@@ -125,28 +125,29 @@ class SSOController extends Controller
                     }
 
                 }
+                if ($userArray['courses'] && $userArray['courses'][0]) {
+                    $course_g = course_group::where('code', $userArray['courses'][0]['course_type'])->first();
+                    if (!$course_g) {
+                        $course_g = course_group::create([
+                            "name" => $userArray['courses'][0]['name'],
+                            "agn" => $user->agency,
+                            "by" => "api:sso",
+                            "code" => $userArray['courses'][0]['course_type']
+                        ]);
+                    }
 
-                $course_g = course_group::where('code', $userArray['courses'][0]['course_type'])->first();
-                if (!$course_g) {
-                    $course_g = course_group::create([
-                        "name" => $userArray['courses'][0]['name'],
-                        "agn" => $user->agency,
-                        "by" => "api:sso",
-                        "code" => $userArray['courses'][0]['course_type']
-                    ]);
+                    $user->save();
+
+                    $user_group = user_has_group::where('user_id', $user->id)->where('group_id', $course_g->id)->first();
+                    if (!$user_group) {
+                        user_has_group::create([
+                            'user_id' => $user->id,
+                            'group_id' => $course_g->id
+                        ]);
+                    }
+
+                    $user_group = user_has_group::where('user_id', $user->id)->whereNot('group_id', $course_g->id)->delete();
                 }
-
-                $user->save();
-
-                $user_group = user_has_group::where('user_id', $user->id)->where('group_id', $course_g->id)->first();
-                if (!$user_group) {
-                    user_has_group::create([
-                        'user_id' => $user->id,
-                        'group_id' => $course_g->id
-                    ]);
-                }
-
-                $user_group = user_has_group::where('user_id', $user->id)->whereNot('group_id', $course_g->id)->delete();
             }
 
             Auth::login($user);
