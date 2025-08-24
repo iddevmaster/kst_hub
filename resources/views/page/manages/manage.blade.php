@@ -40,7 +40,7 @@
                                                         </button>
                                                     </div>
                                                 </td>
-                                                <td class="text-nowrap">{{$agn->name}}</td>
+                                                <td class="text-nowrap">{{$agn->name}}@role('superAdmin')[{{$agn->id}}]@endrole</td>
                                                 <td class="text-nowrap">{{$agn->address?? ""}}</td>
                                                 <td class="text-nowrap">{{$agn->contact?? ""}}</td>
                                             </tr>
