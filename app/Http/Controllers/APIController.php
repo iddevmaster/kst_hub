@@ -45,7 +45,7 @@ class APIController extends Controller
                 'agency' => $tsmcadmin->agency,
                 'brn' => $branch->id,
                 'dpm' => '',
-                'role' => 'employee',
+                'role' => 'TSMCStudent',
                 'courses' => [],
                 'startlt' => null,
             ]);
