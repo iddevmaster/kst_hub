@@ -91,7 +91,7 @@ class HomeController extends Controller
             // $courses = course::all();
             $dpms = department::all();
             // $tests = Test::all();
-            // $activitys = Activitylog::orderBy('id', 'desc')->get();
+            $activitys = Activitylog::orderBy('id', 'desc')->limit(20)->get();
             // $courseDel = course::onlyTrashed()->get();
             // $quizDel = quiz::onlyTrashed()->get();
 
@@ -120,7 +120,7 @@ class HomeController extends Controller
         ]);
 
         if ($request->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || $request->user()->hasAnyRole(['admin', 'superAdmin'])) {
-            return view("page.dashboard", compact('courses', 'dpms', 'tests', 'agns', 'brns', 'roles', 'permissions'));
+            return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'agns', 'brns', 'roles', 'permissions'));
         } else {
             return redirect('/');
         }
