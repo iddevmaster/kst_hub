@@ -92,8 +92,8 @@ class HomeController extends Controller
             $dpms = department::all();
             // $tests = Test::all();
             $activitys = Activitylog::orderBy('id', 'desc')->limit(20)->get();
-            // $courseDel = course::onlyTrashed()->get();
-            // $quizDel = quiz::onlyTrashed()->get();
+            $courseDel = course::onlyTrashed()->limit(10)->get();
+            $quizDel = quiz::onlyTrashed()->limit(10)->get();
 
             $agns = agency::all();
             $brns = branch::all();
@@ -101,9 +101,9 @@ class HomeController extends Controller
             // $courses = course::where('agn', $request->user()->agency)->get();
             $dpms = department::where('agency', $request->user()->agency)->get();
             // $tests = Test::where('agn', $request->user()->agency)->get();
-            // $activitys = Activitylog::where('agn', $request->user()->agency)->orderBy('id', 'desc')->get();
-            // $courseDel = course::where('agn', $request->user()->agency)->onlyTrashed()->get();
-            // $quizDel = quiz::where('agn', $request->user()->agency)->onlyTrashed()->get();
+            $activitys = Activitylog::where('agn', $request->user()->agency)->orderBy('id', 'desc')->limit(20)->get();
+            $courseDel = course::where('agn', $request->user()->agency)->onlyTrashed()->limit(10)->get();
+            $quizDel = quiz::where('agn', $request->user()->agency)->onlyTrashed()->limit(10)->get();
 
             $agns = agency::where('id', $request->user()->agency)->get();
             $brns = branch::where('agency', $request->user()->agency)->get();
@@ -120,7 +120,7 @@ class HomeController extends Controller
         ]);
 
         if ($request->user()->hasAnyPermission(['dCourse', 'dQuiz', 'dLog', 'dHistory']) || $request->user()->hasAnyRole(['admin', 'superAdmin'])) {
-            return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'agns', 'brns', 'roles', 'permissions'));
+            return view("page.dashboard", compact('courses', 'dpms', 'tests', 'activitys', 'courseDel', 'quizDel', 'agns', 'brns', 'roles', 'permissions'));
         } else {
             return redirect('/');
         }
