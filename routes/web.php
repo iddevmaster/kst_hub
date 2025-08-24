@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\APIController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ManageController;
@@ -32,6 +33,8 @@ Route::get('/', function () {
 Route::get("/sso/login", [SSOController::class, "getLogin"])->name('sso.login');
 Route::get("/auth/callback", [SSOController::class, "getCallback"])->name('sso.callback');
 Route::get("/sso/connect", [SSOController::class, "connectUser"])->name('sso.connect');
+
+Route::get("/learn-from-tsmc/{courseId}", [APIController::class, "fromTsmc"]);
 
 // Route::get('/home', function () {
 //     return view('page.home');

@@ -12,4 +12,8 @@ class APIController extends Controller
         $courses = course::where('agn', $agnId)->orderByDesc('created_at')->limit(6)->get(['id', 'title', 'description', 'code', 'img']);
         return response()->json($courses);
     }
+
+    public function fromTsmc(Request $request, $courseId) {
+        dd($courseId, $request->all());
+    }
 }
