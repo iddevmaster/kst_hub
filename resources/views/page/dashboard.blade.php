@@ -407,7 +407,7 @@
                                                                 <td class="text-nowrap">
                                                                     <img src="/uploads/logo/{{ $agn->logo ?? '' }}" alt="" width="25">
                                                                 </td>
-                                                                <td class="text-nowrap">{{$agn->name}}</td>
+                                                                <td class="text-nowrap">{{$agn->name}} @hasrole('superAdmin')[{{$agn->id}}]@endhasrole</td>
                                                                 <td class="text-nowrap">{{$agn->address?? ""}}</td>
                                                                 <td class="text-nowrap">{{$agn->contact?? ""}}</td>
                                                             </tr>
