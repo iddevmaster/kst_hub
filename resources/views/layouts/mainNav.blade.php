@@ -263,13 +263,14 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('messages.profile') }}
-                        </x-dropdown-link>
-
-                        <x-dropdown-link href="https://sso.trainingzenter.com/">
-                            กลับไปยัง Hub SSO
-                        </x-dropdown-link>
+                        @if (!(Auth::user()->role === 'TSMCStudent'))
+                            <x-dropdown-link :href="route('profile.edit')">
+                                {{ __('messages.profile') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link href="https://sso.trainingzenter.com/">
+                                กลับไปยัง Hub SSO
+                            </x-dropdown-link>
+                        @endif
 
                         @if (!(Auth::user()->role === 'customer'))
                             <!-- Authentication -->
@@ -381,13 +382,15 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('messages.profile') }}
-                </x-responsive-nav-link>
+                @if (!(Auth::user()->role === 'TSMCStudent'))
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        {{ __('messages.profile') }}
+                    </x-responsive-nav-link>
 
-                <x-responsive-nav-link href="https://sso.trainingzenter.com/">
-                    กลับไปยัง Hub SSO
-                </x-responsive-nav-link>
+                    <x-responsive-nav-link href="https://sso.trainingzenter.com/">
+                        กลับไปยัง Hub SSO
+                    </x-responsive-nav-link>
+                @endif
 
                 @if (!(Auth::user()->role === 'customer'))
                     <!-- Authentication -->
