@@ -30,13 +30,15 @@ class APIController extends Controller
         } else {
             $tsmcadmin = User::where('username', 'tsmcschool')->first();
 
-            if (branch::where('name', $request->org)->exists()) {
-                $branch = branch::where('name', $request->org)->first();
-            } else {
-                $branch = branch::create([
-                    'name' => $request->org,
-                    'agency' => $tsmcadmin->agency,
-                ]);
+            if ($request->is_tsm === '0') {
+                if (branch::where('name', $request->org)->exists()) {
+                    $branch = branch::where('name', $request->org)->first();
+                } else {
+                    $branch = branch::create([
+                        'name' => $request->org,
+                        'agency' => $tsmcadmin->agency,
+                    ]);
+                }
             }
 
             $user = User::create([
