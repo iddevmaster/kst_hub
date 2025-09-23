@@ -21,7 +21,8 @@ class APIController extends Controller
         $request->validate([
             'name' => 'required|string|max:500',
             'username' => 'required|string|max:500',
-            'org' => 'required|string|max:500',
+            'org' => $request->is_tsm === '1' ? 'nullable|string|max:500' : 'required|string|max:500',
+            'is_tsm' => 'required|string|max:5|defaults:0',
             // Add other fields as necessary
         ]);
         if (User::where('username', $request->username)->exists()) {
@@ -43,7 +44,7 @@ class APIController extends Controller
                 'username' => $request->username,
                 'password' => $request->username,
                 'agency' => $tsmcadmin->agency,
-                'brn' => $branch->id,
+                'brn' => $request->is_tsm === '1' ? $tsmcadmin->brn : $branch->id,
                 'dpm' => '',
                 'role' => 'TSMCStudent',
                 'courses' => [],
