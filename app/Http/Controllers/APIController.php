@@ -22,7 +22,7 @@ class APIController extends Controller
             'name' => 'required|string|max:500',
             'username' => 'required|string|max:500',
             'org' => $request->is_tsm === '1' ? 'nullable|string|max:500' : 'required|string|max:500',
-            'is_tsm' => 'required|string|max:5|defaults:0',
+            'is_tsm' => 'required|string|max:5',
             // Add other fields as necessary
         ]);
         if (User::where('username', $request->username)->exists()) {
