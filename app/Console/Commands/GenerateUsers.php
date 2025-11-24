@@ -52,8 +52,8 @@ class GenerateUsers extends Command
                 " | Department ID: {$dpmId}". " ----------"
         );
         for ($i = 1; $i <= $count; $i++) {
-            $username = $gen ? "{$prefix}0{$gen}-0{$i}" : "{$prefix}0{$i}";
-            $name = $gen ? "นักเรียนรุ่นที่{$gen} หมายเลข{$i}" : "นักเรียน หมายเลข{$i}";
+            $username = "{$prefix}-0{$i}";
+            $name = "นักเรียนรุ่นที่{$gen} หมายเลข{$i}";
             try {
                 $user = User::create([
                     'name' => $name,
@@ -69,7 +69,7 @@ class GenerateUsers extends Command
 
                 $this->info(
                     "Generated user: {$username}" .
-                    ($gen ? " | Name: นักเรียนรุ่นที่{$gen} หมายเลข{$i}" : " | Name: นักเรียน หมายเลข{$i}" )
+                    " | Name: นักเรียนรุ่นที่{$gen} หมายเลข{$i}"
                 );
             } catch (\Exception $e) {
                 $this->error("Failed to create user {$username}: " . $e->getMessage());
