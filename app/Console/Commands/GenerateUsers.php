@@ -52,7 +52,7 @@ class GenerateUsers extends Command
                 " | Department ID: {$dpmId}". " ----------"
         );
         for ($i = 1; $i <= $count; $i++) {
-            $username = $gen ? "{$prefix}-0{$gen}-0{$i}" : "{$prefix}-0{$i}";
+            $username = $gen ? "{$prefix}0{$gen}-0{$i}" : "{$prefix}0{$i}";
             $name = $gen ? "นักเรียนรุ่นที่{$gen} หมายเลข{$i}" : "นักเรียน หมายเลข{$i}";
             try {
                 $user = User::create([
