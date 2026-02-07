@@ -940,12 +940,12 @@
         qzbtn.addEventListener('click', function() {
             const pdfUrl = this.getAttribute('data-file-path');
             Swal.fire({
-                title: `Quiz::${qTitle}`,
-                html: `<p>By: ${qBy}</p>
-                <p>Pass Score: ${qpass}%</p>
-                <p class="mb-2">Qurstions: ${quesNum}</p>
+                title: `แบบทดสอบ::${qTitle}`,
+                html: `<p>โดย: ${qBy}</p>
+                <p>คะแนนที่ผ่าน: ${qpass}%</p>
+                <p class="mb-2">จำนวนข้อ: ${quesNum}</p>
                 <hr>
-                <p class="my-2">History</p>
+                <p class="my-2">ประวัติการทดสอบ</p>
                 <div class="relative h-40 overflow-x-auto overflow-y-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50  ">
