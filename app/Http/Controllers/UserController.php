@@ -71,6 +71,15 @@ class UserController extends Controller
             }
             $user->assignRole($request->role);
 
+            foreach ($request->courses ?? [] as $cid) {
+                if (!user_has_course::where('user_id', $user->id)->where('course_id', $cid)->exists()) {
+                    user_has_course::create([
+                        'user_id' => $user->id,
+                        'course_id' => $cid
+                    ]);
+                }
+            }
+
             Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'User',
