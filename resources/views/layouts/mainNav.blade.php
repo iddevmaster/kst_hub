@@ -86,9 +86,11 @@
                                     <x-dropdown-link :href="route('test.report')">
                                         รายงานการทดสอบ
                                     </x-dropdown-link>
-                                    <x-dropdown-link :href="route('summary.report')">
-                                        ผู้สอบใบอนุญาต
-                                    </x-dropdown-link>
+                                    @if (auth()->user()->username === 'iddschool' || auth()->user()->username === 'superadmin')
+                                        <x-dropdown-link :href="route('summary.report')">
+                                            ผู้สอบใบอนุญาต
+                                        </x-dropdown-link>
+                                    @endif
                                 @endif
                                 <x-dropdown-link :href="route('learning.report')">
                                     รายงานการเรียน
@@ -358,9 +360,11 @@
                     <x-responsive-nav-link :href="route('test.report')" :active="request()->routeIs('home')">
                         รายงานการทดสอบ
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('summary.report')" :active="request()->routeIs('home')">
-                        ผู้สอบใบอนุญาต
-                    </x-responsive-nav-link>
+                    @if (auth()->user()->username === 'iddschool' || auth()->user()->username === 'superadmin')
+                        <x-responsive-nav-link :href="route('summary.report')" :active="request()->routeIs('home')">
+                            ผู้สอบใบอนุญาต
+                        </x-responsive-nav-link>
+                    @endif
                 @endif
                 <x-responsive-nav-link :href="route('learning.report')" :active="request()->routeIs('home')">
                     รายงานการเรียน
