@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Test;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class GenTest extends Command
 {
@@ -33,11 +34,9 @@ class GenTest extends Command
 
         $sample_answer2 = $sample_test[1]->answers;
 
-        $merged = array_merge($sample_answer1, $sample_answer2);
+        $merged = $sample_answer1 + $sample_answer2;
 
-        $random = collect($merged)
-        ->shuffle()
-        ->take(30);
+        $random = Arr::random($merged, 30);
 
         $count_status = $random
         ->where('status', '1')
