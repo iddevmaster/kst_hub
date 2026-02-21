@@ -35,6 +35,7 @@ class GenTest extends Command
         $sample_answer2 = $sample_test[1]->answers;
 
         $merged = $sample_answer1 + $sample_answer2;
+        $this->info('merged sample: ' . json_encode($merged));
 
         $random = Arr::random($merged, 30);
 
