@@ -59,21 +59,26 @@ class GenTest extends Command
         $this->info('total: ' . count($random));
 
         $randomDateTimes = $this->randomDateTimes();
-        $this->info('Random date times: ' . json_encode($randomDateTimes));
 
-        // $users = User::whereBetween('username', ['CP2569041', 'CP2569070'])->whereNot('username', 'CP2569046')->get('id');
-        // foreach ($users as $user) {
-        //     $new_test = new Test();
-        //     $new_test->quiz = $sample_test[0]->quiz;
-        //     $new_test->course_id = $sample_test[0]->course_id;
-        //     $new_test->tester = $user->id;
-        //     $new_test->answers = $random;
-        //     $new_test->score = $count_status;
-        //     $new_test->totalScore = count($random);
-        //     $new_test->agn = $sample_test[0]->agn;
-        //     $new_test->save();
-        //     $this->info('Test created for user: ' . $user->username);
-        // }
+        $users = User::whereBetween('username', ['CP2569041', 'CP2569070'])->whereNot('username', 'CP2569046')->get('id');
+        foreach ($users as $index => $user) {
+            $startDate = $randomDateTimes[$index % count($randomDateTimes)];
+            $endDate = Carbon::parse($startDate)->addMinutes(rand(10,30))->format('Y-m-d H:i:s');
+            $this->info('startDate: ' . $startDate . '-- endDate: ' . $endDate);
+
+            // $new_test = new Test();
+            // $new_test->quiz = $sample_test[0]->quiz;
+            // $new_test->course_id = $sample_test[0]->course_id;
+            // $new_test->tester = $user->id;
+            // $new_test->answers = $random;
+            // $new_test->score = $count_status;
+            // $new_test->totalScore = count($random);
+            // $new_test->agn = $sample_test[0]->agn;
+            // $new_test->start = $startDate;
+            // $new_test->end = $endDate;
+            // $new_test->save();
+            // $this->info('Test created for user: ' . $user->username);
+        }
     }
 
     public function randomDateTimes()
