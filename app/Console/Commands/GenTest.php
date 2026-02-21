@@ -28,5 +28,11 @@ class GenTest extends Command
     {
         $sample_test = Test::whereIn('id', [20907, 20905])->get();
         $this->info('Sample tests retrieved: ' . count($sample_test));
+
+        $sample_answer1 = $sample_test[0]->answers;
+        $this->info('Sample answer 1: ' . json_encode($sample_answer1));
+
+        $sample_answer2 = $sample_test[1]->answers;
+        $this->info('Sample answer 2: ' . json_encode($sample_answer2));
     }
 }
