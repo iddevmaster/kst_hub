@@ -33,9 +33,9 @@ class GenTest extends Command
         $sample_answer1 = $sample_test[0]->answers;
 
         $sample_answer2 = $sample_test[1]->answers;
+        $this->info('sample ex: ' . json_encode($sample_answer2) . " \n");
 
         $merged = $sample_answer1 + $sample_answer2;
-        $this->info('merged sample: ' . json_encode($merged));
 
         // สุ่มเฉพาะ key
         $randomKeys = Arr::random(array_keys($merged), 30);
