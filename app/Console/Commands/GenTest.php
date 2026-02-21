@@ -37,11 +37,20 @@ class GenTest extends Command
         $merged = $sample_answer1 + $sample_answer2;
         $this->info('merged sample: ' . json_encode($merged));
 
-        $random = Arr::random($merged, 30);
+        // สุ่มเฉพาะ key
+        $randomKeys = Arr::random(array_keys($merged), 30);
 
+        // rebuild array โดยรักษา key เดิม
+        $random = collect($randomKeys)
+            ->mapWithKeys(function ($key) use ($merged) {
+                return [$key => $merged[$key]];
+            })
+            ->toArray();
+
+        // นับ status = 1
         $count_status = collect($random)
-        ->where('status', '1')
-        ->count();
+            ->where('status', '1')
+            ->count();
 
         $this->info('Random sample: ' . json_encode($random));
         $this->info('Count of status 1: ' . $count_status);
