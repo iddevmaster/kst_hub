@@ -61,21 +61,19 @@ class GenTest extends Command
             $random = $result['answers'];
             $count_status = $result['score'];
 
-            $this->info("User: {$user->username}, Score: {$count_status}, Total: {$result['total']}");
-
-            // $new_test = new Test();
-            // $new_test->quiz = $sample_test[0]->quiz;
-            // $new_test->course_id = $sample_test[0]->course_id;
-            // $new_test->tester = $user->id;
-            // $new_test->answers = json_encode($random);
-            // $new_test->score = $count_status;
-            // $new_test->totalScore = count($random);
-            // $new_test->agn = $sample_test[0]->agn;
-            // $new_test->start = $startDate;
-            // $new_test->end = $endDate;
-            // $new_test->created_at = $endDate;
-            // $new_test->save();
-            // $this->info('Test created with ID: ' . $new_test->id . ' for user: ' . $user->username);
+            $new_test = new Test();
+            $new_test->quiz = $sample_test[0]->quiz;
+            $new_test->course_id = $sample_test[0]->course_id;
+            $new_test->tester = $user->id;
+            $new_test->answers = json_encode($random);
+            $new_test->score = $count_status;
+            $new_test->totalScore = count($random);
+            $new_test->agn = $sample_test[0]->agn;
+            $new_test->start = $startDate;
+            $new_test->end = $endDate;
+            $new_test->created_at = $endDate;
+            $new_test->save();
+            $this->info('Test created with ID: ' . $new_test->id . ' for user: ' . $user->username);
         }
 
         $this->info('----------  End generating tests  ----------');
