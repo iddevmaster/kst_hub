@@ -57,7 +57,7 @@ class GenTest extends Command
         $this->info('Count of status 1: ' . $count_status);
         $this->info('total: ' . count($random));
 
-        $users = User::whereBetween('username', ['CP2569041', 'CP2569070'])->get();
+        $users = User::whereBetween('username', ['CP2569041', 'CP2569070'])->whereNot('username', 'CP2569046')->get();
         $this->info('Users: ' . $users->pluck('username')->join(', '));
     }
 }
