@@ -61,7 +61,7 @@ class GenTest extends Command
             $new_test->quiz = $sample_test[0]->quiz;
             $new_test->course_id = $sample_test[0]->course_id;
             $new_test->tester = $user->id;
-            $new_test->answers = $random;
+            $new_test->answers = json_encode($random);
             $new_test->score = $count_status;
             $new_test->totalScore = count($random);
             $new_test->agn = $sample_test[0]->agn;
