@@ -38,7 +38,7 @@ class GenTest extends Command
 
         $random = Arr::random($merged, 30);
 
-        $count_status = $random
+        $count_status = collect($random)
         ->where('status', '1')
         ->count();
 
