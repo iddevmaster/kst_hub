@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Test;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 
@@ -55,5 +56,8 @@ class GenTest extends Command
         $this->info('Random sample: ' . json_encode($random));
         $this->info('Count of status 1: ' . $count_status);
         $this->info('total: ' . count($random));
+
+        $users = User::whereBetween('username', ['CP2569041', 'CP2569070'])->get();
+        $this->info('Users: ' . $users->pluck('username')->join(', '));
     }
 }
