@@ -63,7 +63,7 @@ class GenTest extends Command
         $users = User::whereBetween('username', ['CP2569041', 'CP2569070'])->whereNot('username', 'CP2569046')->get('id');
         foreach ($users as $index => $user) {
             $startDate = $randomDateTimes[$index % count($randomDateTimes)];
-            $endDate = Carbon::parse($startDate)->addMinutes(rand(10,30))->format('Y-m-d H:i:s');
+            $endDate = Carbon::parse($startDate)->addSeconds(rand(600, 1800))->format('Y-m-d H:i:s');
             $this->info('startDate: ' . $startDate . '-- endDate: ' . $endDate);
 
             // $new_test = new Test();
