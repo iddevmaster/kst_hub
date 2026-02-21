@@ -29,9 +29,9 @@ class GenTest extends Command
         $sample_test = Test::whereIn('id', [20907, 20905])->get();
         $this->info('Sample tests retrieved: ' . count($sample_test));
 
-        $sample_answer1 = json_decode($sample_test[0]->answers, true);
+        $sample_answer1 = $sample_test[0]->answers;
 
-        $sample_answer2 = json_decode($sample_test[1]->answers, true);
+        $sample_answer2 = $sample_test[1]->answers;
 
         $merged = array_merge($sample_answer1, $sample_answer2);
 
