@@ -1,6 +1,6 @@
 <div class="bg-white p-4 rounded shadow-sm min-w-full">
-    <div class="flex flex-wrap justify-between mb-3 gap-4">
-        <div>
+    <div class="mb-2">
+        <div class="flex justify-between gap-2 mb-2">
             <p class="text-2xl font-bold"><i class="bi bi-backpack"></i>{{ __('messages.All Test') }}</p>
             <form action="{{ route('test.export') }}" method="get" target="_blank">
                 @csrf

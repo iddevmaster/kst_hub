@@ -93,6 +93,9 @@
             @if ($fuser)
                 <p>ผู้ทดสอบ: <u>{{ $fuser->name }}</u></p>
             @endif
+            @if ($brn_name)
+                <p>สาขา: <u>{{ $brn_name }}</u></p>
+            @endif
             @if ($fquiz)
                 <p>ชุดข้อสอบ: <u>{{ $fquiz->title }} adwadadawdsdawd awdadawdawoduhwd adw</u></p>
             @endif

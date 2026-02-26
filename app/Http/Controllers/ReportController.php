@@ -79,12 +79,20 @@ class ReportController extends Controller
         $fquiz = null;
         $fsdate = null;
         $fedate = null;
+        // dd($search_data);
         if ($search_data) {
             // check if formdata has key filter_user
             if (array_key_exists('filter_user', $search_data)) {
                 if ($search_data['filter_user'] != null) {
                     $filter_tests = $filter_tests->where('tester', $search_data['filter_user']);
                     $fuser = User::find($search_data['filter_user']);
+                }
+            }
+            if (array_key_exists('filter_brn', $search_data)) {
+                if ($search_data['filter_brn'] != null) {
+                    $user_list = User::where('brn', $search_data['filter_brn'])->pluck('id')->toArray() ?? [];
+                    $brn_name = branch::where('id', $search_data['filter_brn'])->first()->name ?? '';
+                    $filter_tests = $filter_tests->whereIn('tester', $user_list);
                 }
             }
             // check if formdata has key filter_course
@@ -108,7 +116,7 @@ class ReportController extends Controller
             }
         }
         $tests = $filter_tests->get();
-        return view('page.exports.test', compact('tests', 'fuser', 'fquiz', 'fsdate', 'fedate'));
+        return view('page.exports.test', compact('tests', 'fuser', 'fquiz', 'fsdate', 'fedate', 'brn_name'));
     }
 
     public function summaryExport(Request $request) {
