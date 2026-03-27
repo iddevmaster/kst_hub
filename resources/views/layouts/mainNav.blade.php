@@ -88,7 +88,7 @@
                                     </x-dropdown-link>
                                     @if (auth()->user()->username === 'iddschool' || auth()->user()->username === 'superadmin')
                                         <x-dropdown-link :href="route('summary.report')">
-                                            ผู้สอบใบอนุญาต
+                                            ผู้สอบใบอนุญาต (EM)
                                         </x-dropdown-link>
                                     @endif
                                 @endif
@@ -362,7 +362,7 @@
                     </x-responsive-nav-link>
                     @if (auth()->user()->username === 'iddschool' || auth()->user()->username === 'superadmin')
                         <x-responsive-nav-link :href="route('summary.report')" :active="request()->routeIs('home')">
-                            ผู้สอบใบอนุญาต
+                            ผู้สอบใบอนุญาต (EM)
                         </x-responsive-nav-link>
                     @endif
                 @endif
