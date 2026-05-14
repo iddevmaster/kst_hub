@@ -56,4 +56,19 @@ class APIController extends Controller
         Auth::login($user);
         return redirect()->route('course.detail', ['id' => $courseId]);
     }
+
+
+    public function fromPublic(Request $request) {
+
+        $request->validate([
+            'username' => 'required|string|max:500',
+        ]);
+        if (User::where('username', $request->username)->exists()) {
+            $user = User::where('username', $request->username)->first();
+        } else {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        Auth::login($user);
+        return redirect()->route('main');
+    }
 }

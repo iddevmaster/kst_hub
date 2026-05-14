@@ -35,6 +35,7 @@ Route::get("/auth/callback", [SSOController::class, "getCallback"])->name('sso.c
 Route::get("/sso/connect", [SSOController::class, "connectUser"])->name('sso.connect');
 
 Route::get("/learn-from-tsmc/{courseId}", [APIController::class, "fromTsmc"]);
+Route::get("/learn-from-public", [APIController::class, "fromPublic"]);
 
 // Route::get('/home', function () {
 //     return view('page.home');
