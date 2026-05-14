@@ -58,16 +58,9 @@ class APIController extends Controller
     }
 
 
-    public function fromPublic(Request $request) {
+    public function fromPublic() {
 
-        $request->validate([
-            'username' => 'required|string|max:500',
-        ]);
-        if (User::where('username', $request->username)->exists()) {
-            $user = User::where('username', $request->username)->first();
-        } else {
-            return response()->json(['error' => 'User not found'], 404);
-        }
+        $user = User::where('username', 'publicstudent')->firstOrFail();
         Auth::login($user);
         return redirect()->route('main');
     }
