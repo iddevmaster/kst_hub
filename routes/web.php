@@ -48,7 +48,7 @@ Route::get("/learn-from-public", [APIController::class, "fromPublic"]);
 //     phpinfo();
 // });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'maintenance.gate'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/icon', [ProfileController::class, 'updateIcon'])->name('icon.update');
