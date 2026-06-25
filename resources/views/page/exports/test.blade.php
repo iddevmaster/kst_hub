@@ -86,7 +86,7 @@
 </head>
 <body>
     <header>
-        <img src="/img/logo.png" width="60" alt="">
+        <img src="/img/smarthubtz_logo.png" width="60" alt="">
         <h3>ศูนย์ฝึกอบรมเทรนนิ่งเซนเตอร์</h3>
         <p>รายงานการทดสอบ</p>
         <div id="filtered">

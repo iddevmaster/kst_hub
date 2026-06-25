@@ -8,7 +8,7 @@
                 <div class="shrink-0 flex items-center">
                     <div class="p-1 rounded">
                         <a href="{{ route('main') }}">
-                            <img src="/img/logo.png" alt="" width="90">
+                            <img src="/img/smarthubtz_logo.png" alt="" width="90">
                         </a>
                     </div>
                 </div>

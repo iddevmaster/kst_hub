@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-        <link rel="icon" href="/img/logo.png" type="image/icon type">
+        <link rel="icon" href="/img/smarthubtz_logo.png" type="image/icon type">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -25,7 +25,7 @@
     <body class="font-sans text-gray-900 antialiased" >
         <div class="min-h-screen flex flex-col sm:justify-center items-center bg-gray-100" style="background-image: url('{{ asset('img/bg2.jpg') }}'); background-size: cover; background-position: center">
             <div class="py-4">
-                <img src="/img/logo.png" style="max-height: 150px" alt="" >
+                <img src="/img/smarthubtz_logo.png" style="max-height: 150px" alt="" >
             </div>
 
             <div class="w-full sm:max-w-md my-6 px-6 py-4  overflow-hidden rounded-xl" style="backdrop-filter: blur(4px); box-shadow: 0px 0px 10px 0px white; border-radius: 20px; background-color:rgba(255, 255, 255, .2);">

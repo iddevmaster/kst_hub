@@ -75,7 +75,7 @@
 </head>
 <body>
     <header>
-        <img src="/img/logo.png" width="100" alt="">
+        <img src="/img/smarthubtz_logo.png" width="100" alt="">
         <h3>ศูนย์ฝึกอบรมเทรนนิ่งเซนเตอร์</h3>
         <p>รายงานหลักสูตร</p>
     </header>

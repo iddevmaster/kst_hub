@@ -5,8 +5,8 @@
             <div class="shadow-sm card mb-3 course-card">
                 <a href="{{route('course.detail', ['id' => $course->id])}}">
                     <div class="row g-0">
-                        <div class="col-md-4 d-flex align-items-center coursebg" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
-                            {{-- <img src="{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}" class="img-fluid rounded-start object-fit-cover" alt="..."> --}}
+                        <div class="col-md-4 d-flex align-items-center coursebg" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}')">
+                            {{-- <img src="{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}" class="img-fluid rounded-start object-fit-cover" alt="..."> --}}
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">

@@ -69,7 +69,7 @@
                             <div class="item">
                                 <div class="card w-100" style="height: 200px">
                                     <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
-                                    <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                    <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}')">
                                         {{-- course Img --}}
                                         <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                                     </div>
@@ -99,7 +99,7 @@
                         <div class="item">
                             <div class="card w-100" style="height: 200px">
                                 <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
-                                <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}')">
                                     {{-- course Img --}}
                                     <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded  ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                                 </div>
@@ -131,7 +131,7 @@
                         <div class="item">
                             <div class="card w-100" style="height: 200px">
                                 <a href="{{ route('course.detail', ['id' => $course->id]) }}" class="hoverbg flex justify-center items-center"><p>{{ __('messages.view_course') }}</p></a>
-                                <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}')">
                                     {{-- course Img --}}
                                     <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded ">ฝ่าย: {{ optional($course->getDpm)->name }}</span>
                                 </div>

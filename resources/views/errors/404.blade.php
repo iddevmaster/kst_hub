@@ -307,7 +307,7 @@
     <div class="stars">
         <div class="custom-navbar">
             <div class="brand-logo">
-                <img src="/img/logo.png" width="150px">
+                <img src="/img/smarthubtz_logo.png" width="150px">
             </div>
         </div>
         <div class="central-body">

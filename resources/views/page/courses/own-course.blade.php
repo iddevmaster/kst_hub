@@ -71,7 +71,7 @@
                                                 <input type="checkbox" id="react-option{{ $index }}" value="{{ $course->id }}" name="selected_course[]" class="hidden peer">
                                                 <label for="react-option{{ $index }}" class="inline-flex items-center justify-between w-full text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
                                                     <div class="card w-full" style="height: 200px">
-                                                        <div class="card-header" style="height: 100px; background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}'); background-size: cover; background-position:center;">
+                                                        <div class="card-header" style="height: 100px; background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}'); background-size: cover; background-position:center;">
                                                         </div>
                                                         <div class="card-body gray-800" style="border-radius: 0px 0px 5px 5px">
                                                             <h5 class="card-title fw-bold mb-2"><span>{{ $course->code }}</span>:: {{ $course->title }}</h5>
