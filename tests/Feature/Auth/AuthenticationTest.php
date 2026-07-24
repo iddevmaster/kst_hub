@@ -43,6 +43,16 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_users_can_authenticate_via_public_route_with_query_params(): void
+    {
+        $user = User::factory()->create();
+
+        $response = $this->get('/public-login?username='.$user->username.'&password=password');
+
+        $this->assertAuthenticatedAs($user);
+        $response->assertRedirect(RouteServiceProvider::HOME);
+    }
+
     public function test_users_can_logout(): void
     {
         $user = User::factory()->create();

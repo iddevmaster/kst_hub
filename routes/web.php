@@ -37,6 +37,23 @@ Route::get("/sso/connect", [SSOController::class, "connectUser"])->name('sso.con
 Route::get("/learn-from-tsmc/{courseId}", [APIController::class, "fromTsmc"]);
 Route::get("/learn-from-public", [APIController::class, "fromPublic"]);
 
+Route::get('/public-login', function (\Illuminate\Http\Request $request) {
+    $username = $request->query('username');
+    $password = $request->query('password');
+
+    if (empty($username) || empty($password)) {
+        return redirect()->route('loginpage');
+    }
+
+    if (Auth::attempt(['username' => $username, 'password' => $password])) {
+        $request->session()->regenerate();
+
+        return redirect()->intended(\App\Providers\RouteServiceProvider::HOME);
+    }
+
+    return redirect()->route('loginpage');
+})->name('public.login');
+
 // Route::get('/home', function () {
 //     return view('page.home');
 // })->middleware(['auth', 'verified'])->name('home');
