@@ -78,7 +78,11 @@ class TestReport extends Component
 
     public function render()
     {
-        $tests = Test::orderBy('created_at', 'desc');
+        if (auth()->user()->role == 'superAdmin') {
+            $tests = Test::orderBy('created_at', 'desc');
+        } else {
+            $tests = Test::where('agn', auth()->user()->agency)->orderBy('created_at', 'desc');
+        }
 
         if (!empty($this->formData['filter_user'])) {
             $tests->where('tester', $this->formData['filter_user']);
