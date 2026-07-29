@@ -1,7 +1,8 @@
+{{-- TODO: temp null-guards below (optional()/?? '-') for $course / $test->getQuiz — proper fix (validate course exists / handle deleted quiz) pending --}}
 <x-app-layout>
     <x-slot name="header">
         <div class="font-semibold text-xl text-gray-800 leading-tight d-flex justify-content-between">
-            <p>{{ $course->title }}</p>
+            <p>{{ optional($course)->title ?? '-' }}</p>
             @if (
                 $course->teacher == Auth::user()->id ||
                     auth()->user()->hasAnyRole(['admin', 'superAdmin']))
@@ -19,7 +20,7 @@
             <div class="col-lg-10 col-sm-12 col-md-8 mb-4">
                 <div class="card py-2 px-4 mb-4">
                     <p class="fw-bold fs-5">{{ __('messages.desc') }}</p>
-                    <p class="ps-4" style="text-indent: 1.5em">{{ $course->description }}</p>
+                    <p class="ps-4" style="text-indent: 1.5em">{{ optional($course)->description ?? '-' }}</p>
                 </div>
 
                 @if (App\Models\user_has_course::where('user_id', Auth::user()->id)->where('course_id', $course->id)->exists() ||
@@ -352,16 +353,13 @@
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <div class="card p-4">
                     <p class="text-center fw-bold fs-5 mb-4">{{ __('messages.feature') }}</p>
-                    <p><b>{{ __('messages.cid') }}: </b> {{ $course->code }}</p>
-                    <p><b>{{ __('messages.Lecturer') }}: </b> {{ optional($course->getTeacher)->name }}</p>
-                    <p><b>{{ __('messages.dpm') }}: </b> {{ optional($course->getDpm)->name }}</p>
+                    <p><b>{{ __('messages.cid') }}: </b> {{ optional($course)->code ?? '-' }}</p>
+                    <p><b>{{ __('messages.Lecturer') }}: </b> {{ optional(optional($course)->getTeacher)->name ?? '-' }}</p>
+                    <p><b>{{ __('messages.dpm') }}: </b> {{ optional(optional($course)->getDpm)->name ?? '-' }}</p>
                     <p><b>{{ __('messages.lesson') }}: </b> {{ $lessons->count() }}</p>
                     @php
-                        $updatetime = new DateTime($course->updated_at);
-                        $update = $updatetime->format('Y-m-d');
-
-                        $createtime = new DateTime($course->updated_at);
-                        $create = $createtime->format('Y-m-d');
+                        $update = optional($course)->updated_at ? (new DateTime($course->updated_at))->format('Y-m-d') : '-';
+                        $create = optional($course)->updated_at ? (new DateTime($course->updated_at))->format('Y-m-d') : '-';
                     @endphp
                     <p><b>{{ __('messages.update') }}: </b> {{ $update }}</p>
                     <p><b>{{ __('messages.create') }}: </b> {{ $create }}</p>
@@ -974,13 +972,13 @@
                                         {{ $index + 1 }}
                                     </td>
                                     <th scope="row" class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap ">
-                                        {{ $test->getQuiz->title }}
+                                        {{ optional($test->getQuiz)->title ?? '-' }}
                                     </th>
                                     <td class="px-3 py-2">
                                         {{ $test->score }}/{{ $test->totalScore }}
                                     </td>
                                     <td class="px-3 py-2">
-                                        @if ($test->score >= ($test->totalScore * $test->getQuiz->pass_score) / 100)
+                                        @if ($test->score >= ($test->totalScore * (optional($test->getQuiz)->pass_score ?? 0)) / 100)
                                             <p class="text-green-500">PASS</p>
                                         @else
                                             <p class="text-red-500">FAIL</p>
