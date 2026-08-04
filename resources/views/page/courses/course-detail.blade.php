@@ -117,6 +117,8 @@
                                                     <i
                                                         class="bi bi-list-check bg-secondary rounded-circle p-1 text-light"></i>
                                                     <a class="text-primary preQuiz cursor-pointer chapter"
+                                                        data-cid="{{ $course->id }}"
+                                                        data-lessid="{{ $lesson->id }}"
                                                         qTitle="{{ $quiz->title ?? 'unknow' }}"
                                                         cid="{{ $course->id ?? '0' }}"
                                                         qid="{{ $sls->content ?? '0' }}"
