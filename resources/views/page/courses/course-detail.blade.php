@@ -116,20 +116,30 @@
                                                 <div>
                                                     <i
                                                         class="bi bi-list-check bg-secondary rounded-circle p-1 text-light"></i>
-                                                    <a class="text-primary preQuiz cursor-pointer chapter"
-                                                        data-cid="{{ $course->id }}"
-                                                        data-lessid="{{ $lesson->id }}"
-                                                        qTitle="{{ $quiz->title ?? 'unknow' }}"
-                                                        cid="{{ $course->id ?? '0' }}"
-                                                        qid="{{ $sls->content ?? '0' }}"
-                                                        pass="{{ $quiz->pass_score ?? '0' }}"
-                                                        qBy="{{ $quiz->getCreated->name ?? 'unknow' }}"
-                                                        quesNum = "{{ $sls->num_quest ?? false ? ($sls->num_quest > 0 ? $sls->num_quest : $quesnum) : $quesnum }}">
-                                                        {{ $sls->label }}
-                                                        <span class="text-secondary"
-                                                            style="font-size: 12px">{{ __('messages.update') }}
-                                                            {{ $sls->date }} ({{ $sls->type }})</span>
-                                                    </a>
+                                                    @if ($quiz)
+                                                        <a class="text-primary preQuiz cursor-pointer chapter"
+                                                            data-cid="{{ $course->id }}"
+                                                            data-lessid="{{ $lesson->id }}"
+                                                            qTitle="{{ $quiz->title ?? 'unknow' }}"
+                                                            cid="{{ $course->id ?? '0' }}"
+                                                            qid="{{ $sls->content ?? '0' }}"
+                                                            pass="{{ $quiz->pass_score ?? '0' }}"
+                                                            qBy="{{ $quiz->getCreated->name ?? 'unknow' }}"
+                                                            quesNum = "{{ $sls->num_quest ?? false ? ($sls->num_quest > 0 ? $sls->num_quest : $quesnum) : $quesnum }}">
+                                                            {{ $sls->label }}
+                                                            <span class="text-secondary"
+                                                                style="font-size: 12px">{{ __('messages.update') }}
+                                                                {{ $sls->date }} ({{ $sls->type }})</span>
+                                                        </a>
+                                                    @else
+                                                        {{-- แบบทดสอบถูกลบไปแล้ว ไม่ต้องให้กดเข้าไปทำ --}}
+                                                        <span class="text-secondary" style="text-decoration: line-through">
+                                                            {{ $sls->label }}
+                                                        </span>
+                                                        <span class="text-danger" style="font-size: 12px">
+                                                            ({{ __('messages.quiz_removed') }})
+                                                        </span>
+                                                    @endif
                                                 </div>
                                                 <div>
                                                     @if (
@@ -373,6 +383,17 @@
 <script src="https://cdn.tiny.cloud/1/4vdoimdjlqj1524p4qwd6k1jg1w71ys0syull57gnp048kgf/tinymce/6/tinymce.min.js"
     referrerpolicy="origin"></script>
 <script>
+    @if (session('error'))
+        Swal.fire({
+            icon: "error",
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            title: "{{ session('error') }}"
+        });
+    @endif
+
     $(document).ready(function() {
         $('.chapter').click(function() {
             // Get the notification ID from the data attribute
@@ -981,9 +1002,9 @@
                                     </td>
                                     <td class="px-3 py-2">
                                         @if ($test->score >= ($test->totalScore * (optional($test->getQuiz)->pass_score ?? 0)) / 100)
-                                            <p class="text-green-500">PASS</p>
+                                            <p class="text-green-500">{{ __('messages.pass') }}</p>
                                         @else
-                                            <p class="text-red-500">FAIL</p>
+                                            <p class="text-red-500">{{ __('messages.fail') }}</p>
                                         @endif
                                     </td>
                                     <td class="px-3 py-2">

@@ -44,7 +44,7 @@
                         </div>
                         <div class="px-2">
                             <p class="text-xs">{{ __('messages.result') }}</p>
-                            <p class="text-3xl font-bold">{{ $scores >= ($totalScore * $quiz->pass_score / 100) ? 'PASS' : 'FAIL' }}</p>
+                            <p class="text-3xl font-bold">{{ $scores >= ($totalScore * $quiz->pass_score / 100) ? __('messages.pass') : __('messages.fail') }}</p>
                         </div>
                     </div>
                 </div>

@@ -205,4 +205,7 @@ return [
     'perm-dLog' => 'Dashboard log',
     'perm-dHistory' => 'Dashboard history',
 
+    'quiz_removed' => 'this quiz has been removed',
+    'quiz_not_found' => 'Quiz not found, it may have been removed.',
+    'quiz_no_question' => 'This quiz has no question yet.',
 ];
