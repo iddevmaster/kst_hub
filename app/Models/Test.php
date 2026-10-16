@@ -18,12 +18,18 @@ class Test extends Model
         "score",
         "totalScore",
         "end",
-        'agn'
+        'agn',
+        'course_id'
     ];
 
     public function getAnswersAttribute($value)
     {
         return json_decode($value, true);
+    }
+
+    public function getCourse()
+    {
+        return $this->belongsTo(course::class, 'course_id');
     }
 
     public function getTester() {

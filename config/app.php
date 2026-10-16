@@ -74,6 +74,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Maintenance Gate
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, only users whose role is superadmin/admin may access the
+    | authenticated pages; everyone else receives the maintenance page (503).
+    |
+    */
+
+    'maintenance_gate' => (bool) env('MAINTENANCE_GATE', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |

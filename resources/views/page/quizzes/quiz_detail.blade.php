@@ -4,7 +4,11 @@
             <p><b>{{ __('messages.quiz') }}:: </b>{{ $quiz->title }}</p>
         </div>
     </x-slot>
-    <div class="container mt-5 pt-5">
+    @php
+        $page = $questions->currentPage();
+        $totalQuest = $questions->total();
+    @endphp
+    <div class="container mt-2 pt-5">
         <div class="row">
             <div class="col-lg-2 col-md-4 col-sm-12">
                 <div class="card p-4 mb-4">
@@ -13,7 +17,7 @@
                     <p><b>{{ __('messages.pass_sc') }}: </b>&nbsp; {{ $quiz->pass_score }}%</p>
                     <p><b>{{ __('messages.shuff_ques') }}: </b>&nbsp; {{ $quiz->shuffle_quest ? "True" : "False" }}</p>
                     <p><b>{{ __('messages.by') }}: </b>&nbsp; {{ optional($quiz->getCreated)->name }}</p>
-                    <p><b>{{ __('messages.question') }}: </b>&nbsp; {{ count( $questions ?? [] ) }}</p>
+                    <p><b>{{ __('messages.question') }}: </b>&nbsp; {{ $totalQuest }}</p>
                     <p><b>{{ __('messages.update') }}: </b> &nbsp;
                         @php
                             $date = new DateTime($quiz->updated_at);
@@ -29,14 +33,19 @@
                         @endphp
                     </p>
                 </div>
-                <div class="card p-4 mb-4">
-                    <div>
-                        <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
-                            <button type="button" class="w-100  focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 ">
-                                <i class="bi bi-plus-lg"></i> {{ __('messages.add_ques') }}
-                            </button>
-                        </a>
-                    </div>
+                <div class="flex justify-center mt-4 ">
+                    <a href="{{ route('quiz.quest.add', ['id' => $id]) }}">
+                        <button type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 ">
+                            <i class="bi bi-plus-lg"></i> {{ __('messages.add_ques') }}
+                        </button>
+                    </a>
+                    <a href="{{ route('quiz.quest.import', ['id' => $id]) }}">
+                        <button type="button" class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 ">
+                            <i class="bi bi-arrow-down"></i> นำเข้าคำถาม
+                        </button>
+                    </a>
+                </div>
+                {{-- <div class="card p-4 mb-4">
                     <div class="mb-3 text-center">
                         <p>{{ __('messages.question') }}</p>
                     </div>
@@ -47,15 +56,31 @@
                             </button>
                         @endforeach
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="col-lg-10 col-sm-12 col-md-8 mb-4" id="content">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <form action="{{ route('quiz.detail', ['id' => $quiz->id ]) }}" method="get">
+                            @csrf
+                            <div class="flex">
+                                <input type="text" id="search" name="search" class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full" placeholder="{{ __('messages.search') }}" value="{{ $searchText ?? '' }}">
+                                <button type="submit" class=" focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2">
+                                    {{ __('messages.search') }}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-12">
+                        {{ $questions->links() }}
+                    </div>
+                </div>
                 @foreach ($questions as $index => $quest)
-                    <div id="accordion-open" data-accordion="open" class="mb-2">
+                    <div id="accordion-open" data-accordion="open" class="my-2">
                         <h2 id="accordion-open-heading{{$index}}">
                             <button type="button" class="bg-white rounded-xl flex items-center justify-between w-full px-4 py-3 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:text-black focus:ring-4 focus:ring-gray-200 "
                                 data-accordion-target="#accordion-open-body{{$index}}" aria-expanded="false" aria-controls="accordion-open-body{{$index}}">
-                                <span class="flex items-center">{{$index+1}}. {!! $quest->title !!}</span>
+                                <span class="flex items-center">{{ (($page -1) * 20) + $index+1 }}. {!! $quest->title !!}</span>
                                 <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
                                 </svg>
@@ -67,6 +92,16 @@
                                     <p ><b>{{ __('messages.type') }}:</b> &nbsp;{{$quest->type ? 'Multiple choice' : 'Short answer'}}</p>
                                     <p ><b>{{ __('messages.score') }}:</b> &nbsp;{{$quest->score}}</p>
                                     <p ><b>{{ __('messages.shuff_ques') }}:</b> &nbsp;{{$quest->shuffle_ch ? "Yes" : "No"}}</p>
+                                </div>
+                                <div>
+                                    <div class="d-flex">
+                                        <p class="align-self-center me-2"><b>เสียงบรรยาย:</b> </p>
+                                        @if ($quest->audio)
+                                            <audio preload controls sourcelist="{{ $quest->audio }}"></audio>
+                                        @else
+                                            <p class="text-danger">-ไม่พบเสียงบรรยาย-</p>
+                                        @endif
+                                    </div>
                                 </div>
                                 @if ($quest->type)
                                     <p class="mb-2"><b>{{ __('messages.choices') }}:</b></p>
@@ -101,6 +136,7 @@
                         </div>
                     </div>
                 @endforeach
+                {{ $questions->links() }}
             </div>
         </div>
     </div>
@@ -184,6 +220,25 @@
                 }
             })
 
+        });
+
+        $('audio').each(function(){
+            const sourcelist = $(this).attr('sourcelist');
+            let source = JSON.parse(sourcelist);
+            let current = 0;
+
+            $(this).attr('src', source[current]);
+
+            $(this).on('ended', function(){
+                current++;
+                if(current < source.length){
+                    $(this).attr('src', source[current]);
+                    this.play();
+                } else {
+                    current = 0;
+                    $(this).attr('src', source[current]);
+                }
+            });
         });
     });
 

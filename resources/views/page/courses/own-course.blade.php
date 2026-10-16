@@ -11,7 +11,7 @@
                     </button>
                 </div>
 
-                <div class="mb-4 border-b border-gray-200">
+                <div class="mb-4 border-b">
                     <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
                         <li class="me-2" role="presentation">
                             <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">All</button>
@@ -19,12 +19,12 @@
                         @if ($groups)
                             @foreach ($groups as $index => $group)
                                 <li class="me-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="group-{{ $group->id }}-tab" data-tabs-target="#group{{ $group->id }}" type="button" role="tab" aria-controls="group{{ $group->id }}" aria-selected="false">{{ $group->name }}</button>
+                                    <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-950" id="group-{{ $group->id }}-tab" data-tabs-target="#group{{ $group->id }}" type="button" role="tab" aria-controls="group{{ $group->id }}" aria-selected="false">{{ $group->name }}</button>
                                 </li>
                             @endforeach
                         @endif
                         <li class="me-2" role="presentation">
-                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="addGroup-tab" data-tabs-target="#addGroup" type="button" role="tab" aria-controls="addGroup" aria-selected="false">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="addGroup-tab" data-tabs-target="#addGroup" type="button" role="tab" aria-controls="addGroup" aria-selected="false">
                                 <svg class="w-6 h-6 text-green-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5.757v8.486M5.757 10h8.486M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                 </svg>
@@ -71,7 +71,7 @@
                                                 <input type="checkbox" id="react-option{{ $index }}" value="{{ $course->id }}" name="selected_course[]" class="hidden peer">
                                                 <label for="react-option{{ $index }}" class="inline-flex items-center justify-between w-full text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-600 hover:text-gray-600 peer-checked:text-gray-600 hover:bg-gray-50">
                                                     <div class="card w-full" style="height: 200px">
-                                                        <div class="card-header" style="height: 100px; background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}'); background-size: cover; background-position:center;">
+                                                        <div class="card-header" style="height: 100px; background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}'); background-size: cover; background-position:center;">
                                                         </div>
                                                         <div class="card-body gray-800" style="border-radius: 0px 0px 5px 5px">
                                                             <h5 class="card-title fw-bold mb-2"><span>{{ $course->code }}</span>:: {{ $course->title }}</h5>

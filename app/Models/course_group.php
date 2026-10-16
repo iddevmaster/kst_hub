@@ -13,7 +13,8 @@ class course_group extends Model
         "name",
         "courses",
         "by",
-        'agn'
+        'agn',
+        'code'
     ] ;
 
     public function getCoursesAttribute($value)

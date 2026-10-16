@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\course;
+use App\Models\course_has_quiz;
 use App\Models\quiz;
 use App\Models\Test;
 use App\Models\User;
+use App\Models\user_has_course;
 use Illuminate\Http\Request;
 
 class CertificateController extends Controller
@@ -44,7 +46,8 @@ class CertificateController extends Controller
             if (is_null($user)) {
                 return response()->json(['message' => 'User id ' . $id . ' has not exist.'], 400);
             } else {
-                $courses = course::where("studens", 'LIKE' , '%"'.$user->id.'"%')->get();
+                $course_list = user_has_course::where('user_id', $user->id)->get(['course_id']);
+                $courses = course::whereIn("id", $course_list)->get();
                 $user_data = [
                     "id" => $user->id,
                     "name" => $user->name,
@@ -55,7 +58,8 @@ class CertificateController extends Controller
 
                 $course_data = [];
                 foreach ($courses as $course) {
-                    $quizzes = quiz::where('for_courses', 'LIKE' , '%"'.$course->code.'"%')->get();
+                    $quiz_list = course_has_quiz::where('course_id', $course->id)->get(['quiz_id']);
+                    $quizzes = quiz::whereIn('id', $quiz_list)->get();
 
                     $test_data = [];
                     foreach ($quizzes as $quiz) {

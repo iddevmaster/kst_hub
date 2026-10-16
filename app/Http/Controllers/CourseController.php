@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\File;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use App\Models\course_has_group;
+use App\Models\course_has_quiz;
+use App\Models\user_has_course;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -32,10 +35,21 @@ class CourseController extends Controller
         try {
             $group = course_group::create([
                 'name' => $request->gname,
-                'courses' => json_encode($request->selected_course),
                 'by' => auth()->id(),
                 'agn' => $request->user()->agency
             ]);
+
+            $selectedCourses = $request->selected_course;
+            foreach ($selectedCourses as $key => $selectedCourse) {
+                $gcourse = course_has_group::where('group_id', $group->id)->where('course_id', $selectedCourse)->get();
+                if (count($gcourse) == 0) {
+                    course_has_group::create([
+                        'group_id' => $group->id,
+                        'course_id' => $selectedCourse,
+                    ]);
+                }
+            }
+            course_has_group::where('group_id', $group->id)->whereNotIn('course_id', $selectedCourses)->delete();
 
             Activitylog::create([
                 'user' => auth()->id(),
@@ -67,17 +81,18 @@ class CourseController extends Controller
     public function searchEn(Request $request)
     {
         $search = $request->get('search');
+        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
 
         if ($search !== '!all!') {
             // search in title
-            $courses1 = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+            $courses1 = course::whereIn("id", $course_list)
             // Add your search condition here before paginate
             ->when($search, function ($query) use ($search) {
                 return $query->where('title', 'like', '%'.$search.'%');
             });
 
             // search in course code
-            $courses2 = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+            $courses2 = course::whereIn("id", $course_list)
                     // Add your search condition here before paginate
                     ->when($search, function ($query) use ($search) {
                         return $query->where('code', 'like', '%'.$search.'%');
@@ -86,7 +101,7 @@ class CourseController extends Controller
             // query
             $courses = $courses2->paginate(12);
         } else {
-            $courses = course::where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')->paginate(12);
+            $courses = course::whereIn("id", $course_list)->paginate(12);
         }
 
         Activitylog::create([
@@ -360,43 +375,24 @@ class CourseController extends Controller
 
     public function enroll(Request $request, $cid) {
         try {
-            $course = course::find($cid);
-            $user = User::find( $request->user()->id );
-            $courseContainer = [];
-            $stdContainer = [];
-            $oCourses = $user->courses ?? [];
-
-            // ins user table -> course
-            if (count($oCourses) > 0) {
-                $courseContainer = array_unique(array_merge($oCourses, [(string) $course->id]));
-            } else {
-                $courseContainer[] = (string) $course->id;
+            if (!user_has_course::where('user_id', $request->user()->id)->where('course_id', $cid)->exists()) {
+                user_has_course::create([
+                    'user_id' => $request->user()->id,
+                    'course_id' => $cid
+                ]);
             }
-            // ins course table -> studens
-            $oStd = $course->studens ?? [];
-            if (count($oStd) > 0) {
-                $stdContainer = $oStd;
-            }
-            if (!($stdContainer[$user->id] ?? false)) {
-                $stdContainer[$user->id] = date('Y-m-d');
-            }
-            $course->studens = $stdContainer;
-            $course->save();
-
-            $user->courses = $courseContainer;
-            $user->save();
 
             Activitylog::create([
                 'user' => auth()->id(),
                 'module' => 'Course',
-                'content' => $course->id,
+                'content' => $cid,
                 'note' => 'enroll',
                 'agn' => $request->user()->agency
             ]);
             Log::channel('activity')->info('User '. $request->user()->name .' enroll course',
             [
-                'user_id' => $user->id,
-                'course_id' => $course->id,
+                'user_id' => $request->user()->id,
+                'course_id' => $cid,
             ]);
             return redirect()->route('course.detail', ['id' => $cid]);
         } catch (\Throwable $th) {
@@ -444,6 +440,7 @@ class CourseController extends Controller
 
     public function searchMy(Request $request)
     {
+        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
         // Retrieve the search keyword and department filters from the request
         $search = $request->input('search');
         if (!($request->input('departments'))) {
@@ -458,8 +455,8 @@ class CourseController extends Controller
             $query = Course::where('permission->dpm', true)->where('agn', $request->user()->agency);
         } else {
             $query = Course::where('permission->dpm', true)->where('agn', $request->user()->agency)
-                        ->where(function ($query) use ($request) {
-                            $query->where("studens", 'LIKE' , '%"'.$request->user()->id.'"%')
+                        ->where(function ($query) use ($request, $course_list) {
+                            $query->whereIn("id", $course_list)
                                 ->orWhere('dpm', $request->user()->dpm);
                         });
         }
@@ -646,10 +643,12 @@ class CourseController extends Controller
 
                 if ($request->addType == "quiz") {
                     $quiz = quiz::find($request->content);
-                    $forCourse = is_null($quiz->for_courses) ? [] : $quiz->for_courses;
-                    $forCourse[] = $lesson->getCourse->code;
-                    $quiz->for_courses = json_encode($forCourse);
-                    $quiz->save();
+                    if (!course_has_quiz::where('course_id', $lesson->getCourse->id)->where('quiz_id', $quiz->id)->exists()) {
+                        course_has_quiz::create([
+                            'course_id' => $lesson->getCourse->id,
+                            'quiz_id' => $quiz->id
+                        ]);
+                    }
                 }
             }
 
@@ -693,20 +692,7 @@ class CourseController extends Controller
                                 }
                             } elseif ($item->type == "quiz") {
                                 $quiz = quiz::find($item->content);
-                                $forCourse = is_null($quiz->for_courses) ? [] : $quiz->for_courses;
-                                $new4Course = [];
-                                $delStatus = 0;
-                                foreach ($forCourse as $key => $item) {
-                                    if ($item !== $lesson->getCourse->code) {
-                                        $new4Course[] = $item;
-                                    } elseif ($delStatus == 1) {
-                                        $new4Course[] = $item;
-                                    } else {
-                                        $delStatus = 1;
-                                    }
-                                }
-                                $quiz->for_courses = json_encode($new4Course);
-                                $quiz->save();
+                                course_has_quiz::where('course_id', $lesson->getCourse->id)->where('quiz_id', $quiz->id)->delete();
                             }
                         }
                     }

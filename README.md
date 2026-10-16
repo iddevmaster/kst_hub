@@ -19,3 +19,9 @@ Don't forget to update the .env file after pulling the project from Git.
 after you install project,the default admin user is : 
 - Username: `superadmin`
 - Password: `iddrivesadmin`
+
+
+Command :
+- `php artisan schedule:run`
+- `php artisan update:coursegroup`
+- `php artisan update:normalize`

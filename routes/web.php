@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\APIController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ManageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ReqController;
+use App\Http\Controllers\SSOController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +30,30 @@ Route::get('/', function () {
     return view('auth.login');
 })->name('loginpage');
 
+Route::get("/sso/login", [SSOController::class, "getLogin"])->name('sso.login');
+Route::get("/auth/callback", [SSOController::class, "getCallback"])->name('sso.callback');
+Route::get("/sso/connect", [SSOController::class, "connectUser"])->name('sso.connect');
+
+Route::get("/learn-from-tsmc/{courseId}", [APIController::class, "fromTsmc"]);
+Route::get("/learn-from-public", [APIController::class, "fromPublic"]);
+
+Route::get('/public-login', function (\Illuminate\Http\Request $request) {
+    $username = $request->query('username');
+    $password = $request->query('password');
+
+    if (empty($username) || empty($password)) {
+        return redirect()->route('loginpage');
+    }
+
+    if (Auth::attempt(['username' => $username, 'password' => $password])) {
+        $request->session()->regenerate();
+
+        return redirect()->intended(\App\Providers\RouteServiceProvider::HOME);
+    }
+
+    return redirect()->route('loginpage');
+})->name('public.login');
+
 // Route::get('/home', function () {
 //     return view('page.home');
 // })->middleware(['auth', 'verified'])->name('home');
@@ -38,7 +65,7 @@ Route::get('/', function () {
 //     phpinfo();
 // });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'maintenance.gate'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/icon', [ProfileController::class, 'updateIcon'])->name('icon.update');
@@ -106,6 +133,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/quiz/update/{id}', [QuizController::class,'update'])->name('quiz.update');
     Route::get('/quiz/detail/{id}', [QuizController::class,'quizDetail'])->name('quiz.detail');
     Route::get('/quiz/question/add/{id}', [QuizController::class, 'addQuestion'])->name('quiz.quest.add');
+    Route::get('/quiz/{id}/question/import', [QuizController::class, 'importQuestion'])->name('quiz.quest.import');
     Route::get('/quiz{qid}/question{id}/edit', [QuizController::class, 'editQuestion'])->name('quiz.quest.edit');
     Route::post('/quiz/question/store/{id}', [QuizController::class, 'storeQuestion'])->name('quiz.quest.store');
     Route::post('/quiz/question/update/{id}', [QuizController::class, 'updateQuestion'])->name('quiz.quest.update');
@@ -113,6 +141,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/quiz/delete/{id}', [QuizController::class, 'destroy'])->name('quiz.del');
     Route::get('/quiz/record/{qid}', [QuizController::class, 'testRecord'])->name('quiz.record');
     Route::get('/quiz/copy/{id}', [QuizController::class, 'copyQuiz'])->name('quiz.copy');
+    Route::post('/quiz/import-question/{qid}', [QuizController::class, 'importQues'])->name('quiz.importques');
+    Route::post('/quiz/{id}/file/import', [QuizController::class, 'importQuesFile'])->name('quiz.quest.importfile');
 
     // request
     Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');
@@ -124,11 +154,22 @@ Route::middleware('auth')->group(function () {
 
     // Take Exam
     Route::get('/test/start/{cid}/{qzid}/{ques_num}', [TestController::class, 'index'])->name('test.start');
-    Route::get('/test/summary', [TestController::class, 'testSummary'])->name('test.summary');
+    Route::get('/test/summary/', [TestController::class, 'testSummary'])->name('test.summary');
+    Route::get('/test/history/{cid}/{testid}', [TestController::class, 'testHistory'])->name('test.history');
     Route::get('/test/finish', [TestController::class, 'finishTest'])->name('test.finish');
 
     // Export file
     Route::get('/export/{type}', [HomeController::class, 'previewPDF'])->name('export.pdf');
+
+    // Report
+    Route::get('/report/course', [ReportController::class, 'courseReport'])->name('course.report');
+    Route::get('/report/test', [ReportController::class, 'testReport'])->name('test.report');
+    Route::get('/report/summary', [ReportController::class, 'summaryReport'])->name('summary.report');
+    Route::get('/report/learning', [ReportController::class, 'learningReport'])->name('learning.report');
+    Route::get('/export2pdf/course', [ReportController::class, 'courseExport'])->name('course.export');
+    Route::get('/export2pdf/test', [ReportController::class, 'testExport'])->name('test.export');
+    Route::get('/export2pdf/summary', [ReportController::class, 'summaryExport'])->name('summary.export');
+
 
     Route::get('/language/{locale}', function ($locale) {
         app()->setLocale($locale);

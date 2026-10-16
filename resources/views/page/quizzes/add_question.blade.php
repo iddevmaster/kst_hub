@@ -25,7 +25,7 @@
                         <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 mb-3">
                             <p class="self-center text-lg"></p>
                             <div class="flex items-center mb-4">
-                                <input id="shuff" name="shuffle" type="checkbox" checked value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                                <input id="shuff" name="shuffle" type="checkbox" disabled value="1" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
                                 <label for="shuff" class="ms-2 text-sm font-medium text-gray-900 ">{{ __('messages.shuff_choice') }}</label>
                             </div>
                         </div>
@@ -100,6 +100,23 @@
                             <input type="text" id="choice2" name="writing" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input answer" />
                         </div>
                     </div>
+                    <div class="mt-4">
+                        <p class="text-lg">เสียงบรรยาย:</p>
+                        <p class="text-xs mb-2 text-yellow-500">{{ __('messages.note') }}: ระบบจะเล่นเสียงทั้งหมดตามลำดับ</p>
+                        <div class="d-flex justify-between">
+                            <div class="ps-5 grow">
+                                <ol class="list-decimal d-flex flex-wrap" id="audioList">
+                                    <li class="w-50">
+                                        <input type="text" maxlength="1000" name="audios[]" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input audio link"/>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div class="p-4 flex gap-2 justify-center">
+                                <button type="button" id="addAudio" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-2 py-2"><i class="bi bi-plus-lg"></i> {{ __('messages.add') }}</button>
+                                <button type="button" id="deleteAudio" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-2"><i class="bi bi-trash3"></i> ลบ</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="mt-20">
                         <button type="submit" class="transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300 text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">
                             {{ __('messages.save') }}
@@ -153,6 +170,18 @@
             updateLastChoice(count);
         });
 
+        $('#addAudio').on('click', function() {
+            var count = $('#audioList li').length;
+            count++;
+
+            // Append the new li
+            $('#audioList').append(`
+            <li class="w-50">
+                <input type="text" maxlength="1000" name="audios[]" class="block w-50 text-sm text-gray-900 bg-transparent border-t-0 border-s-0 border-e-0 border-b-2 border-gray-400 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="Input audio link"/>
+            </li>
+            `);
+        });
+
         $("#delete-btn").click(function() {
             var count = $('#choiceList li').length;
             console.log("befor: ",count);
@@ -162,6 +191,14 @@
             }
             console.log("after: ",count);
             updateLastChoice(count);
+        });
+
+        $("#deleteAudio").click(function() {
+            var count = $('#audioList li').length;
+            if (count > 1) {
+                $("#audioList li:last").remove();
+                count--;
+            }
         });
 
         // Function to update the lastChoice value

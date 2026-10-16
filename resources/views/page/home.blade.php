@@ -24,7 +24,7 @@
                     @foreach ($courses as $course)
                         <div class="card" style="width: 18rem;">
                             <div class="card-header" >
-                                <img class="bg-light rounded" src="/img/logo.png" alt="" width="80">
+                                <img class="bg-light rounded" src="/img/smarthubtz_logo.png" alt="" width="80">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title fw-bold">{{ $course->title }}</h5>

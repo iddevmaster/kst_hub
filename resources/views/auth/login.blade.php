@@ -3,6 +3,13 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
     <div class="text-center">
         <h1 class="fw-bold mb-2" style="font-size: 200%">Login</h1>
+
+        {{-- get error message from session --}}
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
     </div>
     <form method="POST" action="{{ route('login') }}">
         @csrf
@@ -35,7 +42,7 @@
             </label>
         </div> --}}
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex flex-wrap items-center justify-end mt-4">
             {{-- @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
@@ -45,6 +52,10 @@
             <x-primary-button class="ml-3">
                 {{ __('Log in') }}
             </x-primary-button>
+            {{-- <div class="flex justify-center">
+                <p class="px-2">หรือ</p>
+                <a href="{{ route('sso.login') }}"><button type="button" class="btn btn-primary">SSO Login</button></a>
+            </div> --}}
             {{-- <x-secondary-button class="ml-3">
                 <a href="{{ route('register') }}">Register</a>
             </x-secondary-button> --}}

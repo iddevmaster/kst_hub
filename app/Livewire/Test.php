@@ -30,18 +30,32 @@ class Test extends Component
         $this->courseId = $courseId;
         $this->startTest = Carbon::now()->format('Y-m-d H:i:s');
         $this->quiz = quiz::find($this->testId);
+
+        // แบบทดสอบถูกลบไปแล้ว แต่บทเรียนยังอ้างถึงอยู่
+        if (!$this->quiz) {
+            session()->flash('error', __('messages.quiz_not_found'));
+            return redirect()->route('course.detail', ['id' => $this->courseId]);
+        }
+
         $all_ques = Question::where('quiz', $this->testId)->count();
 
-        if ($this->quiz->shuffle_quest && $ques_num == $all_ques) {
+        if ($this->quiz->shuffle_quest && $ques_num >= $all_ques) {
             $this->questions = Question::where('quiz', $this->testId)->get()->shuffle();  // เรียงจากน้อยไปมาก
-        } elseif (!$this->quiz->shuffle_quest && $ques_num == $all_ques) {
+        } elseif (!$this->quiz->shuffle_quest && $ques_num >= $all_ques) {
             $this->questions = Question::where('quiz', $this->testId)->orderBy('id', 'asc')->get();  // เรียงจากน้อยไปมาก
-        } elseif ($ques_num < $all_ques) {
+        } else {
             $this->questions = Question::where('quiz', $this->testId)->inRandomOrder()->limit($ques_num)->get();
         }
+        $this->totalQuestion = count($this->questions ?? []);
+
+        // ไม่มีคำถามให้ทำ (คำถามถูกลบทั้งหมด หรือ ques_num ใน url ไม่ถูกต้อง) -> render() จะพังถ้าปล่อยผ่าน
+        if ($this->totalQuestion < 1) {
+            session()->flash('error', __('messages.quiz_no_question'));
+            return redirect()->route('course.detail', ['id' => $this->courseId]);
+        }
+
         session()->put('shuffled_questions', $this->questions);
         // dd($this->questions);
-        $this->totalQuestion = count($this->questions ?? []);
         $this->initAnswers();
     }
 

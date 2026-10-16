@@ -4,7 +4,7 @@
 
 
 return [
-    'kst_name' => 'Knowledge Service Training',
+    'kst_name' => 'HUB Trainingzenter',
 
     // Menu Bar
     'home' => 'Home',
@@ -104,6 +104,7 @@ return [
     'lesson' => 'Lessons',
     'please' => "Please",
     'itrs' => 'in top right to get all lesson',
+    'lang' => 'Language',
     'min' => "min",
 
     //Request
@@ -205,4 +206,7 @@ return [
     'perm-dLog' => 'Dashboard log',
     'perm-dHistory' => 'Dashboard history',
 
+    'quiz_removed' => 'this quiz has been removed',
+    'quiz_not_found' => 'Quiz not found, it may have been removed.',
+    'quiz_no_question' => 'This quiz has no question yet.',
 ];

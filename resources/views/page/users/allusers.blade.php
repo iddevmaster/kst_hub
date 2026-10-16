@@ -25,26 +25,26 @@
                                 <form action="{{ route('user.register') }}" method="post">
                                     @csrf
                                     <div class="d-flex gap-2 mb-2">
-                                        <p>{{ __('messages.Name') }}</p>
-                                        <input type="text" class="form-control form-control-sm" value="{{ old('name') }}" name="name" required>
+                                        <p>{{ __('messages.Name') }}<span class="text-danger">*</span></p>
+                                        <input type="text" class="form-control form-control-sm" value="{{ old('name') }}" placeholder="ชื่อผู้ใช้งาน" name="name" required>
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
-                                        <p>{{ __('messages.Username') }}</p>
-                                        <input type="text" class="form-control form-control-sm" value="{{ old('username') }}" name="username" required>
+                                        <p>{{ __('messages.Username') }}<span class="text-danger">*</span></p>
+                                        <input type="text" class="form-control form-control-sm" value="{{ old('username') }}" placeholder="username สำหรับใช้ login" name="username" required>
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
-                                        <p>{{ __('messages.Password') }}</p>
-                                        <input type="password" class="form-control form-control-sm" name="password" required>
+                                        <p>{{ __('messages.Password') }}<span class="text-danger">*</span></p>
+                                        <input type="password" class="form-control form-control-sm" name="password" placeholder="รหัสผ่านต้องมีความยาว 8 ตัวหรือมากกว่า" required>
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('agn') }}" name="agn" required>
-                                            <option selected disabled>{{ __('messages.Agency') }}</option>
+                                            <option selected disabled>{{ __('messages.Agency') }}<span class="text-danger">*</span></option>
                                             @foreach ($agns as $agn)
                                                 <option value="{{ $agn->id }}">{{ $agn->name }}</option>
                                             @endforeach
                                         </select>
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('brn') }}" name="brn" required>
-                                            <option selected disabled>{{ __('messages.Branch') }}</option>
+                                            <option selected disabled>{{ __('messages.Branch') }}<span class="text-danger">*</span></option>
                                             @foreach ($brns as $brn)
                                                 <option value="{{ $brn->id }}">{{ $brn->name }}</option>
                                             @endforeach
@@ -52,13 +52,13 @@
                                     </div>
                                     <div class="d-flex gap-2 mb-2">
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('dpm') }}" name="dpm" required>
-                                            <option selected disabled>{{ __('messages.Department') }}</option>
+                                            <option selected disabled>{{ __('messages.Department') }}<span class="text-danger">*</span></option>
                                             @foreach ($dpms as $dpm)
                                                 <option value="{{ $dpm->id }}">{{ $dpm->name }}</option>
                                             @endforeach
                                         </select>
                                         <select class="form-select form-select-sm" aria-label="Small select example" value="{{ old('role') }}" name="role" required>
-                                            <option selected disabled>{{ __('messages.Role') }}</option>
+                                            <option selected disabled>{{ __('messages.Role') }}<span class="text-danger">*</span></option>
                                             @foreach ($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                             @endforeach

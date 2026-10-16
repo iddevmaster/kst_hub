@@ -13,5 +13,6 @@ class agency extends Model
         "name",
         "address",
         "contact",
+        "agn_id",
     ];
 }

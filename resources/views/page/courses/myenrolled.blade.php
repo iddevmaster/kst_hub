@@ -31,7 +31,7 @@
                             @endphp
                             <a href="{{ route('course.detail', ['id' => $course->id]) }}">
                                 <div class="card" style="height: 350px">
-                                    <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
+                                    <div class="card-header" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}')">
                                         {{-- course Img --}}
                                     </div>
                                     <div class="card-body" style="border-radius: 0px 0px 5px 5px">

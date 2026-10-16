@@ -7,20 +7,15 @@
           {{ __('messages.delete') }}
         </button>
     </div>
-
-    @livewireScripts
-
-    <script>
-        let alertShown = false; // Flag to track whether the alert has been shown
-
-        Livewire.on('error', () => {
-            if (!alertShown) {
-                // Handle success status here, e.g., show a success message
-                alert('Sorry, Something wrong!');
-                alertShown = true; // Set the flag to true to indicate that the alert has been shown
-            }
-        });
-    </script>
+    @if (session()->has('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @elseif (session()->has('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
     @if (count($courses ?? []) > 0)
         @foreach ($courses as $course)
@@ -28,8 +23,8 @@
             <div class="shadow-sm card mb-3 course-card">
                 <a href="{{route('course.detail', ['id' => $course->id])}}">
                     <div class="row g-0">
-                        <div class="col-md-4 d-flex align-items-center coursebg" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}')">
-                            {{-- <img src="{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/logo.png' }}" class="img-fluid rounded-start object-fit-cover" alt="..."> --}}
+                        <div class="col-md-4 d-flex align-items-center coursebg" style="background-image: url('{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}')">
+                            {{-- <img src="{{ $course->img ? '/uploads/course_imgs/'.$course->img : '/img/smarthubtz_logo.png' }}" class="img-fluid rounded-start object-fit-cover" alt="..."> --}}
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">

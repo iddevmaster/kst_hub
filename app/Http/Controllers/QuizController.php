@@ -15,19 +15,18 @@ class QuizController extends Controller
 {
     public function index(Request $request) {
         if (auth()->user()->hasRole('superAdmin')) {
-            $quizs = quiz::orderBy('id', 'desc')->get();
+            $quizs = quiz::orderBy('id', 'desc')->paginate(10);
+            $importQuizs = quiz::orderBy('id', 'desc')->get(['id', 'title']);
         } elseif (auth()->user()->hasRole('admin')) {
-            $quizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get();
+            $quizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->paginate(10);
+            $importQuizs = quiz::where('agn', auth()->user()->agency)->orderBy('id', 'desc')->get(['id', 'title']);
         } else {
-            $quizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get();
+            $quizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->paginate(10);
+            $importQuizs = quiz::where('create_by', auth()->user()->id)->orderBy('id', 'desc')->get(['id', 'title']);
         }
 
-        Log::channel('activity')->info('User '. $request->user()->name .' visited allquizzes',
-        [
-            'user' => $request->user(),
-        ]);
         if ($request->user()->hasPermissionTo('quiz')) {
-            return view("page.quizzes.allquizzes", compact("quizs"));
+            return view("page.quizzes.allquizzes", compact("quizs", "importQuizs"));
         } else {
             return redirect('/');
         }
@@ -69,7 +68,12 @@ class QuizController extends Controller
     }
 
     public function quizDetail(Request $request, $id) {
-        $questions = question::where("quiz", $id)->get();
+        $searchText = $request->search ?? '';
+        if ($request->search ?? false) {
+            $questions = question::where("quiz", $id)->where('title', 'LIKE', "%" . $request->search . "%")->orderBy('order', 'asc')->paginate(20);
+        } else {
+            $questions = question::where("quiz", $id)->orderBy('order', 'asc')->paginate(20);
+        }
         $quiz = quiz::find($id);
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited quiz detail',
@@ -77,7 +81,7 @@ class QuizController extends Controller
             'user' => $request->user(),
             'quiz' => $quiz,
         ]);
-        return view("page.quizzes.quiz_detail", compact("id", "questions", 'quiz'));
+        return view("page.quizzes.quiz_detail", compact("id", "questions", 'quiz', 'searchText'));
     }
 
     public function store(Request $request) {
@@ -178,8 +182,11 @@ class QuizController extends Controller
 
     public function storeQuestion(Request $request, $id) {
         try {
+            $lastQuest = question::where('quiz', $id)->orderBy('id', 'desc')->first();
+
             $question = new question;
             $question->quiz = $id;
+            $question->order = $lastQuest ? $lastQuest->order + 1 : 1;
             $question->title = $request->title;
             $question->score = $request->score;
             $question->shuffle_ch = $request->shuffle ?? false;
@@ -209,6 +216,20 @@ class QuizController extends Controller
             $question->answer = json_encode( $choices );
             $question->type = $request->ansType;  // type 1 = choice , type 0 = text
             $question->agn = auth()->user()->agency;
+
+            $store_audio = [];
+            if ($request->audios) {
+                foreach ($request->audios as $audio) {
+                    if ($audio) {
+                        $store_audio[] = $audio;
+                    }
+                }
+            }
+
+            if (count($store_audio) > 0) {
+                $question->audio = json_encode($store_audio);
+            }
+
             $question->save();
 
             Activitylog::create([
@@ -257,6 +278,18 @@ class QuizController extends Controller
                     'text'=> '',
                     'answer'=> $request->writing,
                 ];
+            }
+
+            $store_audio = [];
+            if ($request->audios) {
+                foreach ($request->audios as $audio) {
+                    if ($audio) {
+                        $store_audio[] = $audio;
+                    }
+                }
+            }
+            if (count($store_audio) > 0) {
+                $question->audio = json_encode($store_audio);
             }
 
             $question->answer = json_encode( $choices );
@@ -316,5 +349,79 @@ class QuizController extends Controller
         }
 
         return response()->json(['success' => $copyQuiz]);
+    }
+
+    public function importQues(Request $request, $qid) {
+        $datas = $request->all();
+        array_shift($datas);
+        foreach ($datas as $data) {
+            $quiz = quiz::find($data[0]);
+            $quest_num = question::where('quiz', $quiz->id)->count();
+            if ($data[1] > $quest_num) {
+                return redirect()->back()->with('error','The number of questions is greater than the number of questions in the quiz.');
+            }
+            if ($qid !== $data[0]) {
+                if ($data[2] ?? false) {
+                    $questions = Question::where('quiz', $data[0])->inRandomOrder()->limit($data[1])->get();
+                } else {
+                    $questions = Question::where('quiz', $data[0])->limit($data[1])->get();
+                }
+
+                // duplicate questions
+                if ($questions) {
+                    foreach ($questions as $question) {
+                        $copyQues = $question->replicate()->fill([
+                            'quiz' => $qid
+                        ]);
+                        $copyQues->save();
+                    }
+                }
+            }
+        }
+        return redirect()->back()->with('success','Questions has been imported.');
+    }
+
+    public function importQuestion($id) {
+        $quiz = quiz::find($id);
+        return view("page.quizzes.quest_import", compact("id", "quiz"));
+    }
+
+    public function importQuesFile(Request $request, $id) {
+        // number | question | choice1 | choice2 | choice3 | choice4 | answer | audio_link_quest | audio_link1 | audio_link2 | audio_link3 | audio_link4
+        $questions = json_decode($request->questions, associative: true) ?? [];
+        $success_count = 0;
+        foreach ($questions ?? [] as $questData) {
+            if ((count($questData ?? []) >= 7)) {
+                $newQuest = new question;
+                $newQuest->quiz = $id;
+                $newQuest->shuffle_ch = 0;
+                $newQuest->score = 1;
+                $newQuest->type = 1; // type 1 = choice , type 0 = text
+                $newQuest->agn = auth()->user()->agency;
+
+                $choices = [];
+
+                for ($i=1; $i <= 4; $i++) {
+                    $choiceText = preg_replace('/^[A-D]\./', '', $questData[$i + 1]);
+                    $choices[] = [
+                        'id'=> $i,
+                        'type'=> 'choice',
+                        'text'=> trim($choiceText),
+                        'answer'=> $i == $questData[6] ? 1 : 0,
+                    ];
+                }
+                // need assign
+                $newQuest->title = "<p>" . $questData[1] . "</p>";
+                $newQuest->answer = json_encode( $choices );
+                $newQuest->order = $questData[0];
+                if (count($questData) == 12) {
+                    $newQuest->audio = json_encode(array_slice($questData, 7));
+                }
+                $newQuest->save();
+                $success_count++;
+            }
+        }
+
+        return response()->json(['success' => $success_count ], 200);
     }
 }
