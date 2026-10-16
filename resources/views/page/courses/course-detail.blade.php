@@ -1019,9 +1019,8 @@
                 showCancelButton: true,
                 confirmButtonText: 'Start',
             }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href =
-                        `/test/start/${cid}/${qid}/${quesNum}`; // Replace 'startQuiz' with your route name
+                if (result.isConfirmed && quesNum > 0) {
+                    window.location.href = `/test/start/${cid}/${qid}/${quesNum}`; // Replace 'startQuiz' with your route name
                 }
             });
         });

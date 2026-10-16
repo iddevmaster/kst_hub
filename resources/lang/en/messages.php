@@ -105,6 +105,7 @@ return [
     'please' => "Please",
     'itrs' => 'in top right to get all lesson',
     'lang' => 'Language',
+    'min' => "min",
 
     //Request
     'Request All' => 'Request All',
