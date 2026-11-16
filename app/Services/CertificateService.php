@@ -113,23 +113,125 @@ class CertificateService
     /** Issue certificates for every passing test of an agency that doesn't have one yet. */
     public function backfill(?string $agn): array
     {
-        $issued = 0;
-        $skipped = 0;
-        $q = Test::query()->orderBy('id');
-        if ($agn) {
-            $q->where('agn', $agn);
+        @set_time_limit(0);
+        @ini_set('memory_limit', '512M');
+
+        // Existing certificates: never touched by a backfill.
+        $existing = [];
+        foreach (DB::table('certificates')->select('user_id', 'course_id')->cursor() as $r) {
+            $existing[$r->user_id . ':' . $r->course_id] = true;
         }
-        $q->chunkById(200, function ($tests) use (&$issued, &$skipped) {
-            foreach ($tests as $test) {
-                $before = Certificate::count();
-                $cert = $this->issueForTest($test);
-                if ($cert && Certificate::count() > $before) {
-                    $issued++;
-                } else {
-                    $skipped++;
+
+        $quizCourse = [];      // quiz id => first course id (for old tests without course_id)
+        foreach (DB::table('course_has_quizzes')->orderBy('id')->get(['quiz_id', 'course_id']) as $r) {
+            $quizCourse[$r->quiz_id] ??= $r->course_id;
+        }
+        $courses = [];         // course id => course|null
+        $tplCache = [];        // "courseId:userAgency" => template|null
+        $users = [];           // user id => User|null
+
+        $skipped = 0;
+        $pending = [];         // "user:course" => best attempt so far (+ date of the first pass)
+
+        // Passing attempts only, decided in SQL; a removed quiz or test never qualifies.
+        $q = DB::table('tests')
+            ->join('quizzes', 'quizzes.id', '=', 'tests.quiz')
+            ->whereNull('tests.deleted_at')->whereNull('quizzes.deleted_at')
+            ->whereRaw('tests.score >= tests.totalScore * quizzes.pass_score / 100')
+            ->select('tests.id', 'tests.quiz', 'tests.tester', 'tests.course_id', 'tests.score',
+                'tests.totalScore', 'tests.end', 'quizzes.title as quiz_title');
+        if ($agn) {
+            $q->where('tests.agn', $agn);
+        }
+
+        $q->chunkById(1000, function ($rows) use (&$existing, &$pending, &$skipped, &$users, &$courses, &$tplCache, $quizCourse) {
+            // One query for this chunk's users instead of one per row.
+            $need = $rows->pluck('tester')->unique()->diff(array_keys($users))->all();
+            if ($need) {
+                foreach (User::with('agnName')->whereIn('id', $need)->get() as $u) {
+                    $users[$u->id] = $u;
+                }
+                foreach ($need as $id) {
+                    $users[$id] ??= null;
                 }
             }
-        });
+
+            foreach ($rows as $t) {
+                $cid = $t->course_id ?: ($quizCourse[$t->quiz] ?? null);
+                $user = $users[$t->tester] ?? null;
+                if (!$cid || !$user) { $skipped++; continue; }
+
+                $key = $user->id . ':' . $cid;
+                if (isset($existing[$key])) { $skipped++; continue; }
+
+                if (!array_key_exists($cid, $courses)) {
+                    $courses[$cid] = course::find($cid);
+                }
+                $course = $courses[$cid];
+                if (!$course) { $skipped++; continue; }
+
+                $tk = $cid . ':' . $user->agency;
+                if (!array_key_exists($tk, $tplCache)) {
+                    $tplCache[$tk] = $this->findTemplate($course, $user);
+                }
+                $tpl = $tplCache[$tk];
+                if (!$tpl) { $skipped++; continue; }
+
+                $percent = $t->totalScore > 0 ? round($t->score / $t->totalScore * 100, 2) : 0;
+                $cur = $pending[$key] ?? null;
+                if (!$cur) {
+                    $pending[$key] = [
+                        'user' => $user, 'course' => $course, 'tpl' => $tpl, 'percent' => $percent, 'row' => $t,
+                        'issued_at' => $t->end ? Carbon::parse($t->end) : now(),
+                    ];
+                } elseif ($percent > $cur['percent']) {
+                    $pending[$key]['percent'] = $percent;   // keep first-pass date, upgrade score
+                    $pending[$key]['row'] = $t;
+                }
+            }
+        }, 'tests.id', 'id');
+
+        // Cert numbers: read the last sequence once per prefix, then count up in memory.
+        $seq = [];
+        $now = now();
+        $issued = 0;
+        foreach (array_chunk($pending, 500, true) as $batch) {
+            $insert = [];
+            foreach ($batch as $p) {
+                $agnOf = $p['course']->agn ?: $p['user']->agency;
+                $prefix = sprintf('SH-%s-%s-', $agnOf, $p['issued_at']->format('y'));
+                if (!isset($seq[$prefix])) {
+                    $last = DB::table('certificates')->where('cert_no', 'like', $prefix . '%')->max('cert_no');
+                    $seq[$prefix] = $last ? (int) substr($last, strlen($prefix)) : 0;
+                }
+                $seq[$prefix]++;
+                $t = $p['row'];
+                $insert[] = [
+                    'cert_no' => $prefix . str_pad($seq[$prefix], 5, '0', STR_PAD_LEFT),
+                    'user_id' => $p['user']->id,
+                    'course_id' => $p['course']->id,
+                    'quiz_id' => $t->quiz,
+                    'test_id' => $t->id,
+                    'template_id' => $p['tpl']->id,
+                    'score' => $t->score,
+                    'total_score' => $t->totalScore,
+                    'percent' => $p['percent'],
+                    'issued_at' => $p['issued_at'],
+                    'snapshot' => json_encode([
+                        'name' => $p['user']->name,
+                        'course' => $p['course']->title,
+                        'quiz' => $t->quiz_title,
+                        'agency' => optional($p['user']->agnName)->name,
+                    ]),
+                    'agn' => $agnOf,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+            // insertOrIgnore: a concurrent issue of the same user+course just wins, no crash.
+            $issued += DB::table('certificates')->insertOrIgnore($insert);
+        }
+
         return compact('issued', 'skipped');
     }
 
