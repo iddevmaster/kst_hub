@@ -32,7 +32,7 @@
                     </div>
                     <div class="card p-2 rounded-xl flex flex-row bg-gradient-to-br from-pink-400 via-pink-500 to-pink-600 border-0 text-white shadow">
                         <div class="flex justify-center items-center px-2">
-                            @if ($scores >= ($totalScore * $quiz->pass_score / 100))
+                            @if ($quiz->passes($scores, $totalScore))
                                 <svg class="w-8 h-8 text-white " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
                                 </svg>
@@ -44,10 +44,19 @@
                         </div>
                         <div class="px-2">
                             <p class="text-xs">{{ __('messages.result') }}</p>
-                            <p class="text-3xl font-bold">{{ $scores >= ($totalScore * $quiz->pass_score / 100) ? __('messages.pass') : __('messages.fail') }}</p>
+                            <p class="text-3xl font-bold">{{ $quiz->passes($scores, $totalScore) ? __('messages.pass') : __('messages.fail') }}</p>
                         </div>
                     </div>
                 </div>
+
+                @if (!empty($certificate) && $quiz->passes($scores, $totalScore))
+                    <div class="card p-3 mb-2 bg-green-50 border border-green-300 flex flex-row items-center justify-between gap-2 flex-wrap">
+                        <p class="m-0 text-green-800 font-semibold"><i class="bi bi-award"></i> {{ __('messages.cert_earned') }} ({{ $certificate->cert_no }})</p>
+                        <a href="{{ route('certificate.download', $certificate->id) }}" target="_blank" class="text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                            <i class="bi bi-download"></i> {{ __('messages.cert_download') }}
+                        </a>
+                    </div>
+                @endif
 
                 <div class="card p-2 mb-2 bg-gray-100 border-0">
                     <div class="mb-2">

@@ -48,6 +48,14 @@
                             <x-dropdown-link :href="route('courses-enrolled')">
                                 {{ __('messages.cenrolled') }}
                             </x-dropdown-link>
+                            <x-dropdown-link :href="route('certificates.mine')">
+                                {{ __('messages.my_certificates') }}
+                            </x-dropdown-link>
+                            @if (auth()->user()->can('quiz') || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
+                                <x-dropdown-link :href="route('certificates.templates')">
+                                    {{ __('messages.cert_templates') }}
+                                </x-dropdown-link>
+                            @endif
                         </x-slot>
                     </x-dropdown>
                     @can('quiz')

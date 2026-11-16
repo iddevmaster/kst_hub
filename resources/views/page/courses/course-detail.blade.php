@@ -966,6 +966,12 @@
                 <p>คะแนนที่ผ่าน: ${qpass}%</p>
                 <p class="mb-2">จำนวนข้อ: ${quesNum}</p>
                 <hr>
+                @php
+                    $myCert = \App\Models\Certificate::where('user_id', auth()->id())->where('course_id', $course->id)->whereNull('revoked_at')->first();
+                @endphp
+                @if ($myCert)
+                    <p class="my-2"><a href="{{ route('certificate.download', $myCert->id) }}" target="_blank" class="text-green-700 font-bold"><i class="bi bi-award-fill"></i> {{ __('messages.cert_download') }} ({{ $myCert->cert_no }})</a></p>
+                @endif
                 <p class="my-2">ประวัติการทดสอบ</p>
                 <div class="relative h-40 overflow-x-auto overflow-y-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
@@ -1001,7 +1007,7 @@
                                         {{ $test->score }}/{{ $test->totalScore }}
                                     </td>
                                     <td class="px-3 py-2">
-                                        @if ($test->score >= ($test->totalScore * (optional($test->getQuiz)->pass_score ?? 0)) / 100)
+                                        @if ($test->isPassed())
                                             <p class="text-green-500">{{ __('messages.pass') }}</p>
                                         @else
                                             <p class="text-red-500">{{ __('messages.fail') }}</p>

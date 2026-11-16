@@ -11,6 +11,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ReqController;
 use App\Http\Controllers\SSOController;
+use App\Http\Controllers\CertificateTemplateController;
+use App\Http\Controllers\MyCertificateController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -143,6 +145,20 @@ Route::middleware(['auth', 'maintenance.gate'])->group(function () {
     Route::get('/quiz/copy/{id}', [QuizController::class, 'copyQuiz'])->name('quiz.copy');
     Route::post('/quiz/import-question/{qid}', [QuizController::class, 'importQues'])->name('quiz.importques');
     Route::post('/quiz/{id}/file/import', [QuizController::class, 'importQuesFile'])->name('quiz.quest.importfile');
+
+    // certificates
+    Route::get('/certificates', [MyCertificateController::class, 'index'])->name('certificates.mine');
+    Route::get('/certificate/{id}/download', [MyCertificateController::class, 'download'])->name('certificate.download');
+    Route::get('/certificates/templates', [CertificateTemplateController::class, 'index'])->name('certificates.templates');
+    Route::get('/certificates/templates/create', [CertificateTemplateController::class, 'create'])->name('certificates.templates.create');
+    Route::post('/certificates/templates', [CertificateTemplateController::class, 'store'])->name('certificates.templates.store');
+    Route::get('/certificates/templates/{id}/edit', [CertificateTemplateController::class, 'edit'])->name('certificates.templates.edit');
+    Route::post('/certificates/templates/{id}/update', [CertificateTemplateController::class, 'update'])->name('certificates.templates.update');
+    Route::post('/certificates/templates/{id}/delete', [CertificateTemplateController::class, 'destroy'])->name('certificates.templates.delete');
+    Route::get('/certificates/templates/{id}/preview', [CertificateTemplateController::class, 'preview'])->name('certificates.templates.preview');
+    Route::get('/certificates/manage', [CertificateTemplateController::class, 'manage'])->name('certificates.manage');
+    Route::post('/certificates/manage/backfill', [CertificateTemplateController::class, 'backfill'])->name('certificates.backfill');
+    Route::post('/certificates/manage/{id}/revoke', [CertificateTemplateController::class, 'toggleRevoke'])->name('certificates.revoke');
 
     // request
     Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');

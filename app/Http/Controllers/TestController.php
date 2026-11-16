@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use App\Models\quiz;
 use Illuminate\Support\Facades\Log;
 use App\Models\Activitylog;
+use App\Models\Certificate;
+use App\Services\CertificateService;
 
 class TestController extends Controller
 {
@@ -33,7 +35,8 @@ class TestController extends Controller
             'course' => $cid,
             '$quiz' => $quiz
         ]);
-        return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
+        $certificate = Certificate::where('user_id', auth()->id())->where('course_id', $cid)->whereNull('revoked_at')->first();
+        return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid', 'certificate'));
     }
 
     public function testHistory ($cid, $testid) {
@@ -51,7 +54,8 @@ class TestController extends Controller
         //  clear session -> session()->forget('scores');
         $quiz = quiz::find($quizId);
 
-        return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid'));
+        $certificate = Certificate::where('user_id', auth()->id())->where('course_id', $cid)->whereNull('revoked_at')->first();
+        return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid', 'certificate'));
     }
 
     public function finishTest(Request $request) {
@@ -88,6 +92,13 @@ class TestController extends Controller
             'agn' => auth()->user()->agency,
             'course_id' => $testResults['courseId'],
         ]);
+
+        // Issue a certificate when the attempt passes; never let this break the test flow.
+        try {
+            app(CertificateService::class)->issueForTest($test);
+        } catch (\Throwable $e) {
+            Log::error('Certificate issue failed for test ' . $test->id . ': ' . $e->getMessage());
+        }
 
         session([
             'scores' => $scores,

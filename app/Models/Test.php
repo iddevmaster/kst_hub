@@ -27,6 +27,13 @@ class Test extends Model
         return json_decode($value, true);
     }
 
+    /** Pass/fail by the quiz's pass_score (a removed quiz is treated as pass_score 0, as before). */
+    public function isPassed(): bool
+    {
+        $quiz = $this->getQuiz;
+        return $quiz ? $quiz->passes($this->score, $this->totalScore) : true;
+    }
+
     public function getCourse()
     {
         return $this->belongsTo(course::class, 'course_id');

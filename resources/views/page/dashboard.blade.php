@@ -13,8 +13,7 @@
                 $totaltest = count($tests ?? []);
                 $passtest = 0;
                 foreach ($tests as $key => $test) {
-                    $passScore = ($test->totalScore) * (optional($test->getQuiz)->pass_score) / 100;
-                    if ($test->score >= $passScore) {
+                    if ($test->isPassed()) {
                         $passtest++;
                     }
                 }

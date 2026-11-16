@@ -208,4 +208,13 @@ return [
     'quiz_removed' => 'this quiz has been removed',
     'quiz_not_found' => 'Quiz not found, it may have been removed.',
     'quiz_no_question' => 'This quiz has no question yet.',
+
+    // Certificates
+    'certificates' => 'Certificates',
+    'my_certificates' => 'My certificates',
+    'cert_templates' => 'Certificate templates',
+    'cert_issued' => 'Issued certificates',
+    'cert_earned' => 'You have earned a certificate for this course.',
+    'cert_download' => 'Download certificate',
+    'cert_none' => 'No certificates yet - pass a quiz of a course that offers a certificate to earn one.',
 ];

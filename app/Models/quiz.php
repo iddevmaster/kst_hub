@@ -21,6 +21,12 @@ class quiz extends Model
         "agn"
     ];
 
+    /** Single source of truth for the pass/fail rule. */
+    public function passes($score, $totalScore): bool
+    {
+        return $score >= ($totalScore * ($this->pass_score ?? 0) / 100);
+    }
+
     public function getCreated() {
         return $this->belongsTo(User::class, 'create_by');
     }
