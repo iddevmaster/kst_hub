@@ -123,7 +123,7 @@ class CertificateService
         }
 
         $quizCourse = [];      // quiz id => first course id (for old tests without course_id)
-        foreach (DB::table('course_has_quizzes')->orderBy('id')->get(['quiz_id', 'course_id']) as $r) {
+        foreach (DB::table('course_has_quizzes')->orderBy('course_id')->get(['quiz_id', 'course_id']) as $r) {
             $quizCourse[$r->quiz_id] ??= $r->course_id;
         }
         $courses = [];         // course id => course|null
