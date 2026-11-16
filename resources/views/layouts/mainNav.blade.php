@@ -52,8 +52,8 @@
                                 {{ __('messages.my_certificates') }}
                             </x-dropdown-link>
                             @if (auth()->user()->can('quiz') || auth()->user()->hasAnyRole(['admin', 'superAdmin']))
-                                <x-dropdown-link :href="route('certificates.templates')">
-                                    {{ __('messages.cert_templates') }}
+                                <x-dropdown-link :href="route('certificates.manage')">
+                                    {{ __('messages.cert_manage') }}
                                 </x-dropdown-link>
                             @endif
                         </x-slot>

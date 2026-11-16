@@ -213,6 +213,7 @@ return [
     'certificates' => 'ใบรับรอง',
     'my_certificates' => 'ใบรับรองของฉัน',
     'cert_templates' => 'จัดการแบบใบรับรอง',
+    'cert_manage' => 'จัดการใบรับรอง',
     'cert_issued' => 'ใบรับรองที่ออกแล้ว',
     'cert_earned' => 'คุณได้รับใบรับรองสำหรับหลักสูตรนี้แล้ว',
     'cert_download' => 'ดาวน์โหลดใบรับรอง',

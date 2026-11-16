@@ -213,6 +213,7 @@ return [
     'certificates' => 'Certificates',
     'my_certificates' => 'My certificates',
     'cert_templates' => 'Certificate templates',
+    'cert_manage' => 'Manage certificates',
     'cert_issued' => 'Issued certificates',
     'cert_earned' => 'You have earned a certificate for this course.',
     'cert_download' => 'Download certificate',
