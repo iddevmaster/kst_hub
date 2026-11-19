@@ -81,7 +81,7 @@ class CourseController extends Controller
     public function searchEn(Request $request)
     {
         $search = $request->get('search');
-        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
+        $course_list = user_has_course::ofUserSchool($request->user())->get(['course_id']);
 
         if ($search !== '!all!') {
             // search in title
@@ -375,7 +375,7 @@ class CourseController extends Controller
 
     public function enroll(Request $request, $cid) {
         try {
-            if (!user_has_course::where('user_id', $request->user()->id)->where('course_id', $cid)->exists()) {
+            if (!user_has_course::ofUserSchool($request->user())->where('course_id', $cid)->exists()) {
                 user_has_course::create([
                     'user_id' => $request->user()->id,
                     'course_id' => $cid
@@ -440,7 +440,7 @@ class CourseController extends Controller
 
     public function searchMy(Request $request)
     {
-        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
+        $course_list = user_has_course::ofUserSchool($request->user())->get(['course_id']);
         // Retrieve the search keyword and department filters from the request
         $search = $request->input('search');
         if (!($request->input('departments'))) {

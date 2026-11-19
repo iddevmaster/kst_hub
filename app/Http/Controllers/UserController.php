@@ -72,7 +72,7 @@ class UserController extends Controller
             $user->assignRole($request->role);
 
             foreach ($request->courses ?? [] as $cid) {
-                if (!user_has_course::where('user_id', $user->id)->where('course_id', $cid)->exists()) {
+                if (!user_has_course::ofUserSchool($user)->where('course_id', $cid)->exists()) {
                     user_has_course::create([
                         'user_id' => $user->id,
                         'course_id' => $cid
@@ -233,8 +233,9 @@ class UserController extends Controller
 
     public function addCourse(Request $request) {
         try {
+            $target = User::findOrFail($request->uid);
             foreach ($request->courses ?? [] as $cid) {
-                if (!user_has_course::where('user_id', $request->uid)->where('course_id', $cid)->exists()) {
+                if (!user_has_course::ofUserSchool($target)->where('course_id', $cid)->exists()) {
                     user_has_course::create([
                         'user_id' => $request->uid,
                         'course_id' => $cid
@@ -250,7 +251,7 @@ class UserController extends Controller
 
     public function removeCourse(Request $request) {
         try {
-            user_has_course::where('user_id', $request->uid)->where('course_id', $request->cid)->delete();
+            user_has_course::ofUserSchool(User::findOrFail($request->uid))->where('course_id', $request->cid)->delete();
 
             return response()->json(['success' => $request->all() ]);
         } catch (\Throwable $th) {
@@ -265,9 +266,9 @@ class UserController extends Controller
             $userId = $request->user()->id;
 
             // Check if the progress already exists
-            $progressExists = progress::where('course_id', $cid)
+            $progressExists = progress::ofUserSchool($request->user())
+                                      ->where('course_id', $cid)
                                       ->where('lesson_id', $lessid)
-                                      ->where('user_id', $userId)
                                       ->exists();
 
             if (!$progressExists) {
@@ -296,8 +297,9 @@ class UserController extends Controller
             }
 
             $courses = course_has_group::whereIn('group_id', $request->groups)->get(['course_id']);
+            $target = User::findOrFail($request->uid);
             foreach ($courses as $course) {
-                if (!user_has_course::where('user_id', $request->uid)->where('course_id', $course->course_id)->exists()) {
+                if (!user_has_course::ofUserSchool($target)->where('course_id', $course->course_id)->exists()) {
                     user_has_course::create([
                         'user_id' => $request->uid,
                         'course_id' => $course->course_id

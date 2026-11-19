@@ -56,7 +56,7 @@
                     <div class="owl-carousel">
                         @foreach ($mycourses as $course)
                             @php
-                                $prog_finish = App\Models\progress::where('user_id', auth()->user()->id)
+                                $prog_finish = App\Models\progress::ofUserSchool(auth()->user())
                                     ->where('course_id', $course->id)
                                     ->count();
                                 $less_all = App\Models\lesson::where('course', $course->id)->count();

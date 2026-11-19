@@ -21,6 +21,7 @@
                     @foreach ($user_courses as $user_course)
                         @php
                             $prog_finish = App\Models\progress::where('user_id', $user_course->user_id)
+                                ->where('brn', $user_course->brn)
                                 ->where('course_id', $user_course->course_id)
                                 ->count();
                             $less_all = App\Models\lesson::where('course', $user_course->course_id)->count();

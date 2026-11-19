@@ -35,7 +35,8 @@ class TestController extends Controller
             'course' => $cid,
             '$quiz' => $quiz
         ]);
-        $certificate = Certificate::where('user_id', auth()->id())->where('course_id', $cid)->whereNull('revoked_at')->first();
+        $certificate = Certificate::where('user_id', auth()->id())->where('brn', (string) auth()->user()->brn)
+            ->where('course_id', $cid)->whereNull('revoked_at')->first();
         return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid', 'certificate'));
     }
 
@@ -54,7 +55,8 @@ class TestController extends Controller
         //  clear session -> session()->forget('scores');
         $quiz = quiz::find($quizId);
 
-        $certificate = Certificate::where('user_id', auth()->id())->where('course_id', $cid)->whereNull('revoked_at')->first();
+        $certificate = Certificate::where('user_id', auth()->id())->where('brn', (string) auth()->user()->brn)
+            ->where('course_id', $cid)->whereNull('revoked_at')->first();
         return view("page.quizzes.test_summary", compact('scores', 'quests', 'totalScore', 'timeUsege', 'quiz', 'answers', 'cid', 'certificate'));
     }
 

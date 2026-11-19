@@ -7,7 +7,7 @@
                 $course->teacher == Auth::user()->id ||
                     auth()->user()->hasAnyRole(['admin', 'superAdmin']))
                 <button class="badge btn btn-secondary" disabled>{{ __('messages.own') }}</button>
-            @elseif (App\Models\user_has_course::where('user_id', Auth::user()->id)->where('course_id', $course->id)->exists())
+            @elseif (App\Models\user_has_course::ofUserSchool(Auth::user())->where('course_id', $course->id)->exists())
                 <button class="badge btn btn-success" disabled>{{ __('messages.enrolled') }}</button>
             @else
                 <a href="{{ route('enroll', ['cid' => $course->id]) }}"><button class="badge btn"
@@ -23,7 +23,7 @@
                     <p class="ps-4" style="text-indent: 1.5em">{{ optional($course)->description ?? '-' }}</p>
                 </div>
 
-                @if (App\Models\user_has_course::where('user_id', Auth::user()->id)->where('course_id', $course->id)->exists() ||
+                @if (App\Models\user_has_course::ofUserSchool(Auth::user())->where('course_id', $course->id)->exists() ||
                         $course->teacher == Auth::user()->id ||
                         auth()->user()->hasAnyRole(['admin', 'superAdmin']))
                     @foreach ($lessons as $lesson)
@@ -967,7 +967,7 @@
                 <p class="mb-2">จำนวนข้อ: ${quesNum}</p>
                 <hr>
                 @php
-                    $myCert = \App\Models\Certificate::where('user_id', auth()->id())->where('course_id', $course->id)->whereNull('revoked_at')->first();
+                    $myCert = \App\Models\Certificate::where('user_id', auth()->id())->where('brn', (string) auth()->user()->brn)->where('course_id', $course->id)->whereNull('revoked_at')->first();
                 @endphp
                 @if ($myCert)
                     <p class="my-2"><a href="{{ route('certificate.download', $myCert->id) }}" target="_blank" class="text-green-700 font-bold"><i class="bi bi-award-fill"></i> {{ __('messages.cert_download') }} ({{ $myCert->cert_no }})</a></p>

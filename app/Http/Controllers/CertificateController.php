@@ -46,7 +46,7 @@ class CertificateController extends Controller
             if (is_null($user)) {
                 return response()->json(['message' => 'User id ' . $id . ' has not exist.'], 400);
             } else {
-                $course_list = user_has_course::where('user_id', $user->id)->get(['course_id']);
+                $course_list = user_has_course::ofUserSchool($user)->get(['course_id']);
                 $courses = course::whereIn("id", $course_list)->get();
                 $user_data = [
                     "id" => $user->id,
@@ -63,7 +63,7 @@ class CertificateController extends Controller
 
                     $test_data = [];
                     foreach ($quizzes as $quiz) {
-                        $test = Test::where('quiz', $quiz->id)->where('tester', $id)->orderByDesc('score')->first();
+                        $test = Test::ofUserSchool($user)->where('quiz', $quiz->id)->orderByDesc('score')->first();
                         $test_data[] = [
                             "quiz_name" => $quiz->title,
                             "test_score" => $test->score,

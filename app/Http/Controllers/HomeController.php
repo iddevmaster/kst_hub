@@ -58,7 +58,7 @@ class HomeController extends Controller
             $quiz['ques_num'] = $ques_num;
         }
 
-        $tested = Test::where('tester', $request->user()->id)->orderBy('id', 'desc')->get();
+        $tested = Test::ofUserSchool($request->user())->orderBy('id', 'desc')->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited course detail',
         [
@@ -129,7 +129,7 @@ class HomeController extends Controller
     public function main(Request $request) {
         $courses = course::where('agn', $request->user()->agency)->latest()->take(6)->get();
         $dpms = department::where('agency', $request->user()->agency)->get();
-        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
+        $course_list = user_has_course::ofUserSchool($request->user())->get(['course_id']);
         if ($request->user()->role == "new") {
             return redirect()->route('home');
         } else {
@@ -169,7 +169,7 @@ class HomeController extends Controller
     }
 
     public function courseEnrolled(Request $request) {
-        $course_list = user_has_course::where('user_id', $request->user()->id)->get(['course_id']);
+        $course_list = user_has_course::ofUserSchool($request->user())->get(['course_id']);
         $courses = course::whereIn("id", $course_list)->paginate(12);
 
         $dpms = department::all();
@@ -247,10 +247,10 @@ class HomeController extends Controller
         $permissions = Permission::all();
         $user = User::find($id);
 
-        $course_list = user_has_course::where('user_id', $user->id)->get(['course_id']);
+        $course_list = user_has_course::ofUserSchool($user)->get(['course_id']);
         $ucourse = course::whereIn("id", $course_list ?? [])->get();
 
-        $tests = Test::where('tester', $user->id)->orderBy('id', 'desc')->get();
+        $tests = Test::ofUserSchool($user)->orderBy('id', 'desc')->get();
         $ownCourse = course::where('teacher', $user->id)->orderBy('id', 'desc')->get();
 
         Log::channel('activity')->info('User '. $request->user()->name .' visited userDetail',

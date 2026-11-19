@@ -107,7 +107,7 @@
                                 <tbody class="text-start">
                                     @foreach ($ucourse as $course)
                                         @php
-                                            $prog_finish = App\Models\progress::where('user_id', $id)
+                                            $prog_finish = App\Models\progress::ofUserSchool($user)
                                                 ->where('course_id', $course->id)
                                                 ->count();
                                             $less_all = App\Models\lesson::where('course', $course->id)->count();
@@ -116,7 +116,7 @@
                                             } else {
                                                 $prog_avg = 0;
                                             }
-                                            $user_course = App\Models\user_has_course::where('user_id', $id)
+                                            $user_course = App\Models\user_has_course::ofUserSchool($user)
                                                 ->where('course_id', $course->id)
                                                 ->first();
                                         @endphp
