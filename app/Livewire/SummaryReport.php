@@ -74,11 +74,15 @@ class SummaryReport extends Component
         $this->filterData['type'] = $this->course_types[$this->formData['filter_type']];
         $this->filterData['quiz'] = $this->formData['filter_quiz'];
         $apiUrl = 'http://www.dsmsys.net/'. $this->formData['filter_brn'] . '/api/examlist/?date=' . $this->formData['filter_date'] . '&course_type_id=' . $this->formData['filter_type'];
+        $reportUser = (string) config('services.dsms_report.user');
+        $reportPass = (string) config('services.dsms_report.pass');
+        if ($reportUser === '' || $reportPass === '') {
+            session()->flash('error', 'DSMS report credentials are not configured.');
+            return;
+        }
         $this->is_loading = true;
         try {
-            $response = Http::withHeaders([
-                "Authorization" => "Basic YWRtaW50ejpRYkh2NGJxZA=="
-            ])->get($apiUrl);
+            $response = Http::withBasicAuth($reportUser, $reportPass)->get($apiUrl);
 
             if ($response->successful()) {
                 $testerList = $response->json();
@@ -89,7 +93,13 @@ class SummaryReport extends Component
             if ($testerList && count($testerList) > 0) {
                 $ids = collect($testerList)->pluck('std_id')->all();
                 foreach ($ids ?? [] as $username) {
-                    $find_user = User::where('username', $username)->first();
+                    $q = User::query();
+                    if (auth()->user()->role !== 'superAdmin') {
+                        $q->where('agency', auth()->user()->agency);
+                    }
+                    $find_user = $q->where(fn ($w) => $w->where('id_number', $username)
+                            ->orWhere(fn ($l) => $l->whereNull('id_number')->where('username', $username)))
+                        ->orderByRaw('id_number IS NULL')->first();
                     if ($find_user) {
                         $this->user_ids[] = $find_user->id;
                     } else {

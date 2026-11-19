@@ -18,10 +18,16 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call( function () {
+            $apiUser = (string) config('services.sso_legacy_api.user');
+            $apiPass = (string) config('services.sso_legacy_api.pass');
+            if ($apiUser === '' || $apiPass === '') {
+                echo "Skipped: SSO_LEGACY_API_USER / SSO_LEGACY_API_PASS are not configured.
+";
+                return;
+            }
+
             try {
-                $response = Http::withHeaders([
-                    "Authorization" => "Basic YWRtaW46aWRkcml2ZXNhZG1pbg=="
-                ])->get(config('auth.sso_host') . "/api/courses");
+                $response = Http::withBasicAuth($apiUser, $apiPass)->get(config('auth.sso_host') . "/api/courses");
 
                 // Check for successful response
                 if ($response->ok()) {

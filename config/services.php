@@ -31,6 +31,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sso_legacy_api' => [
+        'user' => env('SSO_LEGACY_API_USER'),
+        'pass' => env('SSO_LEGACY_API_PASS'),
+    ],
+
+    'dsms_report' => [
+        'user' => env('DSMS_REPORT_USER'),
+        'pass' => env('DSMS_REPORT_PASS'),
+    ],
+
     'sso_subscription' => [
         'host' => env('SSO_SUB_HOST'),
         'client_id' => env('SSO_SUB_CLIENT_ID'),
