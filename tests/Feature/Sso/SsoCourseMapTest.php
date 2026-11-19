@@ -60,4 +60,26 @@ class SsoCourseMapTest extends TestCase
         $admin->assignRole('superAdmin');
         $this->actingAs($admin)->get(route('sso.course-maps'))->assertOk()->assertSee('CAR');
     }
+
+    public function test_admin_of_other_agency_is_forbidden_and_sees_no_nav_link(): void
+    {
+        $this->withoutVite();
+        config(['services.sso_subscription.agency' => 'IDD0002']);
+        $sub = $this->makeAgency('IDD0002');
+        $other = $this->makeAgency('TZ0003');
+        $map = SsoCourseMap::create(['source' => 'subscription', 'code' => 'CAR']);
+
+        Role::create(['name' => 'admin']);
+        $foreign = $this->makeUser(['agency' => (string) $other->id]);
+        $foreign->assignRole('admin');
+        $this->actingAs($foreign)->get(route('sso.course-maps'))->assertForbidden();
+        $this->actingAs($foreign)->get(route('sso.roster'))->assertForbidden();
+        $this->actingAs($foreign)->post(route('sso.course-maps.update', $map->id), ['course_group_id' => null])->assertForbidden();
+
+        $own = $this->makeUser(['agency' => (string) $sub->id]);
+        $own->assignRole('admin');
+        $this->actingAs($own)->get(route('sso.course-maps'))->assertOk();
+        $this->actingAs($own)->get(route('sso.course-maps'))->assertSee(route('sso.roster'), false);
+        $this->actingAs($foreign)->get(route('main'))->assertDontSee(route('sso.roster'), false);
+    }
 }

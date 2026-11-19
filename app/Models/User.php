@@ -71,6 +71,19 @@ class User extends Authenticatable
         return $this->belongsTo(agency::class, 'agency');
     }
 
+    /** superAdmin, or admin of the subscription SSO's shared agency. */
+    public function canManageSubscriptionSso(): bool
+    {
+        if ($this->hasRole('superAdmin')) {
+            return true;
+        }
+        if (!$this->hasRole('admin')) {
+            return false;
+        }
+        $agencyId = agency::where('agn_id', config('services.sso_subscription.agency'))->value('id');
+        return $agencyId !== null && (string) $this->agency === (string) $agencyId;
+    }
+
     public function logoutFromSSOServer () {
         // Revoke tokens on the SSO this session came from; failures are silent, the session is cleared anyway.
         try {

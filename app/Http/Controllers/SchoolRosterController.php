@@ -15,7 +15,7 @@ class SchoolRosterController extends Controller
 {
     public function index(Request $request, SubscriptionRosterClient $client)
     {
-        abort_unless($request->user()->hasAnyRole(['admin', 'superAdmin']), 403);
+        abort_unless($request->user()->canManageSubscriptionSso(), 403);
         $agency = agency::where('agn_id', config('services.sso_subscription.agency'))->firstOrFail();
         $schools = branch::where('agency', $agency->id)->where('source', 'subscription')->orderBy('name')->get();
 

@@ -56,7 +56,7 @@
                                     {{ __('messages.cert_manage') }}
                                 </x-dropdown-link>
                             @endif
-                            @if (auth()->user()->hasAnyRole(['admin', 'superAdmin']))
+                            @if (auth()->user()->canManageSubscriptionSso())
                                 <x-dropdown-link :href="route('sso.course-maps')">
                                     {{ __('messages.sso_course_maps') }}
                                 </x-dropdown-link>

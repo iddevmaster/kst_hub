@@ -12,7 +12,7 @@ class SsoCourseMapController extends Controller
 {
     private function authorizeAdmin(): void
     {
-        abort_unless(auth()->user()->hasAnyRole(['admin', 'superAdmin']), 403);
+        abort_unless(auth()->user()->canManageSubscriptionSso(), 403);
     }
 
     private function subscriptionAgency(): agency
