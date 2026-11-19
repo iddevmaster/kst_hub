@@ -2,25 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\agency;
-use App\Models\branch;
-use App\Models\course_group;
-use App\Models\department;
 use App\Models\User;
-use App\Models\user_has_group;
+use App\Services\Sso\SsoLoginRejected;
+use App\Services\Sso\SsoUserProvisioner;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use InvalidArgumentException;
-use Spatie\Permission\Models\Role;
 
 class SSOController extends Controller
 {
     public function getLogin(Request $request) {
-        $request->session()->put("state", $state =  Str::random(40));
+        $request->session()->put("state", $state = Str::random(40));
         $query = http_build_query([
             "client_id" => config('auth.client_id'),
             "redirect_uri" => config('auth.callback'),
@@ -28,139 +22,67 @@ class SSOController extends Controller
             "scope" => config('auth.scopes'),
             "state" => $state,
         ]);
-        return redirect( config('auth.sso_host') . "/oauth/authorize?" . $query);
+        return redirect(config('auth.sso_host') . "/oauth/authorize?" . $query);
     }
 
     public function getCallback(Request $request) {
-        $state = $request->session()->pull("state");
+        $expected = (string) $request->session()->pull("state", '');
+        if ($expected === '' || !hash_equals($expected, (string) $request->query('state', ''))) {
+            return $this->fail();
+        }
+        $code = $request->query('code');
+        if (!is_string($code) || $code === '') {
+            return $this->fail();
+        }
 
-        // throw_unless(strlen($state) > 0 && $state == $request->state , InvalidArgumentException::class);
-
-        $response = Http::asForm()->post(
-            config('auth.sso_host') . "/oauth/token",
-            [
-                "grant_type" => "authorization_code",
-                "client_id" => config('auth.client_id'),
-                "client_secret" => config('auth.client_secret'),
-                "redirect_uri" => config('auth.callback'),
-                "code" => $request->code
-            ]
-        );
-        $request->session()->put($response->json());
+        $response = Http::asForm()->acceptJson()->post(config('auth.sso_host') . "/oauth/token", [
+            "grant_type" => "authorization_code",
+            "client_id" => config('auth.client_id'),
+            "client_secret" => config('auth.client_secret'),
+            "redirect_uri" => config('auth.callback'),
+            "code" => $code,
+        ]);
+        $access = $response->json('access_token');
+        if (!$response->successful() || !is_string($access) || $access === '') {
+            return $this->fail();
+        }
+        $request->session()->put('access_token', $access);
+        $request->session()->put('refresh_token', $response->json('refresh_token'));
+        $request->session()->put('sso', ['source' => 'idrives']);
         return redirect(route('sso.connect'));
     }
 
-    public function connectUser(Request $request) {
+    public function connectUser(Request $request, SsoUserProvisioner $provisioner) {
         try {
-            $access_token = $request->session()->get("access_token");
-            $response = Http::withHeaders([
-                "Accept" => "application/json",
-                "Authorization" => "Bearer " . $access_token
-            ])->get( config('auth.sso_host') . "/api/user");
+            $response = Http::acceptJson()->withToken((string) $request->session()->get("access_token"))
+                ->get(config('auth.sso_host') . "/api/user");
             $userArray = $response->json();
-
-            try {
-                $username = $userArray['username'];
-            } catch (\Throwable $th) {
-                return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get login information! Try again."));
+            if (!$response->successful() || !is_array($userArray) || !is_string($userArray['username'] ?? null)) {
+                return $this->fail();
             }
 
-            if ($userArray['role'] == 'staff') {
+            if (($userArray['role'] ?? null) === 'staff') {
+                // Shared staff account: known issue K4, out of scope for v1.
                 $user = User::where('username', 'iddriverstaff')->first();
-            } else {
-                $user = User::where('username', $username)->first();
                 if (!$user) {
-                    $user = new User;
-                    $user->name = $userArray['name'];
-                    $user->username = $username;
-                    $user->password = $username;
-
-                    $agn = agency::where('agn_id', $userArray['agency']['agn_id'])->first();
-                    if ($agn) {
-                        $user->agency = $agn->id;
-                    } else {
-                        $agn = agency::create(['name' => $userArray['agency']['name'], 'agn_id' => $userArray['agency']['agn_id']]);
-                        $user->agency = $agn->id;
-                    }
-                    $brn = branch::where('brn_id', $userArray['branch']['brn_id'])->first();
-                    if ($brn) {
-                        $user->brn = $brn->id;
-                    } else {
-                        $brn = new branch;
-                        $brn->name = $userArray['branch']['name'];
-                        $brn->brn_id = $userArray['branch']['brn_id'];
-                        $brn->agency = $agn->id;
-                        $brn->save();
-                        $user->brn = $brn->id;
-                    }
-
-                    $user->dpm = '';
-
-                    $user->role = $userArray['role'];
-                    if (!Role::where('name', $userArray['role'])->exists()) {
-                        Role::create(['name' => $userArray['role']]);
-                    }
-                    if (!$user->hasRole($userArray['role'])) {
-                        $user->assignRole($userArray['role']);
-                    }
-                } else {
-                    $agn = agency::where('agn_id', $userArray['agency']['agn_id'])->orWhere('name', $userArray['agency']['name'])->first();
-                    if ($agn) {
-                        $agn->update(['name' => $userArray['agency']['name'], 'agn_id' => $userArray['agency']['agn_id']]);
-                        $user->agency = $agn->id;
-                    } else {
-                        $agn = agency::create(['name' => $userArray['agency']['name'], 'agn_id' => $userArray['agency']['agn_id']]);
-                        $user->agency = $agn->id;
-                    }
-                    $brn = branch::where('brn_id', $userArray['branch']['brn_id'])->orWhere('name', $userArray['branch']['name'])->first();
-                    if ($brn) {
-                        $brn->update(['name' => $userArray['branch']['name'], 'brn_id' => $userArray['branch']['brn_id'], 'agency' => $agn->id]);
-                        $user->brn = $brn->id;
-                    } else {
-                        $brn = new branch;
-                        $brn->name = $userArray['branch']['name'];
-                        $brn->brn_id = $userArray['branch']['brn_id'];
-                        $brn->agency = $agn->id;
-                        $brn->save();
-                        $user->brn = $brn->id;
-                    }
-
+                    return $this->fail();
                 }
-
-                if ($userArray['courses'] && count($userArray['courses']) > 0) {
-                    # code...
-                    $course_g = course_group::where('code', $userArray['courses'][0]['course_type'])->first();
-                    if (!$course_g) {
-                        $course_g = course_group::create([
-                            "name" => $userArray['courses'][0]['name'],
-                            "agn" => $user->agency,
-                            "by" => "api:sso",
-                            "code" => $userArray['courses'][0]['course_type']
-                        ]);
-                    }
-                } else {
-                    return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode("Failed to get course information! Try again."));
-                }
-
-                $user->save();
-
-                $user_group = user_has_group::where('user_id', $user->id)->where('group_id', $course_g->id)->first();
-                if (!$user_group) {
-                    user_has_group::create([
-                        'user_id' => $user->id,
-                        'group_id' => $course_g->id
-                    ]);
-                }
-
-                $user_group = user_has_group::where('user_id', $user->id)->whereNot('group_id', $course_g->id)->delete();
+            } else {
+                $user = $provisioner->provisionIdrives($userArray);
             }
 
             Auth::login($user);
+            $request->session()->put('sso', ['source' => 'idrives']);
             return redirect(route('main'));
+        } catch (SsoLoginRejected $e) {
+            return $this->fail($e->getMessage());
         } catch (\Throwable $th) {
-            // show error
-            // return redirect('/')->with('error', 'Failed to connect to SSO Server!');
-            return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode($th->getMessage()));
+            Log::error('IDDrives SSO connect failed', ['exception' => get_class($th)]);
+            return $this->fail('Failed to connect to SSO Server!');
         }
+    }
+
+    private function fail(string $message = 'Failed to get login information! Try again.') {
+        return redirect(config('auth.sso_host') . '?login_sso_error=' . urlencode($message));
     }
 }
