@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('id_number', 32)->nullable()->after('username');
+            $table->string('id_number', 64)->nullable()->after('username');
             $table->string('sso_source', 20)->nullable()->after('id_number');
             $table->index(['id_number', 'agency'], 'users_id_number_agency_index');
         });
