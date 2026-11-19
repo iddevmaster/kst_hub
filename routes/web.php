@@ -71,7 +71,7 @@ Route::get('/public-login', function (\Illuminate\Http\Request $request) {
 //     phpinfo();
 // });
 
-Route::middleware(['auth', 'maintenance.gate'])->group(function () {
+Route::middleware(['auth', 'sso.subscription', 'maintenance.gate'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/icon', [ProfileController::class, 'updateIcon'])->name('icon.update');

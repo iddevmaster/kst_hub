@@ -21,5 +21,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+        \Livewire\Livewire::addPersistentMiddleware([
+            \App\Http\Middleware\EnsureSubscriptionSession::class,
+        ]);
     }
 }
