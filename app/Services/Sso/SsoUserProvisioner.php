@@ -135,7 +135,16 @@ class SsoUserProvisioner
         if (!User::where('username', $idNumber)->exists()) {
             return $idNumber;
         }
-        return $idNumber . '-' . ($agency->agn_id ?: $agency->id);
+        $base = $idNumber . '-' . ($agency->agn_id ?: $agency->id);
+        $candidate = $base;
+        for ($i = 2; $i <= 50 && User::where('username', $candidate)->exists(); $i++) {
+            $candidate = $base . '-' . $i;
+        }
+        if (User::where('username', $candidate)->exists()) {
+            // Deliberately no ID number in the message.
+            throw new \RuntimeException('Could not allocate a unique username');
+        }
+        return $candidate;
     }
 
     private function legacyAgency(string $agnId, string $name): agency

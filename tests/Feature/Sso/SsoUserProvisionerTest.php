@@ -142,4 +142,14 @@ class SsoUserProvisionerTest extends TestCase
         $profile['courses'] = [];
         $this->prov()->provisionIdrives($profile);
     }
+
+    public function test_username_dedup_appends_numeric_suffix_when_agency_candidate_is_taken(): void
+    {
+        $agency = $this->makeAgency('IDD0002');
+        $this->makeUser(['username' => '1000000000009']);
+        $this->makeUser(['username' => '1000000000009-IDD0002']);
+        $this->assertSame('1000000000009-IDD0002-2', $this->prov()->uniqueUsername('1000000000009', $agency));
+        $this->makeUser(['username' => '1000000000009-IDD0002-2']);
+        $this->assertSame('1000000000009-IDD0002-3', $this->prov()->uniqueUsername('1000000000009', $agency));
+    }
 }
