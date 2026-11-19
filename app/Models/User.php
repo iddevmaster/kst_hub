@@ -72,8 +72,13 @@ class User extends Authenticatable
     }
 
     public function logoutFromSSOServer () {
-        // Send a revoke tokens request to SSO Server
+        // Revoke tokens on the SSO this session came from; failures are silent, the session is cleared anyway.
         try {
+            $sso = session()->get('sso', []);
+            if (($sso['source'] ?? null) === 'subscription') {
+                app(\App\Services\Sso\SubscriptionSsoClient::class)->logout((string) ($sso['access_token'] ?? ''));
+                return;
+            }
             $access_token = session()->get("access_token");
             $response = Http::withHeaders([
                 "Accept" => "application/json",
