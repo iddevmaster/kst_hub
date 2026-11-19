@@ -70,4 +70,22 @@ class EnsureSubscriptionSessionTest extends TestCase
         $this->actingAs($this->makeUser())->withSession(['sso' => ['source' => 'idrives']])->get('/_test/ping')->assertOk();
         Http::assertNothingSent();
     }
+
+    public function test_denied_json_request_gets_401_with_message(): void
+    {
+        Http::fake(['sso.test/api/user' => Http::response(['error' => 'access_denied', 'message' => 'บัญชีของคุณถูกระงับ กรุณาติดต่อโรงเรียน'], 403)]);
+        $this->actingAs($this->makeUser())->withSession($this->ssoSession(120, 120))
+            ->getJson('/_test/ping')
+            ->assertUnauthorized()->assertJson(['message' => 'บัญชีของคุณถูกระงับ กรุณาติดต่อโรงเรียน']);
+        $this->assertGuest();
+    }
+
+    public function test_denied_livewire_request_is_not_redirected_by_middleware(): void
+    {
+        Http::fake(['sso.test/api/user' => Http::response(['error' => 'access_denied'], 403)]);
+        $this->actingAs($this->makeUser())->withSession($this->ssoSession(120, 120))
+            ->withHeader('X-Livewire', 'true')->getJson('/_test/ping')
+            ->assertUnauthorized();
+        $this->assertGuest();
+    }
 }

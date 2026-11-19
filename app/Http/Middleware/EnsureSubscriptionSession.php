@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Services\Sso\SubscriptionSsoClient;
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,6 +66,14 @@ class EnsureSubscriptionSession
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
+        // Livewire's persistent-middleware runner ignores a returned response and a 302 is
+        // misleading for XHR, so signal "unauthenticated" with an exception instead.
+        if ($request->hasHeader('X-Livewire') || $request->expectsJson()) {
+            $request->session()->flash('error', $message);
+            throw new AuthenticationException($message);
+        }
+
         return redirect()->route('loginpage')->with('error', $message);
     }
 }
