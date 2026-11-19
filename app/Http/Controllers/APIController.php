@@ -27,6 +27,11 @@ class APIController extends Controller
         ]);
         if (User::where('username', $request->username)->exists()) {
             $user = User::where('username', $request->username)->first();
+            // Only accounts this endpoint itself provisions may be logged in here;
+            // SSO identities (username = ID number) and staff accounts are refused.
+            if ($user->sso_source !== null || $user->role !== 'TSMCStudent') {
+                abort(403);
+            }
         } else {
             $tsmcadmin = User::where('username', 'tsmcschool')->first();
 
