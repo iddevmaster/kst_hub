@@ -31,7 +31,13 @@ trait BelongsToSchool
     public function scopeOfUserSchool(Builder $query, User $user): Builder
     {
         $table = $this->getTable();
-        return $query->where("{$table}.{$this->schoolUserColumn()}", (string) $user->id)
-            ->where("{$table}.brn", (string) $user->brn);
+        $query->where("{$table}.{$this->schoolUserColumn()}", (string) $user->id);
+
+        // Only SSO users are split per school; other accounts keep their whole history
+        // even when an admin moves them to another branch.
+        if (!empty($user->sso_source)) {
+            $query->where("{$table}.brn", (string) $user->brn);
+        }
+        return $query;
     }
 }

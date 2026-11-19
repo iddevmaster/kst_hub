@@ -14,7 +14,7 @@ class SchoolScopedHistoryTest extends TestCase
 
     public function test_enrolled_page_hides_previous_school_courses(): void
     {
-        $user = $this->makeUser(['brn' => '1']);
+        $user = $this->makeUser(['brn' => '1', 'sso_source' => 'subscription']);
         $a = $this->course('Course of A');
         $b = $this->course('Course of B');
         user_has_course::create(['user_id' => $user->id, 'course_id' => $a]);

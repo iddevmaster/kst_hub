@@ -25,13 +25,23 @@ class BelongsToSchoolTest extends TestCase
         $this->assertSame('9', $t->fresh()->brn);
     }
 
-    public function test_scope_returns_only_current_school(): void
+    public function test_scope_returns_only_current_school_for_sso_users(): void
     {
-        $user = $this->makeUser(['brn' => '1']);
+        $user = $this->makeUser(['brn' => '1', 'sso_source' => 'subscription']);
         progress::create(['user_id' => $user->id, 'course_id' => '1', 'lesson_id' => '1', 'agn' => '1']);
         $user->forceFill(['brn' => '2'])->save();
         progress::create(['user_id' => $user->id, 'course_id' => '1', 'lesson_id' => '2', 'agn' => '1']);
 
         $this->assertSame(['2'], progress::ofUserSchool($user)->pluck('lesson_id')->all());
+    }
+
+    public function test_scope_keeps_whole_history_for_non_sso_users(): void
+    {
+        $user = $this->makeUser(['brn' => '1', 'sso_source' => null]);
+        progress::create(['user_id' => $user->id, 'course_id' => '1', 'lesson_id' => '1', 'agn' => '1']);
+        $user->forceFill(['brn' => '2'])->save();
+        progress::create(['user_id' => $user->id, 'course_id' => '1', 'lesson_id' => '2', 'agn' => '1']);
+
+        $this->assertEqualsCanonicalizing(['1', '2'], progress::ofUserSchool($user)->pluck('lesson_id')->all());
     }
 }
