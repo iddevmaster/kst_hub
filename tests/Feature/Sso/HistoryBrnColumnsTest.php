@@ -58,6 +58,38 @@ class HistoryBrnColumnsTest extends TestCase
         DB::table('certificates')->insert($row('C-3', '2'));
     }
 
+    private function migration(): object
+    {
+        return require database_path('migrations/2026_11_20_000002_add_brn_to_history_tables.php');
+    }
+
+    public function test_migration_can_run_again_without_losing_data(): void
+    {
+        $user = $this->makeUser(['brn' => '5']);
+        $courseId = DB::table('courses')->insertGetId($this->courseRow());
+        DB::table('user_has_courses')->insert(['user_id' => $user->id, 'course_id' => $courseId, 'brn' => '5']);
+
+        $this->migration()->up();
+
+        $this->assertSame(1, DB::table('user_has_courses')->where('user_id', $user->id)->where('brn', '5')->count());
+        $this->assertTrue(Schema::hasColumn('certificates', 'brn'));
+        $this->assertFalse(Schema::hasTable('user_has_courses_new'));
+    }
+
+    public function test_migration_recovers_when_it_died_before_the_final_rename(): void
+    {
+        $user = $this->makeUser(['brn' => '5']);
+        $courseId = DB::table('courses')->insertGetId($this->courseRow());
+        DB::table('user_has_courses')->insert(['user_id' => $user->id, 'course_id' => $courseId, 'brn' => '5']);
+        Schema::rename('user_has_courses', 'user_has_courses_new');
+
+        $this->migration()->up();
+
+        $this->assertTrue(Schema::hasTable('user_has_courses'));
+        $this->assertFalse(Schema::hasTable('user_has_courses_new'));
+        $this->assertSame(1, DB::table('user_has_courses')->count());
+    }
+
     private function courseRow(): array
     {
         // Fill every NOT NULL column of `courses` without a default; adjust if the schema differs.
