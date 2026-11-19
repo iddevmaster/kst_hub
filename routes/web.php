@@ -12,6 +12,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ReqController;
 use App\Http\Controllers\SSOController;
+use App\Http\Controllers\SubscriptionSsoController;
 use App\Http\Controllers\CertificateTemplateController;
 use App\Http\Controllers\MyCertificateController;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,8 @@ Route::get('/', function () {
 Route::get("/sso/login", [SSOController::class, "getLogin"])->name('sso.login');
 Route::get("/auth/callback", [SSOController::class, "getCallback"])->name('sso.callback');
 Route::get("/sso/connect", [SSOController::class, "connectUser"])->name('sso.connect');
+Route::get('/sso/subscription/login', [SubscriptionSsoController::class, 'login'])->name('sso.sub.login');
+Route::get('/auth/callback/subscription', [SubscriptionSsoController::class, 'callback'])->name('sso.sub.callback');
 
 Route::get("/learn-from-tsmc/{courseId}", [APIController::class, "fromTsmc"]);
 Route::get("/learn-from-public", [APIController::class, "fromPublic"]);
