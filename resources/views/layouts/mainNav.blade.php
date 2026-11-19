@@ -60,6 +60,9 @@
                                 <x-dropdown-link :href="route('sso.course-maps')">
                                     {{ __('messages.sso_course_maps') }}
                                 </x-dropdown-link>
+                                <x-dropdown-link :href="route('sso.roster')">
+                                    {{ __('messages.sso_roster') }}
+                                </x-dropdown-link>
                             @endif
                         </x-slot>
                     </x-dropdown>

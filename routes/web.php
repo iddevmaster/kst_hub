@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\SsoCourseMapController;
+use App\Http\Controllers\SchoolRosterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ManageController;
@@ -150,6 +151,7 @@ Route::middleware(['auth', 'sso.subscription', 'maintenance.gate'])->group(funct
     // SSO course mapping
     Route::get('/sso/course-maps', [SsoCourseMapController::class, 'index'])->name('sso.course-maps');
     Route::post('/sso/course-maps/{id}', [SsoCourseMapController::class, 'update'])->name('sso.course-maps.update');
+    Route::get('/sso/roster', [SchoolRosterController::class, 'index'])->name('sso.roster');
 
     // request
     Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');

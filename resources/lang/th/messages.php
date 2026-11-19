@@ -226,4 +226,13 @@ return [
     'sso_group' => 'กลุ่มหลักสูตร',
     'sso_unmapped' => '— ยังไม่จับคู่ —',
     'sso_map_saved' => 'บันทึกแล้ว',
+    'sso_roster' => 'นักเรียนตามสาขาโรงเรียน',
+    'sso_pick_school' => '— เลือกโรงเรียน —',
+    'sso_pick_branch' => '— เลือกสาขา —',
+    'sso_id_number' => 'เลขบัตร',
+    'sso_status' => 'สถานะ',
+    'sso_active' => 'มีสิทธิ์เรียน',
+    'sso_inactive' => 'หมดสิทธิ์/ระงับ',
+    'sso_roster_empty' => 'ไม่พบนักเรียนที่เคยเข้า SmartHub ในสาขานี้',
+    'sso_roster_error' => 'ดึงรายชื่อจาก SSO ไม่สำเร็จ กรุณาลองใหม่',
 ];

@@ -226,4 +226,13 @@ return [
     'sso_group' => 'Course group',
     'sso_unmapped' => '— Not mapped —',
     'sso_map_saved' => 'Saved',
+    'sso_roster' => 'Students by School Branch',
+    'sso_pick_school' => '— Select school —',
+    'sso_pick_branch' => '— Select branch —',
+    'sso_id_number' => 'ID number',
+    'sso_status' => 'Status',
+    'sso_active' => 'Entitled',
+    'sso_inactive' => 'Expired/Suspended',
+    'sso_roster_empty' => 'No students who have signed in to SmartHub found in this branch',
+    'sso_roster_error' => 'Could not fetch the roster from SSO. Please try again.',
 ];
