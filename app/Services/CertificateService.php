@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\branch;
 use App\Models\Certificate;
 use App\Models\CertificateTemplate;
 use App\Models\course;
@@ -63,10 +64,12 @@ class CertificateService
         }
 
         $percent = $test->totalScore > 0 ? round($test->score / $test->totalScore * 100, 2) : 0;
+        // The school the test was taken in; the user may have moved since.
+        $brn = (string) ($test->brn ?? '') !== '' ? (string) $test->brn : (string) $user->brn;
 
-        return DB::transaction(function () use ($test, $quiz, $user, $course, $template, $percent) {
+        return DB::transaction(function () use ($test, $quiz, $user, $course, $template, $percent, $brn) {
             $cert = Certificate::where('user_id', $user->id)->where('course_id', $course->id)
-                ->where('brn', (string) $user->brn)->lockForUpdate()->first();
+                ->where('brn', $brn)->lockForUpdate()->first();
 
             if ($cert) {
                 // Keep the existing number/date; only upgrade when the new attempt scored higher.
@@ -96,10 +99,10 @@ class CertificateService
                     'course' => $course->title,
                     'quiz' => $quiz->title,
                     'agency' => optional($user->agnName)->name,
-                    'school' => optional($user->getBrn)->name,
+                    'school' => branch::find($brn)?->name,
                 ],
                 'agn' => $agn,
-                'brn' => (string) $user->brn,
+                'brn' => $brn,
             ]);
         });
     }

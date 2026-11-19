@@ -83,12 +83,35 @@ class CertificatePerSchoolTest extends TestCase
         $this->assertSame(2, Certificate::where('user_id', $user->id)->count());
     }
 
+    public function test_certificate_uses_the_school_the_test_was_taken_in_not_the_current_one(): void
+    {
+        $agency = $this->makeAgency('IDD0002');
+        $a = $this->makeBranch($agency, 'uuid-a', 'โรงเรียน A', 'subscription');
+        $b = $this->makeBranch($agency, 'uuid-b', 'โรงเรียน B', 'subscription');
+        $user = $this->makeUser(['agency' => (string) $agency->id, 'brn' => (string) $a->id]);
+
+        $course = new course(); $course->id = 10; $course->title = 'รถยนต์'; $course->agn = (string) $agency->id;
+        $tpl = new CertificateTemplate(); $tpl->id = 5;
+        $svc = Mockery::mock(CertificateService::class)->makePartial();
+        $svc->shouldReceive('courseForTest')->andReturn($course);
+        $svc->shouldReceive('findTemplate')->andReturn($tpl);
+
+        $test = $this->passedTest($user);              // taken in school A
+        $user->forceFill(['brn' => (string) $b->id])->save();   // user moved before the cert is issued
+        $cert = $svc->issueForTest($test);
+
+        $this->assertSame((string) $a->id, $cert->brn);
+        $this->assertSame('โรงเรียน A', $cert->snapshot['school']);
+    }
+
     private function passedTest($user): TestRecord
     {
         $test = Mockery::mock(TestRecord::class)->makePartial();
-        $test->forceFill(['id' => random_int(1, 99999), 'tester' => (string) $user->id, 'score' => 10, 'totalScore' => 10, 'end' => now()->format('Y-m-d H:i:s')]);
+        // brn is stamped from the user's school at creation time, like the BelongsToSchool trait does.
+        $test->forceFill(['id' => random_int(1, 99999), 'tester' => (string) $user->id, 'score' => 10, 'totalScore' => 10,
+            'brn' => (string) $user->brn, 'end' => now()->format('Y-m-d H:i:s')]);
         $test->shouldReceive('isPassed')->andReturn(true);
-        $test->shouldReceive('getAttribute')->with('getQuiz')->andReturn((object) ['id' => 1, 'title' => 'Quiz']);
+        $test->setRelation('getQuiz', (object) ['id' => 1, 'title' => 'Quiz']);
         return $test;
     }
 }
