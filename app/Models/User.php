@@ -31,6 +31,8 @@ class User extends Authenticatable
         'icon',
         'startlt',
         'course_group',
+        'id_number',
+        'sso_source',
     ];
 
     public function getCoursesAttribute($value)

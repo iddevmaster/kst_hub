@@ -13,6 +13,7 @@ class branch extends Model
         "name",
         "agency",
         "brn_id",
+        "source",
     ] ;
 
     public function agencyName() {
