@@ -31,4 +31,15 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sso_subscription' => [
+        'host' => env('SSO_SUB_HOST'),
+        'client_id' => env('SSO_SUB_CLIENT_ID'),
+        'client_secret' => env('SSO_SUB_CLIENT_SECRET'),
+        'callback' => env('SSO_SUB_CLIENT_CALLBACK'),
+        'scopes' => env('SSO_SUB_SCOPES', 'view-user'),
+        'agency' => env('SSO_SUB_AGENCY', 'IDD0002'),
+        'recheck_seconds' => (int) env('SSO_SUB_RECHECK_SECONDS', 60),
+        'outage_grace_seconds' => (int) env('SSO_SUB_OUTAGE_GRACE_SECONDS', 1800),
+    ],
+
 ];
