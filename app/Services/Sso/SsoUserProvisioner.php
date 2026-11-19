@@ -8,6 +8,7 @@ use App\Models\course_group;
 use App\Models\SsoCourseMap;
 use App\Models\User;
 use App\Models\user_has_group;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
@@ -27,19 +28,11 @@ class SsoUserProvisioner
             throw new \RuntimeException('Subscription agency is not configured.');
         }
 
-        return DB::transaction(function () use ($p, $school, $idNumber, $agency) {
-            $branch = branch::where('brn_id', (string) $school['id'])->first();
-            if (!$branch) {
-                $branch = branch::create([
-                    'name' => (string) ($school['name'] ?? $school['id']),
-                    'brn_id' => (string) $school['id'],
-                    'agency' => $agency->id,
-                    'source' => 'subscription',
-                ]);
-            } elseif (!empty($school['name']) && $branch->name !== $school['name']) {
-                $branch->update(['name' => $school['name']]);
-            }
+        // Outside the user transaction on purpose: the branch must be committed before the lock is
+        // released, otherwise a concurrent first login of the same school would not see it.
+        $branch = $this->subscriptionBranch($school, $agency);
 
+        return DB::transaction(function () use ($p, $idNumber, $agency, $branch) {
             $user = $this->findOrNewUser($idNumber, $agency, (string) ($p['name'] ?? ''), 'subscription');
             $isNew = !$user->exists;
             if ($isNew) {
@@ -53,6 +46,26 @@ class SsoUserProvisioner
 
             $this->setOnlyGroup($user, $this->mappedGroupId($p));
             return $user;
+        }, 3);
+    }
+
+    /** Find or create the school's branch; serialised per school (branches.brn_id has no unique index). */
+    private function subscriptionBranch(array $school, agency $agency): branch
+    {
+        return Cache::lock('sso-branch:' . $school['id'], 15)->block(10, function () use ($school, $agency) {
+            $branch = branch::where('brn_id', (string) $school['id'])->first();
+            if (!$branch) {
+                return branch::create([
+                    'name' => (string) ($school['name'] ?? $school['id']),
+                    'brn_id' => (string) $school['id'],
+                    'agency' => $agency->id,
+                    'source' => 'subscription',
+                ]);
+            }
+            if (!empty($school['name']) && $branch->name !== $school['name']) {
+                $branch->update(['name' => $school['name']]);
+            }
+            return $branch;
         });
     }
 
@@ -104,7 +117,7 @@ class SsoUserProvisioner
                 ]);
             $this->setOnlyGroup($user, $group->id);
             return $user;
-        });
+        }, 3);
     }
 
     /** Match by (id_number, agency), then an untagged legacy row; otherwise a new unsaved user. */
@@ -191,7 +204,11 @@ class SsoUserProvisioner
         if ($groupId) {
             $others->where('group_id', '!=', $groupId);
         }
-        $others->delete();
+        // Plain SELECT first: a DELETE that matches nothing still takes gap locks on this
+        // index-less table, and concurrent first logins then deadlock on the INSERT below.
+        if ($others->exists()) {
+            $others->delete();
+        }
 
         if ($groupId && !user_has_group::where('user_id', $user->id)->where('group_id', $groupId)->exists()) {
             user_has_group::create(['user_id' => $user->id, 'group_id' => $groupId]);

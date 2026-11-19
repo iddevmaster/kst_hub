@@ -58,7 +58,7 @@ class SubscriptionSsoController extends Controller
             return $this->fail($e->getMessage());
         } catch (\Throwable $e) {
             // Never log the exception message: SQL bindings would include the ID number.
-            Log::error('Subscription SSO provisioning failed', ['exception' => get_class($e), 'sub' => $res->profile['sub'] ?? null]);
+            Log::error('Subscription SSO provisioning failed', ['exception' => get_class($e), 'at' => basename($e->getFile()) . ':' . $e->getLine(), 'sub' => $res->profile['sub'] ?? null]);
             return $this->fail(self::GENERIC);
         }
 

@@ -94,6 +94,6 @@ class HistoryBrnColumnsTest extends TestCase
     {
         // Fill every NOT NULL column of `courses` without a default; adjust if the schema differs.
         $cols = collect(Schema::getColumnListing('courses'))->reject(fn ($c) => in_array($c, ['id', 'created_at', 'updated_at', 'deleted_at']));
-        return $cols->mapWithKeys(fn ($c) => [$c => $c === 'permission' ? '{}' : 'x'])->all();
+        return $cols->mapWithKeys(fn ($c) => [$c => $c === 'studens' ? '[]' : ($c === 'permission' ? '{}' : 'x')])->all();
     }
 }

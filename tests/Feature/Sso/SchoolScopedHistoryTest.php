@@ -29,7 +29,7 @@ class SchoolScopedHistoryTest extends TestCase
     private function course(string $title): int
     {
         $cols = collect(Schema::getColumnListing('courses'))->reject(fn ($c) => in_array($c, ['id', 'created_at', 'updated_at', 'deleted_at']));
-        $row = $cols->mapWithKeys(fn ($c) => [$c => $c === 'permission' ? '{}' : 'x'])->all();
+        $row = $cols->mapWithKeys(fn ($c) => [$c => $c === 'studens' ? '[]' : ($c === 'permission' ? '{}' : 'x')])->all();
         $row['title'] = $title;
         return DB::table('courses')->insertGetId($row);
     }
