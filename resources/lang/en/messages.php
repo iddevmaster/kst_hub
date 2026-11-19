@@ -219,4 +219,11 @@ return [
     'cert_download' => 'Download certificate',
     'cert_school' => 'School',
     'cert_none' => 'No certificates yet - pass a quiz of a course that offers a certificate to earn one.',
+    'sso_course_maps' => 'SSO Course Mapping',
+    'sso_course_maps_help' => 'Vehicle-type codes from SSO Subscription appear here after a student first logs in. Choose a course group for each code (⚠ = group synced from the legacy SSO, may be auto-deleted).',
+    'sso_code' => 'Code',
+    'sso_code_name' => 'Name from SSO',
+    'sso_group' => 'Course group',
+    'sso_unmapped' => '— Not mapped —',
+    'sso_map_saved' => 'Saved',
 ];

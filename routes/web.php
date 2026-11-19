@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\APIController;
+use App\Http\Controllers\SsoCourseMapController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ManageController;
@@ -159,6 +160,10 @@ Route::middleware(['auth', 'maintenance.gate'])->group(function () {
     Route::get('/certificates/manage', [CertificateTemplateController::class, 'manage'])->name('certificates.manage');
     Route::post('/certificates/manage/backfill', [CertificateTemplateController::class, 'backfill'])->name('certificates.backfill');
     Route::post('/certificates/manage/{id}/revoke', [CertificateTemplateController::class, 'toggleRevoke'])->name('certificates.revoke');
+
+    // SSO course mapping
+    Route::get('/sso/course-maps', [SsoCourseMapController::class, 'index'])->name('sso.course-maps');
+    Route::post('/sso/course-maps/{id}', [SsoCourseMapController::class, 'update'])->name('sso.course-maps.update');
 
     // request
     Route::get('/request/add', [ReqController::class, 'addReq'])->name('add-req');
