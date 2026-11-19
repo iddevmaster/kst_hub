@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToSchool;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToSchool;
 
     protected $fillable = [
         'cert_no', 'user_id', 'course_id', 'quiz_id', 'test_id', 'template_id',
-        'score', 'total_score', 'percent', 'issued_at', 'revoked_at', 'snapshot', 'agn',
+        'score', 'total_score', 'percent', 'issued_at', 'revoked_at', 'snapshot', 'agn', 'brn',
     ];
 
     protected $casts = [

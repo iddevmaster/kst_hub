@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToSchool;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Test extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BelongsToSchool;
 
     protected $fillable = [
         "quiz",
@@ -19,8 +20,14 @@ class Test extends Model
         "totalScore",
         "end",
         'agn',
-        'course_id'
+        'course_id',
+        'brn',
     ];
+
+    public function schoolUserColumn(): string
+    {
+        return 'tester';
+    }
 
     public function getAnswersAttribute($value)
     {
