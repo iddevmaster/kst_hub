@@ -49,6 +49,16 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        if (Auth::user()->sso_source !== null) {
+            // SSO-provisioned accounts must sign in through SSO; same message as bad credentials.
+            Auth::guard('web')->logout();
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'username' => trans('auth.failed'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
