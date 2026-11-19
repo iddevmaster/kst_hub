@@ -217,5 +217,6 @@ return [
     'cert_issued' => 'Issued certificates',
     'cert_earned' => 'You have earned a certificate for this course.',
     'cert_download' => 'Download certificate',
+    'cert_school' => 'School',
     'cert_none' => 'No certificates yet - pass a quiz of a course that offers a certificate to earn one.',
 ];

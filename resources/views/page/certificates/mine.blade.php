@@ -17,6 +17,9 @@
                                 <div class="text-amber-500 text-4xl"><i class="bi bi-award-fill"></i></div>
                                 <div class="grow">
                                     <p class="font-bold m-0">{{ $snap['course'] ?? optional($cert->course)->title }}</p>
+                                    @if (!empty($snap['school']))
+                                        <p class="text-sm text-gray-500 m-0">{{ __('messages.cert_school') }}: {{ $snap['school'] }}</p>
+                                    @endif
                                     <p class="text-xs text-gray-500 m-0">{{ $cert->cert_no }}</p>
                                     <p class="text-sm m-0 mt-1">
                                         {{ __('messages.score') }}: {{ $cert->score }}/{{ $cert->total_score }} ({{ rtrim(rtrim(number_format($cert->percent, 2), '0'), '.') }}%)

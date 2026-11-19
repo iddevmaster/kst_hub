@@ -65,7 +65,8 @@ class CertificateService
         $percent = $test->totalScore > 0 ? round($test->score / $test->totalScore * 100, 2) : 0;
 
         return DB::transaction(function () use ($test, $quiz, $user, $course, $template, $percent) {
-            $cert = Certificate::where('user_id', $user->id)->where('course_id', $course->id)->lockForUpdate()->first();
+            $cert = Certificate::where('user_id', $user->id)->where('course_id', $course->id)
+                ->where('brn', (string) $user->brn)->lockForUpdate()->first();
 
             if ($cert) {
                 // Keep the existing number/date; only upgrade when the new attempt scored higher.
@@ -95,8 +96,10 @@ class CertificateService
                     'course' => $course->title,
                     'quiz' => $quiz->title,
                     'agency' => optional($user->agnName)->name,
+                    'school' => optional($user->getBrn)->name,
                 ],
                 'agn' => $agn,
+                'brn' => (string) $user->brn,
             ]);
         });
     }
@@ -118,8 +121,8 @@ class CertificateService
 
         // Existing certificates: never touched by a backfill.
         $existing = [];
-        foreach (DB::table('certificates')->select('user_id', 'course_id')->cursor() as $r) {
-            $existing[$r->user_id . ':' . $r->course_id] = true;
+        foreach (DB::table('certificates')->select('user_id', 'course_id', 'brn')->cursor() as $r) {
+            $existing[$r->user_id . ':' . $r->course_id . ':' . $r->brn] = true;
         }
 
         $quizCourse = [];      // quiz id => first course id (for old tests without course_id)
@@ -139,10 +142,12 @@ class CertificateService
             ->whereNull('tests.deleted_at')->whereNull('quizzes.deleted_at')
             ->whereRaw('tests.score >= tests.totalScore * quizzes.pass_score / 100')
             ->select('tests.id', 'tests.quiz', 'tests.tester', 'tests.course_id', 'tests.score',
-                'tests.totalScore', 'tests.end', 'quizzes.title as quiz_title');
+                'tests.totalScore', 'tests.end', 'tests.brn', 'quizzes.title as quiz_title');
         if ($agn) {
             $q->where('tests.agn', $agn);
         }
+
+        $schools = DB::table('branches')->pluck('name', 'id')->all();   // id => name
 
         $q->chunkById(1000, function ($rows) use (&$existing, &$pending, &$skipped, &$users, &$courses, &$tplCache, $quizCourse) {
             // One query for this chunk's users instead of one per row.
@@ -161,7 +166,7 @@ class CertificateService
                 $user = $users[$t->tester] ?? null;
                 if (!$cid || !$user) { $skipped++; continue; }
 
-                $key = $user->id . ':' . $cid;
+                $key = $user->id . ':' . $cid . ':' . $t->brn;
                 if (isset($existing[$key])) { $skipped++; continue; }
 
                 if (!array_key_exists($cid, $courses)) {
@@ -183,6 +188,7 @@ class CertificateService
                     $pending[$key] = [
                         'user' => $user, 'course' => $course, 'tpl' => $tpl, 'percent' => $percent, 'row' => $t,
                         'issued_at' => $t->end ? Carbon::parse($t->end) : now(),
+                        'brn' => $t->brn,
                     ];
                 } elseif ($percent > $cur['percent']) {
                     $pending[$key]['percent'] = $percent;   // keep first-pass date, upgrade score
@@ -222,8 +228,10 @@ class CertificateService
                         'course' => $p['course']->title,
                         'quiz' => $t->quiz_title,
                         'agency' => optional($p['user']->agnName)->name,
+                        'school' => $schools[$p['brn']] ?? null,
                     ]),
                     'agn' => $agnOf,
+                    'brn' => (string) $p['brn'],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
