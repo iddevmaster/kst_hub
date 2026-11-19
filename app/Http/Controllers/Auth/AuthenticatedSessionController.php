@@ -27,6 +27,8 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
         $request->session()->regenerate();
+        // Password logins never carry SSO tokens left over from a previous user of this browser.
+        $request->session()->forget(['sso', 'access_token', 'refresh_token']);
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

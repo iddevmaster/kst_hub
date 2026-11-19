@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     Auth::logout();
+    session()->forget(['sso', 'access_token', 'refresh_token']);
     return view('auth.login');
 })->name('loginpage');
 

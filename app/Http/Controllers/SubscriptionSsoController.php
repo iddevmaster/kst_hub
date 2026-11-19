@@ -67,6 +67,7 @@ class SubscriptionSsoController extends Controller
         $now = time();
         $request->session()->put('sso', [
             'source' => 'subscription',
+            'user_id' => $user->id,
             'access_token' => $tokens['access_token'],
             'refresh_token' => $tokens['refresh_token'],
             'checked_at' => $now,

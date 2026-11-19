@@ -23,6 +23,11 @@ class EnsureSubscriptionSession
     public function handle(Request $request, Closure $next): Response
     {
         $sso = $request->session()->get('sso', []);
+        if (Auth::check() && isset($sso['user_id']) && (string) $sso['user_id'] !== (string) Auth::id()) {
+            // SSO data left over from another user of this browser: never attach it to this account.
+            $request->session()->forget('sso');
+            return $next($request);
+        }
         if (!Auth::check() || ($sso['source'] ?? null) !== 'subscription') {
             return $next($request);
         }
