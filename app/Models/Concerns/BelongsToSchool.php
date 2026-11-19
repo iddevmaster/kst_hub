@@ -31,7 +31,7 @@ trait BelongsToSchool
     public function scopeOfUserSchool(Builder $query, User $user): Builder
     {
         $table = $this->getTable();
-        return $query->where("{$table}.{$this->schoolUserColumn()}", $user->id)
+        return $query->where("{$table}.{$this->schoolUserColumn()}", (string) $user->id)
             ->where("{$table}.brn", (string) $user->brn);
     }
 }
