@@ -30,8 +30,8 @@ class SsoCourseMapController extends Controller
         $agency = $this->subscriptionAgency();
         $maps = SsoCourseMap::where('source', 'subscription')->orderBy('code')->get();
         $groups = course_group::where('agn', (string) $agency->id)->orderBy('name')->get(['id', 'name', 'code', 'by']);
-        // Groups the vehicle-type sync created: used when a code has no explicit mapping.
-        $auto = $groups->where('by', VehicleTypeSync::SOURCE_TAG)->pluck('name', 'code');
+        // Existing group with the same code: used when a code has no explicit mapping.
+        $auto = $groups->pluck('name', 'code');
         return view('page.sso.course-maps', compact('maps', 'groups', 'auto'));
     }
 
@@ -59,6 +59,6 @@ class SsoCourseMapController extends Controller
         } catch (\RuntimeException) {
             return back()->with('sync_error', __('messages.sso_sync_failed'));
         }
-        return back()->with('success', __('messages.sso_sync_done', $r));
+        return back()->with('success', __('messages.sso_sync_done', collect($r)->except('unmapped_codes')->all()));
     }
 }

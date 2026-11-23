@@ -48,6 +48,8 @@ return [
         'callback' => env('SSO_SUB_CLIENT_CALLBACK'),
         'scopes' => env('SSO_SUB_SCOPES', 'view-user'),
         'agency' => env('SSO_SUB_AGENCY', 'IDD0002'),
+        // Daily import of vehicle-type codes; turn on once the SSO serves GET /api/vehicle-types.
+        'sync_vehicle_types' => (bool) env('SSO_SUB_SYNC_VEHICLE_TYPES', false),
         'recheck_seconds' => (int) env('SSO_SUB_RECHECK_SECONDS', 60),
         'outage_grace_seconds' => (int) env('SSO_SUB_OUTAGE_GRACE_SECONDS', 1800),
     ],

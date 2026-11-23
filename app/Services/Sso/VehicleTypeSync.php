@@ -7,20 +7,20 @@ use App\Models\course_group;
 use App\Models\SsoCourseMap;
 
 /**
- * Mirrors the SSO's vehicle types into course groups (same idea as the legacy
- * /api/courseType sync): one group per code, in the subscription agency, tagged so it never
- * collides with a legacy group that happens to use the same code.
+ * Imports the SSO's list of vehicle types (course types) into the code list of the mapping page,
+ * so an admin can see every code before the first student logs in.
+ *
+ * It never creates or changes course groups: the legacy SSO and the subscription SSO share the
+ * same SmartHub course groups (and the courses attached to them). A student gets the group whose
+ * `code` equals the code the SSO sends, or the group an admin mapped to that code.
  */
 class VehicleTypeSync
 {
-    /** course_groups.by value of groups created here. */
-    public const SOURCE_TAG = 'api:sso-sub';
-
     public function __construct(private SubscriptionRosterClient $client)
     {
     }
 
-    /** @return array{created:int,updated:int,unchanged:int,skipped:int} */
+    /** @return array{added:int,matched:int,mapped:int,unmapped:int,skipped:int,unmapped_codes:array<int,string>} */
     public function run(): array
     {
         $agency = agency::where('agn_id', (string) config('services.sso_subscription.agency'))->first();
@@ -28,7 +28,7 @@ class VehicleTypeSync
             throw new \RuntimeException('Subscription agency is not configured.');
         }
 
-        $out = ['created' => 0, 'updated' => 0, 'unchanged' => 0, 'skipped' => 0];
+        $out = ['added' => 0, 'matched' => 0, 'mapped' => 0, 'unmapped' => 0, 'skipped' => 0, 'unmapped_codes' => []];
         foreach ($this->client->vehicleTypes() as $item) {
             $code = $item['code'] ?? null;
             $name = $item['name'] ?? null;
@@ -39,27 +39,29 @@ class VehicleTypeSync
                 continue;
             }
 
-            // Lists every code on the mapping page before the first student logs in.
-            SsoCourseMap::firstOrCreate(['source' => 'subscription', 'code' => $code], ['name' => $name]);
+            $map = SsoCourseMap::firstOrCreate(['source' => 'subscription', 'code' => $code], ['name' => $name]);
+            if ($map->wasRecentlyCreated) {
+                $out['added']++;
+            } elseif ($map->name !== $name) {
+                $map->update(['name' => $name]);
+            }
 
-            $group = course_group::where('code', $code)->where('by', self::SOURCE_TAG)->where('agn', (string) $agency->id)->first();
-            if (!$group) {
-                course_group::create(['name' => $name, 'agn' => (string) $agency->id, 'by' => self::SOURCE_TAG, 'code' => $code]);
-                $out['created']++;
-            } elseif ($group->name !== $name) {
-                $group->update(['name' => $name]);
-                $out['updated']++;
+            if ($map->course_group_id) {
+                $out['mapped']++;
+            } elseif (self::groupIdForCode($code, $agency) !== null) {
+                $out['matched']++;
             } else {
-                $out['unchanged']++;
+                $out['unmapped']++;
+                $out['unmapped_codes'][] = $code;
             }
         }
         return $out;
     }
 
-    /** The group created by the sync for this code, if any. */
-    public static function groupIdFor(string $code, agency $agency): ?int
+    /** Existing group (any origin) of the subscription agency whose code equals the SSO's code. */
+    public static function groupIdForCode(string $code, agency $agency): ?int
     {
-        $id = course_group::where('code', $code)->where('by', self::SOURCE_TAG)->where('agn', (string) $agency->id)->value('id');
+        $id = course_group::where('code', $code)->where('agn', (string) $agency->id)->orderBy('id')->value('id');
         return $id === null ? null : (int) $id;
     }
 }

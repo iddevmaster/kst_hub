@@ -10,7 +10,7 @@ use Illuminate\Http\Client\RequestException;
 class SyncSsoVehicleTypes extends Command
 {
     protected $signature = 'sso:sync-vehicle-types';
-    protected $description = 'Create/update course groups from the Subscription SSO vehicle types';
+    protected $description = 'Import the Subscription SSO vehicle-type codes into the mapping page (never creates course groups)';
 
     public function handle(VehicleTypeSync $sync): int
     {
@@ -26,7 +26,10 @@ class SyncSsoVehicleTypes extends Command
             $this->error($e->getMessage());
             return self::FAILURE;
         }
-        $this->info("Vehicle types: {$r['created']} created, {$r['updated']} updated, {$r['unchanged']} unchanged, {$r['skipped']} skipped.");
+        $this->info("Vehicle types: {$r['added']} added, {$r['matched']} match an existing group by code, {$r['mapped']} mapped by admin, {$r['unmapped']} without group, {$r['skipped']} skipped.");
+        if ($r['unmapped_codes']) {
+            $this->warn('No course group yet for code: ' . implode(', ', $r['unmapped_codes']));
+        }
         return self::SUCCESS;
     }
 }

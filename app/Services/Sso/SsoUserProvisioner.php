@@ -184,7 +184,7 @@ class SsoUserProvisioner
         return branch::create(['name' => $name !== '' ? $name : $brnId, 'brn_id' => $brnId, 'agency' => $agency->id, 'source' => 'idrives']);
     }
 
-    /** An admin's explicit mapping wins; otherwise the group the vehicle-type sync created for this code. */
+    /** An admin's explicit mapping wins; otherwise the existing course group whose code equals the SSO's code (same groups as the legacy SSO). */
     private function mappedGroupId(array $p, agency $agency): ?int
     {
         $code = $p['vehicle_type'] ?? ($p['courses'][0]['course_type'] ?? null);
@@ -198,7 +198,7 @@ class SsoUserProvisioner
         if ($map->course_group_id) {
             return $map->course_group_id;
         }
-        return VehicleTypeSync::groupIdFor($code, $agency);
+        return VehicleTypeSync::groupIdForCode($code, $agency);
     }
 
     /** The user belongs to exactly this group (or none); groups from a previous school are removed. */
