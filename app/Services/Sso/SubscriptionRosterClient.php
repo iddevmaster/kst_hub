@@ -30,6 +30,23 @@ class SubscriptionRosterClient
         return $token;
     }
 
+    /**
+     * Vehicle types (course types) known to the SSO. One retry with a fresh token when the cached
+     * one was revoked or expired early.
+     *
+     * @return array<int, array{code:string,name:string,is_active:bool}>
+     */
+    public function vehicleTypes(): array
+    {
+        $call = fn () => Http::acceptJson()->withToken($this->token())->timeout(10)->get($this->url('/api/vehicle-types'));
+        $res = $call();
+        if ($res->status() === 401) {
+            Cache::forget('sso_sub_roster_token');
+            $res = $call();
+        }
+        return $res->throw()->json('data', []);
+    }
+
     /** @return array<int, array{id:string,code:string,name:string,is_active:bool}> */
     public function branches(string $schoolId): array
     {

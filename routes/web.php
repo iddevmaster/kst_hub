@@ -151,6 +151,7 @@ Route::middleware(['auth', 'sso.subscription', 'maintenance.gate'])->group(funct
 
     // SSO course mapping
     Route::get('/sso/course-maps', [SsoCourseMapController::class, 'index'])->name('sso.course-maps');
+    Route::post('/sso/course-maps/sync', [SsoCourseMapController::class, 'sync'])->name('sso.course-maps.sync');
     Route::post('/sso/course-maps/{id}', [SsoCourseMapController::class, 'update'])->name('sso.course-maps.update');
     Route::get('/sso/roster', [SchoolRosterController::class, 'index'])->name('sso.roster');
 

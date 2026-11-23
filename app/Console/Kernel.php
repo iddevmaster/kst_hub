@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        if ((string) config('services.sso_subscription.client_id') !== '') {
+            $schedule->command('sso:sync-vehicle-types')->dailyAt('02:30')->withoutOverlapping();
+        }
         $schedule->call( function () {
             $apiUser = (string) config('services.sso_legacy_api.user');
             $apiPass = (string) config('services.sso_legacy_api.pass');

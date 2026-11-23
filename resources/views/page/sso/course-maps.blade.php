@@ -6,6 +6,13 @@
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
+            @if (session('sync_error'))
+                <div class="alert alert-danger">{{ session('sync_error') }}</div>
+            @endif
+            <form method="post" action="{{ route('sso.course-maps.sync') }}" class="mb-4">
+                @csrf
+                <button class="btn btn-outline-primary btn-sm">{{ __('messages.sso_sync_now') }}</button>
+            </form>
             @error('course_group_id')
                 <div class="alert alert-danger">{{ $message }}</div>
             @enderror
@@ -23,7 +30,7 @@
                         <td>{{ $map->name }}</td>
                         <td>
                             <select name="course_group_id" form="map-{{ $map->id }}" class="form-select">
-                                <option value="">{{ __('messages.sso_unmapped') }}</option>
+                                <option value="">{{ isset($auto[$map->code]) ? __('messages.sso_auto_group', ['name' => $auto[$map->code]]) : __('messages.sso_unmapped') }}</option>
                                 @foreach ($groups as $g)
                                     <option value="{{ $g->id }}" @selected($map->course_group_id == $g->id)>
                                         {{ $g->name }} ({{ $g->code }}){{ $g->by === 'api:sso' ? ' ⚠' : '' }}

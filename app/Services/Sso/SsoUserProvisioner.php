@@ -44,7 +44,7 @@ class SsoUserProvisioner
                 $this->ensureRole($user, 'customer');
             }
 
-            $this->setOnlyGroup($user, $this->mappedGroupId($p));
+            $this->setOnlyGroup($user, $this->mappedGroupId($p, $agency));
             return $user;
         }, 3);
     }
@@ -184,7 +184,8 @@ class SsoUserProvisioner
         return branch::create(['name' => $name !== '' ? $name : $brnId, 'brn_id' => $brnId, 'agency' => $agency->id, 'source' => 'idrives']);
     }
 
-    private function mappedGroupId(array $p): ?int
+    /** An admin's explicit mapping wins; otherwise the group the vehicle-type sync created for this code. */
+    private function mappedGroupId(array $p, agency $agency): ?int
     {
         $code = $p['vehicle_type'] ?? ($p['courses'][0]['course_type'] ?? null);
         if (!is_string($code) || $code === '') {
@@ -194,7 +195,10 @@ class SsoUserProvisioner
             ['source' => 'subscription', 'code' => $code],
             ['name' => $p['courses'][0]['name'] ?? null],
         );
-        return $map->course_group_id;
+        if ($map->course_group_id) {
+            return $map->course_group_id;
+        }
+        return VehicleTypeSync::groupIdFor($code, $agency);
     }
 
     /** The user belongs to exactly this group (or none); groups from a previous school are removed. */
