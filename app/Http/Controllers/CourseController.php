@@ -32,11 +32,15 @@ class CourseController extends Controller
     }
 
     public function addGroup(Request $request) {
+        $request->validate(['gcode' => course_group::codeRules()], course_group::codeMessages());
+        $code = trim((string) $request->gcode);
+
         try {
             $group = course_group::create([
                 'name' => $request->gname,
                 'by' => auth()->id(),
-                'agn' => $request->user()->agency
+                'agn' => $request->user()->agency,
+                'code' => $code === '' ? null : $code,
             ]);
 
             $selectedCourses = $request->selected_course;

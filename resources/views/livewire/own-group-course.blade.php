@@ -7,6 +7,7 @@
           {{ __('messages.delete') }}
         </button>
     </div>
+    <p class="mb-3 text-sm text-gray-500">{{ __('messages.group_code') }}: <span class="font-mono">{{ $group->code ?: '—' }}</span></p>
     @if (session()->has('success'))
         <div class="alert alert-success">
             {{ session('success') }}

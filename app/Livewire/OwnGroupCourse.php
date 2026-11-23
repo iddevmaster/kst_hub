@@ -13,6 +13,7 @@ class OwnGroupCourse extends Component
     public $all_courses = [];
     public $group;
     public $gName;
+    public $gCode;
     public $gCourses = [];
     public $editMode = false;
 
@@ -24,14 +25,25 @@ class OwnGroupCourse extends Component
         $this->all_courses = course::where("teacher", auth()->id())->get();
         $this->gCourses = $this->courses->pluck('id')->toArray();
         $this->gName =  $this->group->name;
+        $this->gCode = $this->group->code;
     }
 
     public function updateGroup()
     {
-        try {
-            $this->group->update([
-                'name' => $this->gName,
+        $changes = ['name' => $this->gName];
+        // A group synced from the legacy SSO keeps the code the sync gave it.
+        if (!$this->group->isSyncedFromSso()) {
+            $this->validate(['gCode' => course_group::codeRules($this->group->id)], [
+                'gCode.regex' => __('messages.group_code_format'),
+                'gCode.unique' => __('messages.group_code_taken'),
+                'gCode.max' => __('messages.group_code_format'),
             ]);
+            $code = trim((string) $this->gCode);
+            $changes['code'] = $code === '' ? null : $code;
+        }
+
+        try {
+            $this->group->update($changes);
             $selectedCourses = $this->gCourses;
             foreach ($selectedCourses as $key => $selectedCourse) {
                 $gcourse = course_has_group::where('group_id', $this->group->id)->where('course_id', $selectedCourse)->get();

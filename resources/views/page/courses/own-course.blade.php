@@ -51,6 +51,14 @@
                                 <label for="gname" class="block mb-2 text-sm font-medium text-gray-900">{{ __('messages.Name') }}</label>
                                 <input type="gname" id="gname" maxlength="100" name="gname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Enter group name" required>
                             </div>
+                            <div class="mb-6">
+                                <label for="gcode" class="block mb-2 text-sm font-medium text-gray-900">{{ __('messages.group_code') }}</label>
+                                <input type="text" id="gcode" maxlength="50" name="gcode" value="{{ old('gcode') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 font-mono" placeholder="20240001" autocomplete="off">
+                                <p class="mt-1 text-sm text-gray-500">{{ __('messages.group_code_help') }}</p>
+                                @error('gcode')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
                             <div class="my-4">
                                 {{-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."> --}}
                                 <div class="my-5 flex justify-between">

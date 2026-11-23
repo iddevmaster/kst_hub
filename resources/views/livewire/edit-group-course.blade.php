@@ -5,6 +5,19 @@
             <label for="gname" class="block mb-2 text-sm font-medium text-gray-900">{{ __('messages.Name') }}</label>
             <input type="gname" wire:model="gName" id="gname" maxlength="100" name="gname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " placeholder="Enter group name" required>
         </div>
+        <div class="mb-6">
+            <label for="gcode-{{ $group->id }}" class="block mb-2 text-sm font-medium text-gray-900">{{ __('messages.group_code') }}</label>
+            @if ($group->isSyncedFromSso())
+                <input type="text" id="gcode-{{ $group->id }}" value="{{ $group->code }}" disabled class="bg-gray-100 border border-gray-300 text-gray-500 text-sm rounded-lg block w-full p-2.5 font-mono">
+                <p class="mt-1 text-sm text-gray-500">{{ __('messages.group_code_locked') }}</p>
+            @else
+                <input type="text" wire:model="gCode" id="gcode-{{ $group->id }}" maxlength="50" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 font-mono" placeholder="20240001" autocomplete="off">
+                <p class="mt-1 text-sm text-gray-500">{{ __('messages.group_code_help') }}</p>
+                @error('gCode')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            @endif
+        </div>
         <div class="my-4">
             {{-- <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."> --}}
             <div class="my-5 flex justify-between">
