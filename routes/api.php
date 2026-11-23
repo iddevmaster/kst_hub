@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::middleware('auth:sanctum')->get('/agn-course/{agnId}', [APIController::class, 'getAgnCourse']);
 
 Route::middleware('auth:sanctum')->get('/agn-course/{agnId}', [APIController::class, 'getAgnCourse']);
 
